@@ -129,10 +129,12 @@ get_object_next_rst (double JD, struct ln_lnlat_posn *observer,
 
 /*! \fn double get_body_rst_horizont (double JD_UT, struct ln_lnlat_posn *
 * observer, struct ln_equ_posn * obj1, struct ln_equ_posn * obj2, struct
-* ln_equ_posn obj3, double horizont, struct ln_rst_time * rst); \param JD
-* Julian day \param observer Observers position \param horizont Sun horizont;
-* use *_HORIZONT constants from libnova.h \param rst Pointer to store Rise,
-* Set and Transit time in JD \return 0 for success, else 1 for circumpolar.
+* ln_equ_posn obj3, double horizont, struct ln_rst_time * rst); 
+* \param JD Julian day 
+* \param observer Observers position 
+* \param horizont Sun horizont use *_HORIZONT constants from libnova.h 
+* \param rst Pointer to store Rise, Set and Transit time in JD 
+* \return 0 for success, else 1 for circumpolar.
 *
 * Calculate the time the rise, set and transit (crosses the local meridian at
 * upper culmination) time of the body for the given Julian day and given

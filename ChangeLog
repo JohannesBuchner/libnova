@@ -1,6 +1,15 @@
 ChangeLog
 
-20022703
+
+**** Release 0.8.0 ****
+
+20032807
+	-examples/*
+	Added some examples.
+	
+	Liam Girdwood
+
+20032703
 	-src/lunar.c
 	Fixed some documentation errors in lunar phase and disk.
 	
