@@ -23,6 +23,10 @@ Copyright (C) 2004 Liam Girdwood <liam@gnova.org>
 #include <time.h>
 #include <libnova/ln_types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! \defgroup calendar General Calendar Functions 
 */
  
@@ -92,5 +96,9 @@ int ln_get_date_from_mpc (struct ln_date* date, char* mpc_date);
 * \ingroup calendar
 */
 double ln_get_julian_from_mpc (char* mpc_date);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

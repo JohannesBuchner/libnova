@@ -23,6 +23,9 @@ Copyright 2004 Liam Girdwood
 
 #include <libnova/ln_types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*! \defgroup elliptic  Elliptic Motion
 *
@@ -153,5 +156,9 @@ int ln_get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_e
 * \ingroup elliptic
 */
 double ln_get_ell_last_perihelion (double epoch_JD, double M, double n);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
