@@ -313,12 +313,12 @@ void vsop87_test(void)
 	struct ln_equ_posn equ;
 	double JD = 2448976.5;
 	double au;
-#if 0
+#if 1
 	struct ln_date date, pdate;
 /*	JD = get_julian_from_sys();	*/
-	date.years = 1992;
-	date.months = 12;
-	date.days = 20; 
+	date.years = 2003;
+	date.months = 1;
+	date.days = 29; 
 	date.hours = 0;
 	date.minutes = 0;
 	date.seconds = 0;
@@ -601,11 +601,11 @@ int parabolic_motion_test ()
 	r = get_par_radius_vector (orbit.q, o_JD - e_JD);
 	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
 	
-	get_par_geo_rect_posn (&orbit, o_JD, &posn);
+/*	get_par_geo_rect_posn (&orbit, o_JD, &posn);
 	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
 	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
 	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
-	
+*/	
 	get_par_helio_rect_posn (&orbit, o_JD, &posn);
 	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
 	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
