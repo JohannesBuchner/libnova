@@ -1,5 +1,11 @@
 ChangeLog
 
+20032803
+	-src/libnova.h, libnova.c
+	Added sign member to struct ln_dms to represent small negative angles.
+	
+	John R. Thorstensen Liam Girdwood
+
 20032203
 	-src/lunar.c, libnova.h
 	Added Lunar longitudes for ascending node and perigee.

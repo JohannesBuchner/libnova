@@ -123,7 +123,8 @@ struct ln_date
 
 struct ln_dms
 {
-    int degrees;	/*!< Degrees. All values are valid */
+	int sign;		/*!< Sign. 0 for positive, anything else is negative */
+    int degrees;	/*!< Degrees. Valid > 0 */
     int minutes;	/*!< Minutes. Valid 0 - 59 */
     double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
 };
