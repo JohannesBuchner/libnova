@@ -208,20 +208,12 @@ void get_equ_from_ecl
 	latitude = deg_to_rad(object->lat);
 
 	/* Equ 12.3, 12.4 */
-	ra = (sin(longitude) * cos(nutation.ecliptic) - tan(latitude) * sin(nutation.ecliptic)) / cos (longitude);
-	ra = atan (ra);
-	
-	if (ra < 0)
-		ra += M_PI;
-	if (longitude > M_PI)
-		ra += M_PI;
-
-
+	ra = atan2 ((sin(longitude) * cos(nutation.ecliptic) - tan(latitude) * sin(nutation.ecliptic)), cos (longitude));
 	declination = sin(latitude) * cos(nutation.ecliptic) + cos(latitude) * sin(nutation.ecliptic) * sin(longitude);
 	declination = asin(declination);
 	
 	/* store in position */
-	position->ra = rad_to_deg(ra);
+	position->ra = range_degrees(rad_to_deg(ra));
 	position->dec = rad_to_deg(declination);
 }
 

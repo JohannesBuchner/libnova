@@ -1,5 +1,12 @@
 ChangeLog
 
+20030226
+	-src/transform.c
+	ra not in correct quadrant for hrz<->equ coords transformation
+	
+	Asrita Chetan, Liam Girdwood
+
+
 20030224
 	-macros/libnova-check.m4
 	fixed compilation problem with gcc 3.2
@@ -7,6 +14,8 @@ ChangeLog
 	-macros/Makefile.am
 	Added install rule for libnova-check.m4
 	Removed unused macros
+	
+	Liam Girdwood
 
 20030126
 	-src/parabolic_motion.c, src/elliptic_motion.c
