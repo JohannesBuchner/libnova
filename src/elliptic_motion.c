@@ -94,7 +94,7 @@ double get_ell_mean_anomaly (double n, double delta_JD)
 	return (delta_JD * n);
 }
 
-/*! \fn double get_ell_true_anomaly (double n, double delta_JD);
+/*! \fn double get_ell_true_anomaly (double e, double E);
 * \param e Orbital eccentricity
 * \param E Eccentric anomaly
 * \return True anomaly (degrees)
@@ -110,7 +110,7 @@ double get_ell_true_anomaly (double e, double E)
 	
 	v = sqrt ((1.0 + e) / (1.0 - e)) * tan (E / 2.0);
 	v = 2.0 * atan (v);
-	v = rad_to_deg (v);
+	v = range_degrees (rad_to_deg (v));
 	return (v);
 }
 

@@ -62,7 +62,7 @@ double get_par_true_anomaly (double q, double t)
 	s = solve_barker (q,t);
 	v = 2.0 * atan (s);
 	
-	return (rad_to_deg(v));
+	return (range_degrees(rad_to_deg(v)));
 }
 
 /*! \fn double get_par_radius_vector (double q, double t);
@@ -84,7 +84,7 @@ double get_par_radius_vector (double q, double t)
 }
 
 
-/*! \fn void get_par_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+/*! \fn void get_par_helio_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \param orbit Orbital parameters of object.
 * \param JD Julian day
 * \param posn Position pointer to store objects position
