@@ -1,5 +1,11 @@
 ChangeLog
 
+20030303
+	-src/libnova.h
+	typo - cant spell jupiter at line 1148
+	
+	Arsita Chetan, Liam Girdwood
+
 20030226
 	-src/mercury.c - pluto.c, transform.c, solar.c, lunar.c
 	replaced atan() with atan2() to remove quadrant errors.

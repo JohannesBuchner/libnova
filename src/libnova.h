@@ -1145,7 +1145,7 @@ double get_jupiter_pol_sdiam (double JD);
 * \brief Calculate the time of rise, set and transit for Jupiter.
 * \ingroup jupiter
 */
-int get_jupter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int get_jupiter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Jupiter's heliocentric coordinates
