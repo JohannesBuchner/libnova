@@ -293,7 +293,7 @@ struct ln_ell_orbit
 	double w;	/*!< Argument of perihelion in degrees */
 	double omega;	/*!< Longitude of ascending node in degrees*/
 	double n;	/*!< Mean motion, in degrees/day */
-	double JD;	/*!< Epoch of orbital elements, in julian day */
+	double JD;	/*!< Time of last passage in Perihelion, in julian day*/
 };
 
 /*!
@@ -309,7 +309,7 @@ struct ln_par_orbit
 	double i;	/*!< Inclination in degrees */
 	double w;	/*!< Argument of perihelion in degrees */
 	double omega;	/*!< Longitude of ascending node in degrees*/
-	double JD;	/*!< Time of passage in Perihelion, in julian day */
+	double JD;	/*!< Time of last passage in Perihelion, in julian day */
 };
 
 
@@ -417,6 +417,12 @@ double get_julian_local_date(struct ln_date* date);
 * \ingroup calendar
 */
 int get_date_from_mpc (struct ln_date* date, char* mpc_date);
+	
+/*! \fn double get_julian_from_mpc (char* mpc_date)
+* \brief Calculate the julian day from the a MPC packed date.
+* \ingroup calendar
+*/
+double get_julian_from_mpc (char* mpc_date);
 
 /*! \defgroup misc Misc Functions
 */
@@ -1814,7 +1820,12 @@ void get_ell_body_equ_coords (double JD, struct ln_ell_orbit * orbit, struct ln_
 * \ingroup elliptic
 */
 int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_orbit * orbit, struct ln_rst_time * rst);
-	
+
+/*!\fn double get_ell_last_perihelion (double epoch_JD, double M, double n);
+* \brief Calculate the julian day of the last perihelion.
+* \ingroup elliptic
+*/
+double get_ell_last_perihelion (double epoch_JD, double M, double n);
 
 /*! \defgroup parabolic  Parabolic Motion
 *
