@@ -374,17 +374,17 @@ double get_julian_from_sys ();
 */
 void get_ln_date_from_sys (struct ln_date * date);
 	
-/*! \fn double get_julian_from_timet (time_t * in_time)
+/*! \fn double get_julian_from_timet (time_t * time)
 * \brief Calculate julian day from time_t
 * \ingroup calendar
 */
-double get_julian_from_timet (time_t * in_time);
+double get_julian_from_timet (time_t * time);
 
-/*! \fn void get_timet_from_julian (double JD, time_t * in_time)
+/*! \fn void get_timet_from_julian (double JD, time_t * time)
 * \brief Calculate time_t from julian day
 * \ingroup calendar
 */
-void get_timet_from_julian (double JD, time_t * in_time);
+void get_timet_from_julian (double JD, time_t * time);
 
 /*! \defgroup misc Misc Functions
 */
@@ -1616,6 +1616,18 @@ double get_lunar_earth_dist (double JD);
 * \ingroup lunar
 */ 
 double get_lunar_bright_limb (double JD);
+
+/*! \fn double get_lunar_long_asc_node (double JD);
+* \brief Calculate the longitude of the Moon's mean ascending node.
+* \ingroup lunar
+*/ 
+double get_lunar_long_asc_node (double JD);
+
+/*! \fn double get_lunar_long_perigee (double JD);
+* \brief Calculate the longitude of the Moon's mean perigee.
+* \ingroup lunar
+*/ 
+double get_lunar_long_perigee (double JD);
 
 /*! \defgroup elliptic  Elliptic Motion
 *

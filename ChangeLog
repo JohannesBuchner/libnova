@@ -1,5 +1,11 @@
 ChangeLog
 
+20032203
+	-src/lunar.c, libnova.h
+	Added Lunar longitudes for ascending node and perigee.
+	
+	Liam Girdwood
+
 20030303
 	-src/libnova.h
 	typo - cant spell jupiter at line 1148

@@ -39739,4 +39739,45 @@ double get_lunar_sdiam (double JD)
 	
 	return (S);
 }
+
+/*! \fn double get_lunar_long_asc_node (double JD);
+* \param JD Julian Day.
+* \return Longitude of ascending node in degrees.
+*
+* Calculate the mean longitude of the Moons ascening node
+* for the given Julian day.
+*/ 
+double get_lunar_long_asc_node (double JD)
+{
+	/* calc julian centuries */
+	double T = (JD - 2451545.0) / 36525.0;
+	double omega = 125.0445479;
+	double T2 = T * T;
+	double T3 = T2 * T;
+	double T4 = T3 * T;
 	
+	/* equ 47.7 */
+	omega -= 1934.1362891 * T + 0.0020754 * T2 + T3 / 467441.0 - T4 / 60616000.0;
+	return (omega);
+}
+
+
+/*! \fn double get_lunar_long_perigee (double JD);
+* \param JD Julian Day
+* \return Longitude of Moons mean perigee in degrees.
+*
+* Calculate the longitude of the Moon's mean perigee.
+*/ 
+double get_lunar_long_perigee (double JD)
+{
+	/* calc julian centuries */
+	double T = (JD - 2451545.0) / 36525.0;
+	double per = 83.3532465;
+	double T2 = T * T;
+	double T3 = T2 * T;
+	double T4 = T3 * T;
+	
+	/* equ 47.7 */
+	per += 4069.0137287 * T - 0.0103200 * T2 - T3 / 80053.0 + T4 / 18999000.0;
+	return (per);
+}
