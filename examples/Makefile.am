@@ -3,7 +3,8 @@
 noinst_PROGRAMS = \
 	lunar \
 	mars \
-	comet
+	comet \
+	sun
 	
 lunar_SOURCES = \
 	lunar.c 
@@ -13,6 +14,9 @@ mars_SOURCES = \
 
 comet_SOURCES = \
 	comet.c
+	
+sun_SOURCES = \
+	sun.c
 	
 INCLUDES = \
 	 -Wall -I../src
@@ -24,4 +28,7 @@ mars_LDADD = \
 	../src/libnova.la
 
 comet_LDADD = \
+	../src/libnova.la
+
+sun_LDADD = \
 	../src/libnova.la

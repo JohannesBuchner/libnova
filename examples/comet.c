@@ -38,8 +38,6 @@ void print_date (char * title, struct ln_date* date)
 
 int main (int argc, char * argv[])
 {
-	struct ln_helio_posn pos;
-	struct lnh_equ_posn hequ;
 	struct ln_equ_posn equ;
 	struct ln_rst_time rst;
 	struct ln_date rise, set, transit, epoch_date;
@@ -47,7 +45,7 @@ int main (int argc, char * argv[])
 	struct ln_ell_orbit orbit;
 	struct ln_rect_posn posn;
 	double JD, e_JD;
-	double au, E, v, V, r, l, dist;
+	double E, v, V, r, l, dist;
 	
 	/* observers location (Edinburgh), used to calc rst */
 	observer.lat = 55.92;
@@ -115,6 +113,18 @@ int main (int argc, char * argv[])
 	
 	dist = get_ell_body_earth_dist (JD, &orbit);
 	printf ("(Body Earth Dist) for comet Enckle in AU  %f\n ", dist);
+	
+	/* rise, set and transit */
+	if (get_ell_body_rst (JD, &observer, &orbit, &rst) == 1) 
+		printf ("Comet is circumpolar\n");
+	else {
+		get_local_date (rst.rise, &rise);
+		get_local_date (rst.transit, &transit);
+		get_local_date (rst.set, &set);
+		print_date ("Rise", &rise);
+		print_date ("Transit", &transit);
+		print_date ("Set", &set);
+	}
 	
 	return 0;
 }
