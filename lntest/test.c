@@ -564,7 +564,7 @@ int elliptic_motion_test ()
 
 /* need a proper parabolic orbit to properly test */
 int parabolic_motion_test ()
-{
+{ 
 	double r,v,dist;
 	double e_JD, o_JD;
 	struct ln_par_orbit orbit;

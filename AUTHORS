@@ -4,3 +4,13 @@ libNova Team
 Liam Girdwood 			<liam@nova-ioe.org>
 Juan Carlos Remis       <jcremis@cajaespana.es>
 
+
+BugFixes
+========
+
+20022911 - src/julian_day.c in get_timet_from_julian ()
+	
+	Spurious errors were caused by loctime.tm_isdst not
+	being initialised to 0.  
+	
+	Fix supplied by Petr Kubanek
