@@ -1,6 +1,12 @@
 ChangeLog
 
 20031708
+	-src/rise_set.c
+	-src/julian_day.c
+	-src/transform.c
+	
+	Fixed doxygen warnings
+
 	-lntest/lntest.c
 	Updated test's to use dynamical time diff in nutation.
 	
@@ -24,7 +30,7 @@ ChangeLog
 	-src/julian_day.c
 	
 	Fixed divide by hours bug in get_julian_local_date()
-	to divide bu seconds
+	to divide by seconds
 	
 	Pablo Martikian, Liam Girdwood
 
