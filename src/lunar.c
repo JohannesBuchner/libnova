@@ -38431,7 +38431,7 @@ double sum_series_elp7 (double *t)
 		/* do we need to calc this value */
 		if (fabs(earth_pert_elp7[j].A) > pre[0])
 		{
-			A = earth_pert_elp9[j].A * t[1];
+			A = earth_pert_elp7[j].A * t[1];
 			y = earth_pert_elp7[j].O * DEG;
 			for (k = 0; k < 2; k++) 
 			{
@@ -38462,7 +38462,7 @@ double sum_series_elp8 (double *t)
 		if (fabs(earth_pert_elp8[j].A) > pre[1])
 		{
 			y = earth_pert_elp8[j].O * DEG;
-			A = earth_pert_elp9[j].A * t[1];
+			A = earth_pert_elp8[j].A * t[1];
 			for (k = 0; k < 2; k++) 
 			{
 				y += earth_pert_elp8[j].iz * zeta[k] * t[k];

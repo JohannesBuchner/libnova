@@ -326,11 +326,10 @@ void vsop87_test(void)
 
 	JD = get_julian_day (&date);
 #endif
-	printf("\n\nVSOP87 Test... for Julian Day %f\n",JD);
 	
 	get_equ_solar_coords (JD, &equ);
-	equ_to_hequ (&equ, &hequ);
-	printf("Sun RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
+	test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 41.55553862);
+	test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, 49.35034910);
 	
 	get_mercury_helio_coords(JD, &pos);
 	printf("Mercury L %f B %f R %f\n", pos.L, pos.B, pos.R);
