@@ -1643,7 +1643,13 @@ double get_ell_orbit_avel (struct ln_ell_orbit * orbit);
 * \brief Calculate the pase angle of the body. The angle Sun - body - Earth. 
 */
 double get_ell_body_phase_angle (double JD, struct ln_ell_orbit * orbit);
-	
+
+/*! \fn double get_ell_body_elong (double JD, struct ln_ell_orbit * orbit);
+* \ingroup elliptic
+* \brief Calculate the bodies elongation to the Sun.. 
+*/
+double get_ell_body_elong (double JD, struct ln_ell_orbit * orbit);
+
 /*!
 * \fn double get_ell_body_solar_dist (double JD, struct ln_ell_orbit * orbit)
 * \brief Calculate the distance between a body and the Sun
