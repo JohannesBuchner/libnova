@@ -198,6 +198,20 @@ struct ln_rect_posn
 };
 
 /*!
+* \struct ln_gal_posn
+* \brief Galactic coordinates
+*
+* The Galactic Latitude and Longitude of and object.
+*
+* Angles are expressed in degrees.
+*/
+struct ln_gal_posn
+{
+	double l;
+	double b;
+};
+
+/*!
 * \struct ln_ell_orbit
 * \brief Elliptic Orbital elements
 *

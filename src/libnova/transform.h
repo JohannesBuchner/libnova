@@ -81,7 +81,21 @@ void ln_get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn *
 /* Equ 33.2
 */
 void ln_get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn);
-	
+
+/*! \fn void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
+* \ingroup transform
+* Transform an object galactic coordinates into equatorial coordinate.
+*/
+/* Pg 94 */
+void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ);
+
+/*! \fn void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
+* \ingroup transform
+* Transform an object equatorial coordinate into galactic coordinates.
+*/
+/* Pg 94 */
+void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal);
+
 #ifdef __cplusplus
 };
 #endif

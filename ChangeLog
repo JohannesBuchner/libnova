@@ -1,6 +1,13 @@
 ChangeLog
 
 20040712
+	- src/transform.c, src/libnova/ln_types.h, src/libnova/transform.h
+
+	Beta Galactics Coordinates support.
+
+	Petr Kubanek
+
+20040712
 	-numerous
 	
 	Refactored sun -> solar in API

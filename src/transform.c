@@ -70,7 +70,7 @@ void ln_get_rect_from_helio
 *
 * TODO:
 * Transform horizontal coordinates to galactic coordinates.
-* Transfrom equatorial coordinates to galactic coordinates.
+* Transfrom equatorial coordinates to galactic coordinates - improve (solve B1950 issues etc.).
 */
 
 void ln_get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
@@ -257,4 +257,69 @@ void ln_get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * po
 	t = sqrt (rect->X * rect->X + rect->Y * rect->Y);
 	posn->lng = ln_range_degrees(ln_rad_to_deg (atan2 (rect->X, rect->Y)));
 	posn->lat = ln_rad_to_deg (atan2 (t, rect->Z));
+}
+
+/*! \fn void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
+* \param gal Galactic coordinates.
+* \param equ Equatorial coordinates.
+* 
+* Transform an object galactic coordinates into equatorial coordinate.
+*/
+/* Pg 94 */
+void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
+{
+	double RAD_27_4, SIN_27_4, COS_27_4;
+
+	double l_123, cos_l_123;
+	double sin_b, cos_b, rad_gal_b;
+	double y;
+
+	RAD_27_4 = ln_deg_to_rad (27.4);
+	SIN_27_4 = sin (RAD_27_4);
+	COS_27_4 = cos (RAD_27_4);
+
+	l_123 = ln_deg_to_rad (gal->l - 123);
+	cos_l_123 = cos (l_123);
+
+	rad_gal_b = ln_deg_to_rad (gal->b);
+
+	sin_b = sin (rad_gal_b);
+	cos_b = cos (rad_gal_b);
+
+	y = atan2 (sin (l_123), cos_l_123 * SIN_27_4 - (sin_b / cos_b) * COS_27_4);
+	equ->ra = ln_range_degrees (ln_rad_to_deg (y) + 12.25);
+	equ->dec = ln_rad_to_deg (asin (sin_b * SIN_27_4 + cos_b * COS_27_4 * cos_l_123));
+}
+
+/*! \fn ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
+* \param equ Equatorial coordinates.
+* \param gal Galactic coordinates.
+* 
+* Transform an object equatorial coordinate into galactic coordinates.
+*/
+/* Pg 94 */
+void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
+{
+	double RAD_27_4, SIN_27_4, COS_27_4;
+
+	double ra_192_25, cos_ra_192_25;
+	double rad_equ_dec;
+	double cos_dec, sin_dec;
+	double x;
+
+	RAD_27_4 = ln_deg_to_rad (27.4);
+	SIN_27_4 = sin (RAD_27_4);
+	COS_27_4 = cos (RAD_27_4);
+
+	ra_192_25 = ln_deg_to_rad (192.25 - equ->ra);
+	cos_ra_192_25 = cos (ra_192_25);
+
+	rad_equ_dec = ln_deg_to_rad (equ->dec);
+
+	sin_dec = sin (rad_equ_dec);
+	cos_dec = cos (rad_equ_dec);
+
+	x = atan2 (sin (ra_192_25), cos_ra_192_25 * SIN_27_4 - (sin_dec / cos_dec) * COS_27_4);
+	gal->l = ln_range_degrees (303 - ln_rad_to_deg (x));
+	gal->b = ln_rad_to_deg (asin (sin_dec * SIN_27_4 + cos_dec * COS_27_4 * cos_ra_192_25));
 }
