@@ -1,5 +1,12 @@
 ChangeLog
 
+20031308
+	-src/nutation.c
+	Removed build warnings.
+	Uses JD + delta T Chap 22, equ 22.1
+	
+	Liam Girdwood, Pablo Martikian
+
 20031208
 	-src/aberration.*
 	-src/misc.c

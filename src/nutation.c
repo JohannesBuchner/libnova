@@ -174,7 +174,7 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 	
 	double D,M,MM,F,O,T,T2,T3,JDE;
 	double coeff_sine, coeff_cos;
-	int i,temp;
+	int i;
 
 	/* should we bother recalculating nutation */
 	if (fabs(JD - c_JD) > LN_NUTATION_EPOCH_THRESHOLD)
@@ -186,10 +186,10 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 		c_ecliptic = 23.0 + 26.0 / 60.0 + 27.407 / 3600.0;
 		
 		/* get julian ephemeris day */
-		/* JDE = get_jde (JD); Not Sure */
+		JDE = get_jde (JD);
 		
 		/* calc T */
-		T = (JD - 2451545.0)/36525;
+		T = (JDE - 2451545.0)/36525;
 		T2 = T * T;
 		T3 = T2 * T;
 
@@ -257,4 +257,3 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 	nutation->obliquity = c_obliquity;
 	nutation->ecliptic = c_ecliptic;
 }
-
