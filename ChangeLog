@@ -6,6 +6,12 @@ ChangeLog
 	Removed unintentional debug from CVS
 	
 	Liam Girdwood
+	
+	-src/libnova.c
+	
+	Added #define VERSION for building on Windows
+	
+	Pablo Martikian
 
 20032508
 	-src/*.c *.h

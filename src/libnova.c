@@ -19,8 +19,12 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h" 
 #include <string.h>
 #include <math.h>
-#include <config.h>
- 
+
+#ifndef WIN32
+#include "config.h"
+#else
+#define VERSION "0.9.0"
+#endif
 
 static char ln_version[16];
 
