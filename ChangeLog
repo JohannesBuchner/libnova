@@ -1,5 +1,12 @@
 ChangeLog
 
+20032403
+	-src/julian_day.c
+	
+	Fixed local to UT transformations
+	
+	Liam Girdwood
+
 20032003
 	-src/misc.c
 	
