@@ -147,9 +147,9 @@ int transform_test(void)
 	int failed = 0;
 	
 	/* observers position */
-	hobserver.lng.degrees = 77;
-	hobserver.lng.minutes = 03;
-	hobserver.lng.seconds = 56;
+	hobserver.lng.degrees = 282;
+	hobserver.lng.minutes = 56;
+	hobserver.lng.seconds = 4;
 	hobserver.lat.degrees = 38;
 	hobserver.lat.minutes = 55;
 	hobserver.lat.seconds = 17;
@@ -179,7 +179,7 @@ int transform_test(void)
 	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 68.03429264, 0.00000001);
 
 	get_equ_from_hrz (&hrz, &observer, JD, &equ);
-	failed += test_result ("(Transforms) Horiz to Equ RA ", equ.ra, -12.68073248, 0.00000001);
+	failed += test_result ("(Transforms) Horiz to Equ RA ", equ.ra, 347.31926752, 0.00000001);
 	failed += test_result ("(Transforms) Horiz to Equ DEC", equ.dec, -6.71989167, 0.00000001);
 	
 	/* Equ position of Pollux */

@@ -40,6 +40,7 @@ int main (int argc, char * argv[])
 	struct ln_rst_time rst;
 	struct ln_date rise, set, transit;
 	struct ln_lnlat_posn observer;
+	struct ln_hrz_posn hrz;
 	struct ln_ell_orbit orbit;
 	struct ln_rect_posn posn;
 	double JD, M_JD;
@@ -93,6 +94,11 @@ int main (int argc, char * argv[])
 	get_ell_body_equ_coords (JD, &orbit, &equ_posn);
 	printf ("(RA) for Pallas   %f\n", equ_posn.ra);
 	printf ("(Dec) for Pallas   %f\n", equ_posn.dec);
+	
+	/* get Alt, Az */
+	get_hrz_from_equ (&equ_posn, &observer, JD, &hrz);
+	printf ("Az %f\n",hrz.az);
+	printf ("Alt %f\n", hrz.alt);
 	
 	/* orbit length */
 	l = get_ell_orbit_len (&orbit);
