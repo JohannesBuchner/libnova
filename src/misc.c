@@ -1,10 +1,10 @@
-/* $Id: misc.c,v 1.6 2003-08-20 21:16:47 l_girdwood Exp $
+/* $Id: misc.c,v 1.7 2003-08-25 20:42:47 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
+* it under the terms of the GNU Library General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
 * (at your option) any later version.
 *

@@ -1,5 +1,12 @@
 ChangeLog
 
+20032508
+	-src/*.c *.h
+	
+	Corrected GNU licence to use LGPL 
+	
+	Liam Girdwood
+
 20032403
 	-src/julian_day.c
 	

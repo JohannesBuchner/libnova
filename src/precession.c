@@ -1,7 +1,7 @@
 /*
  
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the GNU Library General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
@@ -103,5 +103,3 @@ void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_ln
 {
 
 }
-
-
