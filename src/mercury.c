@@ -22,8 +22,13 @@ Copyright 2000 Liam Girdwood
 */
 
 #include <math.h>
-#include "vsop87.h"
-#include "libnova.h"
+#include <libnova/mercury.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 #define LONG_L0 1583
 #define LONG_L1 931
@@ -47,7 +52,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static const struct vsop mercury_longitude_l0[LONG_L0] = {
+static const struct ln_vsop mercury_longitude_l0[LONG_L0] = {
     {     4.40250710144,  0.00000000000,        0.00000000000}, 
     {     0.40989414977,  1.48302034195,    26087.90314157420}, 
     {     0.05046294200,  4.47785489551,    52175.80628314840}, 
@@ -1635,7 +1640,7 @@ static const struct vsop mercury_longitude_l0[LONG_L0] = {
 
  
    
-static const struct vsop mercury_longitude_l1[LONG_L1] = {
+static const struct ln_vsop mercury_longitude_l1[LONG_L1] = {
     { 26087.90313685529,  0.00000000000,        0.00000000000}, 
     {     0.01131199811,  6.21874197797,    26087.90314157420}, 
     {     0.00292242298,  3.04449355541,    52175.80628314840}, 
@@ -2571,7 +2576,7 @@ static const struct vsop mercury_longitude_l1[LONG_L1] = {
 
 
 
-static const struct vsop mercury_longitude_l2[LONG_L2] = {
+static const struct ln_vsop mercury_longitude_l2[LONG_L2] = {
     {     0.00016395129,  4.67759555504,    26087.90314157420}, 
     {     0.00008123865,  1.40305644134,    52175.80628314840}, 
     {     0.00003208170,  4.49577853102,    78263.70942472259}, 
@@ -3014,7 +3019,7 @@ static const struct vsop mercury_longitude_l2[LONG_L2] = {
 
  
  
-static const struct vsop mercury_longitude_l3[LONG_L3] = {
+static const struct ln_vsop mercury_longitude_l3[LONG_L3] = {
     {     0.00000169496,  3.20221586818,    26087.90314157420}, 
     {     0.00000155725,  6.23814315369,    52175.80628314840}, 
     {     0.00000090555,  2.96712953186,    78263.70942472259}, 
@@ -3181,7 +3186,7 @@ static const struct vsop mercury_longitude_l3[LONG_L3] = {
 
 
 
-static const struct vsop mercury_longitude_l4[LONG_L4] = {
+static const struct ln_vsop mercury_longitude_l4[LONG_L4] = {
     {     0.00000002671,  4.76418299344,    52175.80628314840}, 
     {     0.00000002079,  2.01782765964,    26087.90314157420}, 
     {     0.00000002071,  1.47603650163,    78263.70942472259}, 
@@ -3209,7 +3214,7 @@ static const struct vsop mercury_longitude_l4[LONG_L4] = {
 
 
 
-static const struct vsop mercury_longitude_l5[LONG_L5] = {
+static const struct ln_vsop mercury_longitude_l5[LONG_L5] = {
     {     0.00000000039,  6.22596606829,    78263.70942472259}, 
     {     0.00000000035,  3.08442751462,    52175.80628314840}, 
     {     0.00000000036,  5.58268731752,    26087.90314157420}, 
@@ -3226,7 +3231,7 @@ static const struct vsop mercury_longitude_l5[LONG_L5] = {
 
 
 
-static const struct vsop mercury_latitude_b0[LAT_B0] = {
+static const struct ln_vsop mercury_latitude_b0[LAT_B0] = {
     {     0.11737528961,  1.98357498767,    26087.90314157420}, 
     {     0.02388076996,  5.03738959686,    52175.80628314840}, 
     {     0.01222839532,  3.14159265359,        0.00000000000}, 
@@ -4048,7 +4053,7 @@ static const struct vsop mercury_latitude_b0[LAT_B0] = {
 };
 
   
-static const struct vsop mercury_latitude_b1[LAT_B1] = {
+static const struct ln_vsop mercury_latitude_b1[LAT_B1] = {
     {     0.00274646065,  3.95008450011,    26087.90314157420}, 
     {     0.00099737713,  3.14159265359,        0.00000000000}, 
     {     0.00018772047,  0.05141288887,    78263.70942472259}, 
@@ -4545,7 +4550,7 @@ static const struct vsop mercury_latitude_b1[LAT_B1] = {
 
  
    
-static const struct vsop mercury_latitude_b2[LAT_B2] = {
+static const struct ln_vsop mercury_latitude_b2[LAT_B2] = {
     {     0.00002747165,  5.24567337999,    26087.90314157420}, 
     {     0.00002047257,  0.00000000000,        0.00000000000}, 
     {     0.00000516030,  0.49321133154,    52175.80628314840}, 
@@ -4781,7 +4786,7 @@ static const struct vsop mercury_latitude_b2[LAT_B2] = {
 
  
    
-static const struct vsop mercury_latitude_b3[LAT_B3] = {
+static const struct ln_vsop mercury_latitude_b3[LAT_B3] = {
     {     0.00000064680,  2.16518315874,    26087.90314157420}, 
     {     0.00000030733,  0.00000000000,        0.00000000000}, 
     {     0.00000018929,  5.40870348072,    52175.80628314840}, 
@@ -4825,7 +4830,7 @@ static const struct vsop mercury_latitude_b3[LAT_B3] = {
 
  
    
-static const struct vsop mercury_latitude_b4[LAT_B4] = {
+static const struct ln_vsop mercury_latitude_b4[LAT_B4] = {
     {     0.00000001427,  4.97519726738,    26087.90314157420}, 
     {     0.00000000491,  3.14159265359,        0.00000000000}, 
     {     0.00000000336,  3.19691284098,    52175.80628314840}, 
@@ -4843,7 +4848,7 @@ static const struct vsop mercury_latitude_b4[LAT_B4] = {
 
  
    
-static const struct vsop mercury_latitude_b5[LAT_B5] = {
+static const struct ln_vsop mercury_latitude_b5[LAT_B5] = {
     {     0.00000000009,  1.38311629808,    52175.80628314840}, 
     {     0.00000000008,  5.38548752147,    26087.90314157420}, 
     {     0.00000000006,  4.90804019263,    78263.70942472259}, 
@@ -4858,7 +4863,7 @@ static const struct vsop mercury_latitude_b5[LAT_B5] = {
 
  
    
-static const struct vsop mercury_radius_r0[RADIUS_R0] = {
+static const struct ln_vsop mercury_radius_r0[RADIUS_R0] = {
     {     0.39528271651,  0.00000000000,        0.00000000000}, 
     {     0.07834131818,  6.19233722598,    26087.90314157420}, 
     {     0.00795525558,  2.95989690104,    52175.80628314840}, 
@@ -6072,7 +6077,7 @@ static const struct vsop mercury_radius_r0[RADIUS_R0] = {
 
  
    
-static const struct vsop mercury_radius_r1[RADIUS_R1] = {
+static const struct ln_vsop mercury_radius_r1[RADIUS_R1] = {
     {     0.00217347740,  4.65617158665,    26087.90314157420}, 
     {     0.00044141826,  1.42385544001,    52175.80628314840}, 
     {     0.00010094479,  4.47466326327,    78263.70942472259}, 
@@ -6783,7 +6788,7 @@ static const struct vsop mercury_radius_r1[RADIUS_R1] = {
 
  
    
-static const struct vsop mercury_radius_r2[RADIUS_R2] = {
+static const struct ln_vsop mercury_radius_r2[RADIUS_R2] = {
     {     0.00003117867,  3.08231840294,    26087.90314157420}, 
     {     0.00001245397,  6.15183316810,    52175.80628314840}, 
     {     0.00000424822,  2.92583350003,    78263.70942472259}, 
@@ -7106,7 +7111,7 @@ static const struct vsop mercury_radius_r2[RADIUS_R2] = {
 
  
    
-static const struct vsop mercury_radius_r3[RADIUS_R3] = {
+static const struct ln_vsop mercury_radius_r3[RADIUS_R3] = {
     {     0.00000032676,  1.67971641967,    26087.90314157420}, 
     {     0.00000024166,  4.63403168878,    52175.80628314840}, 
     {     0.00000012133,  1.38983777816,    78263.70942472259}, 
@@ -7221,7 +7226,7 @@ static const struct vsop mercury_radius_r3[RADIUS_R3] = {
 };
 
   
-static const struct vsop mercury_radius_r4[RADIUS_R4] = {
+static const struct ln_vsop mercury_radius_r4[RADIUS_R4] = {
     {     0.00000000394,  0.36736738836,    26087.90314157420}, 
     {     0.00000000387,  3.18568894140,    52175.80628314840}, 
     {     0.00000000270,  6.16979809593,    78263.70942472259}, 
@@ -7242,7 +7247,7 @@ static const struct vsop mercury_radius_r4[RADIUS_R4] = {
 };
 
   
-static const struct vsop mercury_radius_r5[RADIUS_R5] = {
+static const struct ln_vsop mercury_radius_r5[RADIUS_R5] = {
     {     0.00000000006,  3.98812118954,    26087.90314157420}, 
     {     0.00000000006,  1.55172409309,    52175.80628314840}, 
     {     0.00000000005,  4.65488347662,    78263.70942472259}, 
@@ -7255,7 +7260,7 @@ static const struct vsop mercury_radius_r5[RADIUS_R5] = {
     {     0.00000000000,  4.00511196914,   234791.12827416777} 
 };
 
-/*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position 
 *
@@ -7268,9 +7273,7 @@ static const struct vsop mercury_radius_r5[RADIUS_R5] = {
 *
 * The position returned is accurate to within 0.1 arcsecs.
 */ 
-void get_mercury_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position)
+void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_mercury;
 	struct ln_rect_posn g_sol, g_mercury;
@@ -7278,14 +7281,13 @@ void get_mercury_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, &g_sol);
+	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_rect_from_helio (&h_sol, &g_sol);
 	
-	do
-	{
+	do {
 		last = t;
-		get_mercury_helio_coords (JD - t, &h_mercury);
-		get_rect_from_helio (&h_mercury, &g_mercury);
+		ln_get_mercury_helio_coords (JD - t, &h_mercury);
+		ln_get_rect_from_helio (&h_mercury, &g_mercury);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mercury.X;
@@ -7296,20 +7298,19 @@ void get_mercury_equ_coords
 		delta = sqrt (delta);
 		t = delta * 0.0057755183;
 		diff = t - last;
-	}
-	while (diff > 0.0001 || diff < -0.0001);
+	} while (diff > 0.0001 || diff < -0.0001);
 		
 	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = range_degrees(rad_to_deg (ra));
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_range_degrees(ln_rad_to_deg (ra));
+	position->dec = ln_rad_to_deg (dec);
 }
 	
 
-/*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
+/*! \fn void ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store heliocentric position
 *
@@ -7319,7 +7320,7 @@ void get_mercury_equ_coords
 */  
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
+void ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4, L5;
@@ -7327,8 +7328,7 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 	double R0, R1, R2, R3, R4, R5;
 	
 	/* check cache first */
-	if (JD == cJD)
-	{
+	if (JD == cJD) {
 		/* cache hit */
 		position->L = cL;
 		position->B = cB;
@@ -7344,40 +7344,40 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 	t5 = t4 * t;
 	
 	/* calc L series */
-	L0 = calc_series (mercury_longitude_l0, LONG_L0, t);
-	L1 = calc_series (mercury_longitude_l1, LONG_L1, t);
-	L2 = calc_series (mercury_longitude_l2, LONG_L2, t);
-	L3 = calc_series (mercury_longitude_l3, LONG_L3, t);
-	L4 = calc_series (mercury_longitude_l4, LONG_L4, t);
-	L5 = calc_series (mercury_longitude_l5, LONG_L5, t);
+	L0 = ln_calc_series (mercury_longitude_l0, LONG_L0, t);
+	L1 = ln_calc_series (mercury_longitude_l1, LONG_L1, t);
+	L2 = ln_calc_series (mercury_longitude_l2, LONG_L2, t);
+	L3 = ln_calc_series (mercury_longitude_l3, LONG_L3, t);
+	L4 = ln_calc_series (mercury_longitude_l4, LONG_L4, t);
+	L5 = ln_calc_series (mercury_longitude_l5, LONG_L5, t);
 	position->L = (L0 + L1 * t + L2 * t2 + L3 * t3 + L4 * t4 + L5 * t5);
 
 	/* calc B series */
-	B0 = calc_series (mercury_latitude_b0, LAT_B0, t);
-	B1 = calc_series (mercury_latitude_b1, LAT_B1, t);
-	B2 = calc_series (mercury_latitude_b2, LAT_B2, t);
-	B3 = calc_series (mercury_latitude_b3, LAT_B3, t);
-	B4 = calc_series (mercury_latitude_b4, LAT_B4, t);
-	B5 = calc_series (mercury_latitude_b5, LAT_B5, t);
+	B0 = ln_calc_series (mercury_latitude_b0, LAT_B0, t);
+	B1 = ln_calc_series (mercury_latitude_b1, LAT_B1, t);
+	B2 = ln_calc_series (mercury_latitude_b2, LAT_B2, t);
+	B3 = ln_calc_series (mercury_latitude_b3, LAT_B3, t);
+	B4 = ln_calc_series (mercury_latitude_b4, LAT_B4, t);
+	B5 = ln_calc_series (mercury_latitude_b5, LAT_B5, t);
 	position->B = (B0 + B1 * t + B2 * t2 + B3 * t3 + B4 * t4 + B5 * t5);
 
 
 	/* calc R series */
-	R0 = calc_series (mercury_radius_r0, RADIUS_R0, t);
-	R1 = calc_series (mercury_radius_r1, RADIUS_R1, t);
-	R2 = calc_series (mercury_radius_r2, RADIUS_R2, t);
-	R3 = calc_series (mercury_radius_r3, RADIUS_R3, t);
-	R4 = calc_series (mercury_radius_r4, RADIUS_R4, t);
-	R5 = calc_series (mercury_radius_r5, RADIUS_R5, t);
+	R0 = ln_calc_series (mercury_radius_r0, RADIUS_R0, t);
+	R1 = ln_calc_series (mercury_radius_r1, RADIUS_R1, t);
+	R2 = ln_calc_series (mercury_radius_r2, RADIUS_R2, t);
+	R3 = ln_calc_series (mercury_radius_r3, RADIUS_R3, t);
+	R4 = ln_calc_series (mercury_radius_r4, RADIUS_R4, t);
+	R5 = ln_calc_series (mercury_radius_r5, RADIUS_R5, t);
 	position->R = (R0 + R1 * t + R2 * t2 + R3 * t3 + R4 * t4 + R5 * t5);
 	
 	/* change to degrees in correct quadrant */
-	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
-	position->L = range_degrees(position->L);	
+	position->L = ln_rad_to_deg(position->L);
+	position->B = ln_rad_to_deg(position->B);
+	position->L = ln_range_degrees(position->L);	
 	
 	/* change to fk5 reference frame */
-	vsop87_to_fk5 (position, JD);
+	ln_vsop87_to_fk5 (position, JD);
 	
 	/* save cache */
 	cJD = JD;
@@ -7387,7 +7387,7 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 
-/*! \fn double get_mercury_earth_dist (double JD);
+/*! \fn double ln_get_mercury_earth_dist (double JD);
 * \brief Calculate the distance between Mercury and the Earth in AU
 * \param JD Julian day
 * \return Distance in AU
@@ -7395,19 +7395,19 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Earth and Mercury for
 * the given julian day.
 */
-double get_mercury_earth_dist (double JD)
+double ln_get_mercury_earth_dist (double JD)
 {
 	struct ln_helio_posn  h_mercury, h_earth;
 	struct ln_rect_posn g_mercury, g_earth;
-	double x, y, z, au;
+	double x, y, z;
 	
 	/* get heliocentric positions */
-	get_mercury_helio_coords (JD, &h_mercury);
-	get_earth_helio_coords (JD, &h_earth);
+	ln_get_mercury_helio_coords (JD, &h_mercury);
+	ln_get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_mercury, &g_mercury);
-	get_rect_from_helio (&h_earth, &g_earth);
+	ln_get_rect_from_helio (&h_mercury, &g_mercury);
+	ln_get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_mercury.X - g_earth.X;
@@ -7417,12 +7417,10 @@ double get_mercury_earth_dist (double JD)
 	y = y * y;
 	z = z * z;
 
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return sqrt (x + y + z);
 }
 	
-/*! \fn double get_mercury_sun_dist (double JD);
+/*! \fn double ln_get_mercury_sun_dist (double JD);
 * \brief Calculate the distance between Mercury and the Sun in AU
 * \param JD Julian day
 * \return Distance in AU
@@ -7430,17 +7428,17 @@ double get_mercury_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Mercury for
 * the given julian day.
 */ 
-double get_mercury_sun_dist (double JD)
+double ln_get_mercury_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_mercury;
 
 	/* get heliocentric position */
-	get_mercury_helio_coords (JD, &h_mercury);
+	ln_get_mercury_helio_coords (JD, &h_mercury);
 
-	return (h_mercury.R);
+	return h_mercury.R;
 }
 	
-/*! \fn double get_mercury_magnitude (double JD);
+/*! \fn double ln_get_mercury_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mercury
 * \param JD Julian day
 * \return Visisble magnitude of mercury
@@ -7448,25 +7446,23 @@ double get_mercury_sun_dist (double JD)
 * Calculate the visisble magnitude of Mercury for the given
 * julian day.
 */ 
-double get_mercury_magnitude (double JD)
+double ln_get_mercury_magnitude (double JD)
 {
-	double mag, delta, r, i, i2, i3;
+	double delta, r, i, i2, i3;
 	
 	/* get distances */
-	r = get_venus_sun_dist (JD);
-	delta = get_venus_earth_dist (JD);
+	r = ln_get_mercury_sun_dist (JD);
+	delta = ln_get_mercury_earth_dist (JD);
 	
 	/* get phase */
-	i = get_venus_phase (JD);
+	i = ln_get_mercury_phase (JD);
 	i2 = i * i;
 	i3 = i2 * i;
 	
-	mag = -0.42 + 5 * log10 (r * delta) + 0.0380 * i - 0.000273 * i2 + 0.000002 * i3;
-	
-	return (mag);
+	return -0.42 + 5 * log10 (r * delta) + 0.0380 * i - 0.000273 * i2 + 0.000002 * i3;
 }
 
-/*! \fn double get_mercury_disk (double JD);
+/*! \fn double ln_get_mercury_disk (double JD);
 * \brief Calculate the illuminated fraction of Mercury's disk
 * \param JD Julian day
 * \return Illuminated fraction of Mercury's disk
@@ -7475,22 +7471,20 @@ double get_mercury_magnitude (double JD)
 * day.
 */ 
 /* Chapter 41 */
-double get_mercury_disk (double JD)
+double ln_get_mercury_disk (double JD)
 {
-	double k,r,delta,R;	
+	double r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_mercury_sun_dist (JD);
-	delta = get_mercury_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_mercury_sun_dist (JD);
+	delta = ln_get_mercury_earth_dist (JD);
 	
 	/* calc fraction angle */
-	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
-	
-	return (k);
+	return (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
 }
   
-/*! \fn double get_mercury_phase (double JD);
+/*! \fn double ln_get_mercury_phase (double JD);
 * \brief Calculate the phase angle of Mercury (Sun - Mercury - Earth)
 * \param JD Julian day
 * \return Phase angle of Mercury (degrees)
@@ -7499,25 +7493,23 @@ double get_mercury_disk (double JD)
 * Mercury - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
-double get_mercury_phase (double JD)
+double ln_get_mercury_phase (double JD)
 {
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_mercury_sun_dist (JD);
-	delta = get_mercury_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_mercury_sun_dist (JD);
+	delta = ln_get_mercury_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
 	i = acos (i);
-	i = rad_to_deg (i);
-	
-	return (i);
+	return ln_rad_to_deg (i);
 }
 
 
-/*! \fn double get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -7529,40 +7521,38 @@ double get_mercury_phase (double JD)
 * Note: this functions returns 1 if Mercury is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_mercury_equ_coords, STAR_STANDART_HORIZONT, rst); 
+	return ln_get_body_rst_horizont (JD, observer, ln_get_mercury_equ_coords, LN_STAR_STANDART_HORIZONT, rst); 
 }
 
-/*! \fn double get_mercury_sdiam (double JD)
+/*! \fn double ln_get_mercury_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
 * Calculate the semidiameter of Mercury in arc seconds for the 
 * given julian day.
 */
-double get_mercury_sdiam (double JD)
+double ln_get_mercury_sdiam (double JD)
 {
-	double S, So = 3.36; /* at 1 AU */
+	double So = 3.36; /* at 1 AU */
 	double dist;
 	
-	dist = get_mercury_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_mercury_earth_dist (JD);
+	return So / dist;
 }
 	
-/*! \fn void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
+/*! \fn void ln_get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
 * \param position ointer to return position
 *
 * Calculate Mercurys rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
 */
-void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
+void ln_get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn mercury;
 		
-	get_mercury_helio_coords (JD, &mercury);
-	get_rect_from_helio (&mercury, position);
+	ln_get_mercury_helio_coords (JD, &mercury);
+	ln_get_rect_from_helio (&mercury, position);
 }

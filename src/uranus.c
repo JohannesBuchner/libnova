@@ -22,10 +22,13 @@ Copyright 2000 Liam Girdwood
 */
 
 #include <math.h>
-#include "vsop87.h"
-#include "libnova.h"
-
-
+#include <libnova/uranus.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 #define LONG_L0 1441
 #define LONG_L1 655
@@ -45,7 +48,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static const struct vsop uranus_longitude_l0[LONG_L0] = {
+static const struct ln_vsop uranus_longitude_l0[LONG_L0] = {
     {     5.48129294297,  0.00000000000,        0.00000000000}, 
     {     0.09260408234,  0.89106421507,       74.78159856730}, 
     {     0.01504247898,  3.62719260920,        1.48447270830}, 
@@ -1490,7 +1493,7 @@ static const struct vsop uranus_longitude_l0[LONG_L0] = {
 };
 
 
-static const struct vsop uranus_longitude_l1[LONG_L1] = {
+static const struct ln_vsop uranus_longitude_l1[LONG_L1] = {
     {    74.78159860910,  0.00000000000,        0.00000000000}, 
     {     0.00154332863,  5.24158770553,       74.78159856730}, 
     {     0.00024456474,  1.71260334156,        1.48447270830}, 
@@ -2149,7 +2152,7 @@ static const struct vsop uranus_longitude_l1[LONG_L1] = {
 };
 
 
-static const struct vsop uranus_longitude_l2[LONG_L2] = {
+static const struct ln_vsop uranus_longitude_l2[LONG_L2] = {
     {     0.00002349469,  2.26708640433,       74.78159856730}, 
     {     0.00000848806,  3.14159265359,        0.00000000000}, 
     {     0.00000768983,  4.52562378749,       11.04570026390}, 
@@ -2412,7 +2415,7 @@ static const struct vsop uranus_longitude_l2[LONG_L2] = {
 };
 
 
-static const struct vsop uranus_longitude_l3[LONG_L3] = {
+static const struct ln_vsop uranus_longitude_l3[LONG_L3] = {
     {     0.00000122192,  0.02112102225,       74.78159856730}, 
     {     0.00000068195,  4.12138633187,        3.93215326310}, 
     {     0.00000052729,  2.38808499397,       11.04570026390}, 
@@ -2485,7 +2488,7 @@ static const struct vsop uranus_longitude_l3[LONG_L3] = {
 };
 
 
-static const struct vsop uranus_longitude_l4[LONG_L4] = {
+static const struct ln_vsop uranus_longitude_l4[LONG_L4] = {
     {     0.00000005536,  4.57721551627,       74.78159856730}, 
     {     0.00000003183,  0.34467460171,       11.04570026390}, 
     {     0.00000001207,  3.40871377105,       56.62235130260}, 
@@ -2497,7 +2500,7 @@ static const struct vsop uranus_longitude_l4[LONG_L4] = {
 };
 
 
-static const struct vsop uranus_latitude_b0[LAT_B0] = {
+static const struct ln_vsop uranus_latitude_b0[LAT_B0] = {
     {     0.01346277648,  2.61877810547,       74.78159856730}, 
     {     0.00062341400,  5.08111189648,      149.56319713460}, 
     {     0.00061601196,  3.14159265359,        0.00000000000}, 
@@ -2812,7 +2815,7 @@ static const struct vsop uranus_latitude_b0[LAT_B0] = {
 };
 
 
-static const struct vsop uranus_latitude_b1[LAT_B1] = {
+static const struct ln_vsop uranus_latitude_b1[LAT_B1] = {
     {     0.00034101978,  0.01321929936,       74.78159856730}, 
     {     0.00002480115,  2.73961370453,      149.56319713460}, 
     {     0.00001719377,  0.00000000000,        0.00000000000}, 
@@ -2946,7 +2949,7 @@ static const struct vsop uranus_latitude_b1[LAT_B1] = {
 };
 
 
-static const struct vsop uranus_latitude_b2[LAT_B2] = {
+static const struct ln_vsop uranus_latitude_b2[LAT_B2] = {
     {     0.00000764663,  1.74870957857,       74.78159856730}, 
     {     0.00000055734,  3.14159265359,        0.00000000000}, 
     {     0.00000025641,  5.67301557131,      149.56319713460}, 
@@ -2989,7 +2992,7 @@ static const struct vsop uranus_latitude_b2[LAT_B2] = {
 };
 
 
-static const struct vsop uranus_latitude_b3[LAT_B3] = {
+static const struct ln_vsop uranus_latitude_b3[LAT_B3] = {
     {     0.00000021201,  3.16540759295,       74.78159856730}, 
     {     0.00000001182,  4.44441014271,      149.56319713460}, 
     {     0.00000001184,  3.14159265359,        0.00000000000}, 
@@ -3008,7 +3011,7 @@ static const struct vsop uranus_latitude_b3[LAT_B3] = {
 };
 
 
-static const struct vsop uranus_radius_r0[RADIUS_R0] = {
+static const struct ln_vsop uranus_radius_r0[RADIUS_R0] = {
     {    19.21264847206,  0.00000000000,        0.00000000000}, 
     {     0.88784984413,  5.60377527014,       74.78159856730}, 
     {     0.03440836062,  0.32836099706,       73.29712585900}, 
@@ -4399,7 +4402,7 @@ static const struct vsop uranus_radius_r0[RADIUS_R0] = {
 };
 
 
-static const struct vsop uranus_radius_r1[RADIUS_R1] = {
+static const struct ln_vsop uranus_radius_r1[RADIUS_R1] = {
     {     0.01479896629,  3.67205697578,       74.78159856730}, 
     {     0.00071212143,  6.22600975161,       63.73589830340}, 
     {     0.00068627160,  6.13411179902,      149.56319713460}, 
@@ -5028,7 +5031,7 @@ static const struct vsop uranus_radius_r1[RADIUS_R1] = {
 };
 
 
-static const struct vsop uranus_radius_r2[RADIUS_R2] = {
+static const struct ln_vsop uranus_radius_r2[RADIUS_R2] = {
     {     0.00022439899,  0.69953310903,       74.78159856730}, 
     {     0.00004726838,  1.69896897296,       63.73589830340}, 
     {     0.00001681383,  4.64842242588,       70.84944530420}, 
@@ -5281,7 +5284,7 @@ static const struct vsop uranus_radius_r2[RADIUS_R2] = {
 };
 
 
-static const struct vsop uranus_radius_r3[RADIUS_R3] = {
+static const struct ln_vsop uranus_radius_r3[RADIUS_R3] = {
     {     0.00001164663,  4.73440180792,       74.78159856730}, 
     {     0.00000212363,  3.34268349684,       63.73589830340}, 
     {     0.00000196315,  2.98101237100,       70.84944530420}, 
@@ -5354,7 +5357,7 @@ static const struct vsop uranus_radius_r3[RADIUS_R3] = {
 };
 
 
-static const struct vsop uranus_radius_r4[RADIUS_R4] = {
+static const struct ln_vsop uranus_radius_r4[RADIUS_R4] = {
     {     0.00000053224,  3.00468894529,       74.78159856730}, 
     {     0.00000009887,  1.91399083603,       56.62235130260}, 
     {     0.00000007008,  5.08677527404,       11.04570026390}, 
@@ -5369,7 +5372,7 @@ static const struct vsop uranus_radius_r4[RADIUS_R4] = {
     {     0.00000002837,  3.14159265359,        0.00000000000}, 
 };
 
-/*! \fn void get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position pointer to store position
 *
@@ -5382,9 +5385,7 @@ static const struct vsop uranus_radius_r4[RADIUS_R4] = {
 *
 * The position returned is accurate to within 0.1 arcsecs.
 */ 
-void get_uranus_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position)
+void ln_get_uranus_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_uranus;
 	struct ln_rect_posn g_sol, g_uranus;
@@ -5392,14 +5393,13 @@ void get_uranus_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol,  &g_sol);
+	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_rect_from_helio (&h_sol,  &g_sol);
 	
-	do
-	{
+	do {
 		last = t;
-		get_uranus_helio_coords (JD - t, &h_uranus);
-		get_rect_from_helio (&h_uranus, &g_uranus);
+		ln_get_uranus_helio_coords (JD - t, &h_uranus);
+		ln_get_rect_from_helio (&h_uranus, &g_uranus);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_uranus.X;
@@ -5410,20 +5410,19 @@ void get_uranus_equ_coords
 		delta = sqrt (delta);
 		t = delta * 0.0057755183;
 		diff = t - last;
-	}
-	while (diff > 0.0001 || diff < -0.0001);
+	} while (diff > 0.0001 || diff < -0.0001);
 		
 	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = range_degrees(rad_to_deg (ra));
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_range_degrees(ln_rad_to_deg (ra));
+	position->dec = ln_rad_to_deg (dec);
 }
 	
 
-/*! \fn void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
+/*! \fn void ln_get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store heliocentric position
 *
@@ -5433,7 +5432,7 @@ void get_uranus_equ_coords
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
+void ln_get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4;
@@ -5441,8 +5440,7 @@ void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 	double R0, R1, R2, R3, R4;
            	
 	/* check cache first */
-	if (JD == cJD)
-	{
+	if (JD == cJD) {
 		/* cache hit */
 		position->L = cL;
 		position->B = cB;
@@ -5458,36 +5456,36 @@ void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 	t5 = t4 * t;
 	
 	/* calc L series */
-	L0 = calc_series (uranus_longitude_l0, LONG_L0, t);
-	L1 = calc_series (uranus_longitude_l1, LONG_L1, t);
-	L2 = calc_series (uranus_longitude_l2, LONG_L2, t);
-	L3 = calc_series (uranus_longitude_l3, LONG_L3, t);
-	L4 = calc_series (uranus_longitude_l4, LONG_L4, t);
+	L0 = ln_calc_series (uranus_longitude_l0, LONG_L0, t);
+	L1 = ln_calc_series (uranus_longitude_l1, LONG_L1, t);
+	L2 = ln_calc_series (uranus_longitude_l2, LONG_L2, t);
+	L3 = ln_calc_series (uranus_longitude_l3, LONG_L3, t);
+	L4 = ln_calc_series (uranus_longitude_l4, LONG_L4, t);
 	position->L = (L0 + L1 * t + L2 * t2 + L3 * t3 + L4 * t4);
 
 	/* calc B series */
-	B0 = calc_series (uranus_latitude_b0, LAT_B0, t);
-	B1 = calc_series (uranus_latitude_b1, LAT_B1, t);
-	B2 = calc_series (uranus_latitude_b2, LAT_B2, t);
-	B3 = calc_series (uranus_latitude_b3, LAT_B3, t);
+	B0 = ln_calc_series (uranus_latitude_b0, LAT_B0, t);
+	B1 = ln_calc_series (uranus_latitude_b1, LAT_B1, t);
+	B2 = ln_calc_series (uranus_latitude_b2, LAT_B2, t);
+	B3 = ln_calc_series (uranus_latitude_b3, LAT_B3, t);
 	position->B = (B0 + B1 * t + B2 * t2 + B3 * t3);
 
 
 	/* calc R series */
-	R0 = calc_series (uranus_radius_r0, RADIUS_R0, t);
-	R1 = calc_series (uranus_radius_r1, RADIUS_R1, t);
-	R2 = calc_series (uranus_radius_r2, RADIUS_R2, t);
-	R3 = calc_series (uranus_radius_r3, RADIUS_R3, t);
-	R4 = calc_series (uranus_radius_r4, RADIUS_R4, t);
+	R0 = ln_calc_series (uranus_radius_r0, RADIUS_R0, t);
+	R1 = ln_calc_series (uranus_radius_r1, RADIUS_R1, t);
+	R2 = ln_calc_series (uranus_radius_r2, RADIUS_R2, t);
+	R3 = ln_calc_series (uranus_radius_r3, RADIUS_R3, t);
+	R4 = ln_calc_series (uranus_radius_r4, RADIUS_R4, t);
 	position->R = (R0 + R1 * t + R2 * t2 + R3 * t3 + R4 * t4);
 	
 	/* change to degrees in correct quadrant */
-	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
-	position->L = range_degrees(position->L);
+	position->L = ln_rad_to_deg(position->L);
+	position->B = ln_rad_to_deg(position->B);
+	position->L = ln_range_degrees(position->L);
 	
 	/* change to fk5 reference frame */
-	vsop87_to_fk5 (position, JD);
+	ln_vsop87_to_fk5 (position, JD);
 	
 	/* save cache */
 	cJD = JD;
@@ -5497,7 +5495,7 @@ void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 
-/*! \fn double get_uranus_earth_dist (double JD);
+/*! \fn double ln_get_uranus_earth_dist (double JD);
 * \param JD Julian day
 * \brief Calculate the distance between Uranus and the Earth in AU
 * \return Distance in AU
@@ -5505,19 +5503,19 @@ void get_uranus_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Earth and Uranus for 
 * the given julian day.
 */
-double get_uranus_earth_dist (double JD)
+double ln_get_uranus_earth_dist (double JD)
 {
 	struct ln_helio_posn  h_uranus, h_earth;
 	struct ln_rect_posn g_uranus, g_earth;
-	double x, y, z, au;
+	double x, y, z;
 	
 	/* get heliocentric positions */
-	get_uranus_helio_coords (JD, &h_uranus);
-	get_earth_helio_coords (JD, &h_earth);
+	ln_get_uranus_helio_coords (JD, &h_uranus);
+	ln_get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_uranus, &g_uranus);
-	get_rect_from_helio (&h_earth, &g_earth);
+	ln_get_rect_from_helio (&h_uranus, &g_uranus);
+	ln_get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_uranus.X - g_earth.X;
@@ -5527,12 +5525,10 @@ double get_uranus_earth_dist (double JD)
 	y = y * y;
 	z = z * z;
 
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return sqrt (x + y + z);
 }
 	
-/*! \fn double get_uranus_sun_dist (double JD);
+/*! \fn double ln_get_uranus_sun_dist (double JD);
 * \param JD Julian day
 * \brief Calculate the distance between Uranus and the Sun in AU
 * \return Distance in AU
@@ -5540,17 +5536,16 @@ double get_uranus_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Uranus for
 * the given julian day.
 */ 
-double get_uranus_sun_dist (double JD)
+double ln_get_uranus_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_uranus;
 		
 	/* get heliocentric position */
-	get_uranus_helio_coords (JD, &h_uranus);
-	
-	return (h_uranus.R);
+	ln_get_uranus_helio_coords (JD, &h_uranus);
+	return h_uranus.R;
 }
 	
-/*! \fn double get_uranus_magnitude (double JD);
+/*! \fn double ln_get_uranus_magnitude (double JD);
 * \param JD Julian day
 * \brief Calculate the visible magnitude of Uranus
 * \return Visible magnitude of Uranus
@@ -5558,20 +5553,18 @@ double get_uranus_sun_dist (double JD)
 * Calculate the visible magnitude of Uranus for the given 
 * julian day.
 */ 
-double get_uranus_magnitude (double JD)
+double ln_get_uranus_magnitude (double JD)
 {
-	double mag, delta, r;
+	double delta, r;
 	
 	/* get distances */
-	r = get_uranus_sun_dist (JD);
-	delta = get_uranus_earth_dist (JD);
+	r = ln_get_uranus_sun_dist (JD);
+	delta = ln_get_uranus_earth_dist (JD);
 
-	mag = -7.19 + 5 * log10 (r * delta);
-	
-	return (mag);
+	return -7.19 + 5 * log10 (r * delta);
 }
 
-/*! \fn double get_uranus_disk (double JD);
+/*! \fn double ln_get_uranus_disk (double JD);
 * \param JD Julian day
 * \brief Calculate the illuminated fraction of Uranus disk
 * \return Illuminated fraction of Uranus disk
@@ -5580,22 +5573,20 @@ double get_uranus_magnitude (double JD)
 * day.
 */ 
 /* Chapter 41 */
-double get_uranus_disk (double JD)
+double ln_get_uranus_disk (double JD)
 {
-	double k,r,delta,R;	
+	double r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_uranus_sun_dist (JD);
-	delta = get_uranus_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_uranus_sun_dist (JD);
+	delta = ln_get_uranus_earth_dist (JD);
 	
 	/* calc fraction angle */
-	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
-	
-	return (k);
+	return (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
 }
 
-/*! \fn double get_uranus_phase (double JD);
+/*! \fn double ln_get_uranus_phase (double JD);
 * \param JD Julian day
 * \brief Calculate the phase angle of Uranus (Sun - Uranus - Earth)
 * \return Phase angle of Uranus (degrees)
@@ -5604,24 +5595,22 @@ double get_uranus_disk (double JD)
 * Uranus - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
-double get_uranus_phase (double JD)
+double ln_get_uranus_phase (double JD)
 {
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_uranus_sun_dist (JD);
-	delta = get_uranus_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_uranus_sun_dist (JD);
+	delta = ln_get_uranus_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
 	i = acos (i);
-	i = rad_to_deg (i);
-	
-	return (i);
+	return ln_rad_to_deg (i);
 }
 
-/*! \fn double get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -5633,41 +5622,39 @@ double get_uranus_phase (double JD)
 * Note: this functions returns 1 if Uranus is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_uranus_equ_coords, STAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_uranus_equ_coords, LN_STAR_STANDART_HORIZONT, rst);
 }
 
 
-/*! \fn double get_uranus_sdiam (double JD)
+/*! \fn double ln_get_uranus_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
 * Calculate the semidiameter of Uranus in arc seconds for the 
 * given julian day.
 */
-double get_uranus_sdiam (double JD)
+double ln_get_uranus_sdiam (double JD)
 {
-	double S, So = 35.02; /* at 1 AU */
+	double So = 35.02; /* at 1 AU */
 	double dist;
 	
-	dist = get_uranus_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_uranus_earth_dist (JD);
+	return So / dist;
 }
 	
-/*! \fn void get_uranus_rect_helio (double JD, struct ln_rect_posn * position)
+/*! \fn void ln_get_uranus_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
 * \param position ointer to return position
 *
 * Calculate Uranus rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
 */
-void get_uranus_rect_helio (double JD, struct ln_rect_posn * position)
+void ln_get_uranus_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn uranus;
 		
-	get_uranus_helio_coords (JD, &uranus);
-	get_rect_from_helio (&uranus, position);
+	ln_get_uranus_helio_coords (JD, &uranus);
+	ln_get_rect_from_helio (&uranus, position);
 }

@@ -16,11 +16,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 
 */
-#include "transform.h"
-#include "libnova.h"
-#include <math.h>
 
-/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn * position); 
+#include <math.h>
+#include <libnova/transform.h>
+#include <libnova/utility.h>
+#include <libnova/sidereal_time.h>
+#include <libnova/nutation.h>
+
+/*! \fn void ln_get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn * position); 
 * \param object Object heliocentric coordinates
 * \param position Pointer to store new position
 *
@@ -29,7 +32,7 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 */
 /* Equ 37.1 Pg 264
 */
-void get_rect_from_helio 
+void ln_get_rect_from_helio 
 	(struct ln_helio_posn *object,  
 	struct ln_rect_posn * position)
 {
@@ -41,10 +44,10 @@ void get_rect_from_helio
 	cos_e = 0.917482062;
 
 	/* calc common values */
-	cos_B = cos(deg_to_rad(object->B));
-	cos_L = cos(deg_to_rad(object->L));
-	sin_B = sin(deg_to_rad(object->B));
-	sin_L = sin(deg_to_rad(object->L));
+	cos_B = cos(ln_deg_to_rad(object->B));
+	cos_L = cos(ln_deg_to_rad(object->L));
+	sin_B = sin(ln_deg_to_rad(object->B));
+	sin_L = sin(ln_deg_to_rad(object->L));
 	
 	/* equ 37.1 */
 	position->X = object->R * cos_L * cos_B;
@@ -52,7 +55,7 @@ void get_rect_from_helio
 	position->Z = object->R * (sin_L * cos_B * sin_e + sin_B * cos_e);
 }
 
-/*! \fn void get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
+/*! \fn void ln_get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -70,7 +73,7 @@ void get_rect_from_helio
 * Transfrom equatorial coordinates to galactic coordinates.
 */
 
-void get_hrz_from_equ 
+void ln_get_hrz_from_equ 
 	(struct ln_equ_posn * object, 
 	struct ln_lnlat_posn * observer, 
 	double JD, 
@@ -79,12 +82,12 @@ void get_hrz_from_equ
 	double sidereal;
 
 	/* get mean sidereal time in hours*/
-	sidereal = get_mean_sidereal_time (JD);
-	get_hrz_from_equ_sidereal_time (object, observer, sidereal, position);
+	sidereal = ln_get_mean_sidereal_time (JD);
+	ln_get_hrz_from_equ_sidereal_time (object, observer, sidereal, position);
 }
 
 
-void get_hrz_from_equ_sidereal_time
+void ln_get_hrz_from_equ_sidereal_time
 	(struct ln_equ_posn * object, 
 	struct ln_lnlat_posn * observer, 
 	double sidereal, 
@@ -96,20 +99,20 @@ void get_hrz_from_equ_sidereal_time
 	sidereal *= 2.0 * M_PI / 24.0;
 
 	/* calculate hour angle of object at observers position */
-	ra = deg_to_rad (object->ra);
-	H = sidereal + deg_to_rad (observer->lng) - ra;
+	ra = ln_deg_to_rad (object->ra);
+	H = sidereal + ln_deg_to_rad (observer->lng) - ra;
 
 	/* hence formula 12.5 and 12.6 give */
 	/* convert to radians - hour angle, observers latitude, object declination */
-	latitude = deg_to_rad (observer->lat);
-	declination = deg_to_rad (object->dec);
+	latitude = ln_deg_to_rad (observer->lat);
+	declination = ln_deg_to_rad (object->dec);
 
 	/* formula 12.6 *; missuse of A (you have been warned) */
 	A = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
 	h = asin (A);
 
 	/* covert back to degrees */
-	position->alt = rad_to_deg (h);   
+	position->alt = ln_rad_to_deg (h);   
 
 	/* zenith distance, Telescope Control 6.8a */
 	Z = acos (A);
@@ -142,10 +145,10 @@ void get_hrz_from_equ_sidereal_time
 	A = (A < 0) ? 2 * M_PI + A : A;
 
 	/* covert back to degrees */
-	position->az = range_degrees(rad_to_deg (A));
+	position->az = ln_range_degrees(ln_rad_to_deg (A));
 }
 
-/*! \fn void get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -154,7 +157,7 @@ void get_hrz_from_equ_sidereal_time
 * Transform an objects horizontal coordinates into equatorial coordinates
 * for the given julian day and observers position.
 */
-void get_equ_from_hrz 
+void ln_get_equ_from_hrz 
 	(struct ln_hrz_posn * object, 
 	struct ln_lnlat_posn * observer, 
 	double JD,
@@ -166,12 +169,12 @@ void get_equ_from_hrz
 	/* change observer/object position into radians */
 
 	/* object alt/az */
-	A = deg_to_rad (object->az);
-	h = deg_to_rad (object->alt);
+	A = ln_deg_to_rad (object->az);
+	h = ln_deg_to_rad (object->alt);
 
 	/* observer long / lat */
-	longitude = deg_to_rad (observer->lng);
-	latitude = deg_to_rad (observer->lat);
+	longitude = ln_deg_to_rad (observer->lng);
+	latitude = ln_deg_to_rad (observer->lat);
 
 	/* equ on pg89 */
 	H = atan2 (sin (A), ( cos(A) * sin (latitude) + tan(h) * cos (latitude)));
@@ -179,14 +182,14 @@ void get_equ_from_hrz
 	declination = asin (declination);
 
 	/* get ra = sidereal - longitude + H and change sidereal to radians*/
-	sidereal = get_apparent_sidereal_time(JD);
+	sidereal = ln_get_apparent_sidereal_time(JD);
 	sidereal *= 2.0 * M_PI / 24.0;
 
-	position->ra = rad_to_deg (sidereal - H + longitude);
-	position->dec = rad_to_deg (declination);
+	position->ra = ln_rad_to_deg (sidereal - H + longitude);
+	position->dec = ln_rad_to_deg (declination);
 }
 
-/*! \fn void get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position)
 * \param object Object coordinates.
 * \param JD Julian day
 * \param position Pointer to store new position.
@@ -196,7 +199,7 @@ void get_equ_from_hrz
 */
 /* Equ 12.3, 12.4 pg 89 
 */
-void get_equ_from_ecl 
+void ln_get_equ_from_ecl 
 	(struct ln_lnlat_posn * object,
 	 double JD,
 	 struct ln_equ_posn * position)
@@ -206,14 +209,14 @@ void get_equ_from_ecl
 	struct ln_nutation nutation;
 
 	/* get obliquity of ecliptic and change it to rads */
-	get_nutation (JD, &nutation);
-	nutation.ecliptic = deg_to_rad (nutation.ecliptic); 
+	ln_get_nutation (JD, &nutation);
+	nutation.ecliptic = ln_deg_to_rad (nutation.ecliptic); 
 
 	/* change object's position into radians */
 
 	/* object */
-	longitude = deg_to_rad(object->lng);
-	latitude = deg_to_rad(object->lat);
+	longitude = ln_deg_to_rad(object->lng);
+	latitude = ln_deg_to_rad(object->lat);
 
 	/* Equ 12.3, 12.4 */
 	ra = atan2 ((sin(longitude) * cos(nutation.ecliptic) - tan(latitude) * sin(nutation.ecliptic)), cos (longitude));
@@ -221,11 +224,11 @@ void get_equ_from_ecl
 	declination = asin(declination);
 	
 	/* store in position */
-	position->ra = range_degrees(rad_to_deg(ra));
-	position->dec = rad_to_deg(declination);
+	position->ra = ln_range_degrees(ln_rad_to_deg(ra));
+	position->dec = ln_rad_to_deg(declination);
 }
 
-/*! \fn void get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
+/*! \fn void ln_get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
 * \param object Object coordinates.
 * \param JD Julian day
 * \param position Pointer to store new position.
@@ -235,7 +238,7 @@ void get_equ_from_ecl
 */
 /* Equ 12.1, 12.2 Pg 88 
 */
-void get_ecl_from_equ 
+void ln_get_ecl_from_equ 
 	(struct ln_equ_posn * object, 
 	double JD,
 	struct ln_lnlat_posn * position)
@@ -245,10 +248,10 @@ void get_ecl_from_equ
 	struct ln_nutation nutation;
 	
 	/* object position */
-	ra = deg_to_rad (object->ra);
-	declination = deg_to_rad (object->dec);
-	get_nutation(JD, &nutation);
-	nutation.ecliptic = deg_to_rad (nutation.ecliptic);
+	ra = ln_deg_to_rad (object->ra);
+	declination = ln_deg_to_rad (object->dec);
+	ln_get_nutation(JD, &nutation);
+	nutation.ecliptic = ln_deg_to_rad (nutation.ecliptic);
 
 	/* Equ 12.1, 12.2 */
 	longitude = atan2 ((sin(ra) * cos(nutation.ecliptic) + tan(declination) * sin(nutation.ecliptic)), cos(ra));
@@ -256,11 +259,11 @@ void get_ecl_from_equ
 	latitude = asin(latitude);
 
 	/* store in position */
-	position->lat = rad_to_deg (latitude);
-	position->lng = range_degrees(rad_to_deg (longitude));
+	position->lat = ln_rad_to_deg (latitude);
+	position->lng = ln_range_degrees(ln_rad_to_deg (longitude));
 }
 
-/*! \fn void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
+/*! \fn void ln_get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
 * \param rect Rectangular coordinates.
 * \param posn Pointer to store new position.
 *
@@ -268,11 +271,11 @@ void get_ecl_from_equ
 */
 /* Equ 33.2
 */
-void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
+void ln_get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
 {
 	double t;
 	
 	t = sqrt (rect->X * rect->X + rect->Y * rect->Y);
-	posn->lng = range_degrees(rad_to_deg (atan2 (rect->X, rect->Y)));
-	posn->lat = rad_to_deg (atan2 (t, rect->Z));
+	posn->lng = ln_range_degrees(ln_rad_to_deg (atan2 (rect->X, rect->Y)));
+	posn->lat = ln_rad_to_deg (atan2 (t, rect->Z));
 }

@@ -18,15 +18,16 @@ Copyright 2000 Liam Girdwood
  
 */
 
-#include "libnova.h"
-#include "apparent_position.h"
-#include <stdlib.h>
+#include <libnova/apparent_position.h>
+#include <libnova/proper_motion.h>
+#include <libnova/aberration.h>
+#include <libnova/precession.h>
 
 /*
 ** Apparent place of an Object 
 */
 
-/*! \fn void get_apparent_posn (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_apparent_posn (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object
 * \param proper_motion Proper motion of object
 * \param JD Julian Day
@@ -38,16 +39,12 @@ Copyright 2000 Liam Girdwood
 * parallax and the gravitational deflection of light (Einstein effect) are NOT used
 * in this calculation. 
 */
-void get_apparent_posn 
-	(struct ln_equ_posn * mean_position, 
-	struct ln_equ_posn * proper_motion, 
-	double JD,
-	struct ln_equ_posn * position)
+void ln_get_apparent_posn (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD,struct ln_equ_posn * position)
 {
 	struct ln_equ_posn proper_position;
 	struct ln_equ_posn aberration_position;
 	
-	get_equ_pm (mean_position, proper_motion, JD, &proper_position);
-	get_equ_aber (&proper_position, JD, &aberration_position);
-	get_equ_prec (&aberration_position, JD, position);
+	ln_get_equ_pm (mean_position, proper_motion, JD, &proper_position);
+	ln_get_equ_aber (&proper_position, JD, &aberration_position);
+	ln_get_equ_prec (&aberration_position, JD, position);
 }

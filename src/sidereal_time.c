@@ -17,11 +17,12 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 
 */
 
-#include "sidereal_time.h"
-#include "libnova.h"
 #include <math.h>
+#include <libnova/sidereal_time.h>
+#include <libnova/nutation.h>
+#include <libnova/utility.h>
 
-/*! \fn double get_mean_sidereal_time (double JD)
+/*! \fn double ln_get_mean_sidereal_time (double JD)
 * \param JD Julian Day
 * \return Mean sidereal time.
 *
@@ -30,7 +31,7 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 /* Formula 11.1, 11.4 pg 83 
 */
 
-double get_mean_sidereal_time (double JD)
+double ln_get_mean_sidereal_time (double JD)
 {
     double sidereal;
     double T;
@@ -41,15 +42,15 @@ double get_mean_sidereal_time (double JD)
     sidereal = 280.46061837 + (360.98564736629 * (JD - 2451545.0)) + (0.000387933 * T * T) - (T * T * T / 38710000.0);
     
     /* add a convenient multiple of 360 degrees */
-    sidereal = range_degrees (sidereal);
+    sidereal = ln_range_degrees (sidereal);
     
     /* change to hours */
     sidereal *= 24.0 / 360.0;
         
-    return(sidereal);
+    return sidereal;
 } 
 
-/*! \fn double get_apparent_sidereal_time (double JD)
+/*! \fn double ln_get_apparent_sidereal_time (double JD)
 * \param JD Julian Day
 * /return Apparent sidereal time (hours).
 *
@@ -58,24 +59,24 @@ double get_mean_sidereal_time (double JD)
 /* Formula 11.1, 11.4 pg 83 
 */
 
-double get_apparent_sidereal_time (double JD)
+double ln_get_apparent_sidereal_time (double JD)
 {
    double correction, hours, sidereal;
    struct ln_nutation nutation;  
    
    /* get the mean sidereal time */
-   sidereal = get_mean_sidereal_time (JD);
+   sidereal = ln_get_mean_sidereal_time (JD);
         
    /* add corrections for nutation in longitude and for the true obliquity of 
    the ecliptic */   
-   get_nutation (JD, &nutation); 
+   ln_get_nutation (JD, &nutation); 
     
-   correction = (nutation.longitude / 15.0 * cos (deg_to_rad(nutation.obliquity)));
+   correction = (nutation.longitude / 15.0 * cos (ln_deg_to_rad(nutation.obliquity)));
   
    /* value is in degrees so change it to hours and add to mean sidereal time */
    hours = (24.0 / 360.0) * correction;
 
    sidereal += hours;
    
-   return (sidereal);
+   return sidereal;
 }

@@ -22,10 +22,13 @@ Copyright 2000 Liam Girdwood
 */
 
 #include <math.h>
-#include "vsop87.h"
-#include "libnova.h"
-
-
+#include <libnova/mars.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 #define LONG_L0 1409
 #define LONG_L1 891
@@ -50,7 +53,7 @@ Copyright 2000 Liam Girdwood
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
 
-static const struct vsop mars_longitude_l0[LONG_L0] = {
+static const struct ln_vsop mars_longitude_l0[LONG_L0] = {
     {     6.20347711581,  0.00000000000,        0.00000000000}, 
     {     0.18656368093,  5.05037100270,     3340.61242669980}, 
     {     0.01108216816,  5.40099836344,     6681.22485339960}, 
@@ -1463,7 +1466,7 @@ static const struct vsop mars_longitude_l0[LONG_L0] = {
 };
 
 
-static const struct vsop mars_longitude_l1[LONG_L1] = {
+static const struct ln_vsop mars_longitude_l1[LONG_L1] = {
     {  3340.61242700512,  0.00000000000,        0.00000000000}, 
     {     0.01457554523,  3.60433733236,     3340.61242669980}, 
     {     0.00168414711,  3.92318567804,     6681.22485339960}, 
@@ -2358,7 +2361,7 @@ static const struct vsop mars_longitude_l1[LONG_L1] = {
 };
 
 
-static const struct vsop mars_longitude_l2[LONG_L2] = {
+static const struct ln_vsop mars_longitude_l2[LONG_L2] = {
     {     0.00058152577,  2.04961712429,     3340.61242669980}, 
     {     0.00013459579,  2.45738706163,     6681.22485339960}, 
     {     0.00002432575,  2.79737979284,    10021.83728009940}, 
@@ -2804,7 +2807,7 @@ static const struct vsop mars_longitude_l2[LONG_L2] = {
 };
 
 
-static const struct vsop mars_longitude_l3[LONG_L3] = {
+static const struct ln_vsop mars_longitude_l3[LONG_L3] = {
     {     0.00001467867,  0.44429839460,     3340.61242669980}, 
     {     0.00000692668,  0.88679887123,     6681.22485339960}, 
     {     0.00000189478,  1.28336839921,    10021.83728009940}, 
@@ -3002,7 +3005,7 @@ static const struct vsop mars_longitude_l3[LONG_L3] = {
 };
 
 
-static const struct vsop mars_longitude_l4[LONG_L4] = {
+static const struct ln_vsop mars_longitude_l4[LONG_L4] = {
     {     0.00000027242,  5.63997742320,     6681.22485339960}, 
     {     0.00000025511,  5.13956279086,     3340.61242669980}, 
     {     0.00000011147,  6.03556608878,    10021.83728009940}, 
@@ -3081,7 +3084,7 @@ static const struct vsop mars_longitude_l4[LONG_L4] = {
 };
 
 
-static const struct vsop mars_longitude_l5[LONG_L5] = {
+static const struct ln_vsop mars_longitude_l5[LONG_L5] = {
     {     0.00000000762,  4.03556368806,     6681.22485339960}, 
     {     0.00000000511,  4.48770393640,    10021.83728009940}, 
     {     0.00000000360,  5.07296615717,      155.42039943420}, 
@@ -3109,7 +3112,7 @@ static const struct vsop mars_longitude_l5[LONG_L5] = {
 };
 
 
-static const struct vsop mars_latitude_b0[LAT_B0] = {
+static const struct ln_vsop mars_latitude_b0[LAT_B0] = {
     {     0.03197134986,  3.76832042431,     3340.61242669980}, 
     {     0.00298033234,  4.10616996305,     6681.22485339960}, 
     {     0.00289104742,  0.00000000000,        0.00000000000}, 
@@ -3554,7 +3557,7 @@ static const struct vsop mars_latitude_b0[LAT_B0] = {
 };
 
 
-static const struct vsop mars_latitude_b1[LAT_B1] = {
+static const struct ln_vsop mars_latitude_b1[LAT_B1] = {
     {     0.00217310991,  6.04472194776,     3340.61242669980}, 
     {     0.00020976948,  3.14159265359,        0.00000000000}, 
     {     0.00012834709,  1.60810667915,     6681.22485339960}, 
@@ -3849,7 +3852,7 @@ static const struct vsop mars_latitude_b1[LAT_B1] = {
 };
 
 
-static const struct vsop mars_latitude_b2[LAT_B2] = {
+static const struct ln_vsop mars_latitude_b2[LAT_B2] = {
     {     0.00008888446,  1.06196052751,     3340.61242669980}, 
     {     0.00002595393,  3.14159265359,        0.00000000000}, 
     {     0.00000918914,  0.11538431190,     6681.22485339960}, 
@@ -4014,7 +4017,7 @@ static const struct vsop mars_latitude_b2[LAT_B2] = {
 };
 
 
-static const struct vsop mars_latitude_b3[LAT_B3] = {
+static const struct ln_vsop mars_latitude_b3[LAT_B3] = {
     {     0.00000330418,  2.04215300484,     3340.61242669980}, 
     {     0.00000093057,  0.00000000000,        0.00000000000}, 
     {     0.00000014546,  5.38525967237,    10021.83728009940}, 
@@ -4082,7 +4085,7 @@ static const struct vsop mars_latitude_b3[LAT_B3] = {
 };
 
 
-static const struct vsop mars_latitude_b4[LAT_B4] = {
+static const struct ln_vsop mars_latitude_b4[LAT_B4] = {
     {     0.00000006007,  3.37637101191,     3340.61242669980}, 
     {     0.00000006625,  0.00000000000,        0.00000000000}, 
     {     0.00000000464,  3.77202757150,    10021.83728009940}, 
@@ -4104,7 +4107,7 @@ static const struct vsop mars_latitude_b4[LAT_B4] = {
 };
 
 
-static const struct vsop mars_latitude_b5[LAT_B5] = {
+static const struct ln_vsop mars_latitude_b5[LAT_B5] = {
     {     0.00000000368,  4.63460005338,     3340.61242669980}, 
     {     0.00000000045,  5.14206308865,     6681.22485339960}, 
     {     0.00000000035,  3.14159265359,        0.00000000000}, 
@@ -4117,7 +4120,7 @@ static const struct vsop mars_latitude_b5[LAT_B5] = {
 };
 
 
-static const struct vsop mars_radius_r0[RADIUS_R0] = {
+static const struct ln_vsop mars_radius_r0[RADIUS_R0] = {
     {     1.53033488271,  0.00000000000,        0.00000000000}, 
     {     0.14184953160,  3.47971283528,     3340.61242669980}, 
     {     0.00660776362,  3.81783443019,     6681.22485339960}, 
@@ -5228,7 +5231,7 @@ static const struct vsop mars_radius_r0[RADIUS_R0] = {
 };
 
 
-static const struct vsop mars_radius_r1[RADIUS_R1] = {
+static const struct ln_vsop mars_radius_r1[RADIUS_R1] = {
     {     0.01107433345,  2.03250524857,     3340.61242669980}, 
     {     0.00103175887,  2.37071847807,     6681.22485339960}, 
     {     0.00012877200,  0.00000000000,        0.00000000000}, 
@@ -5904,7 +5907,7 @@ static const struct vsop mars_radius_r1[RADIUS_R1] = {
 };
 
 
-static const struct vsop mars_radius_r2[RADIUS_R2] = {
+static const struct ln_vsop mars_radius_r2[RADIUS_R2] = {
     {     0.00044242249,  0.47930604954,     3340.61242669980}, 
     {     0.00008138042,  0.86998389204,     6681.22485339960}, 
     {     0.00001274915,  1.22593985222,    10021.83728009940}, 
@@ -6276,7 +6279,7 @@ static const struct vsop mars_radius_r2[RADIUS_R2] = {
 };
 
 
-static const struct vsop mars_radius_r3[RADIUS_R3] = {
+static const struct ln_vsop mars_radius_r3[RADIUS_R3] = {
     {     0.00001113108,  5.14987305093,     3340.61242669980}, 
     {     0.00000424447,  5.61343952053,     6681.22485339960}, 
     {     0.00000100044,  5.99727457548,    10021.83728009940}, 
@@ -6440,7 +6443,7 @@ static const struct vsop mars_radius_r3[RADIUS_R3] = {
 };
 
 
-static const struct vsop mars_radius_r4[RADIUS_R4] = {
+static const struct ln_vsop mars_radius_r4[RADIUS_R4] = {
     {     0.00000019551,  3.58210746512,     3340.61242669980}, 
     {     0.00000016322,  4.05115851142,     6681.22485339960}, 
     {     0.00000005848,  4.46381646580,    10021.83728009940}, 
@@ -6501,7 +6504,7 @@ static const struct vsop mars_radius_r4[RADIUS_R4] = {
 };
 
 
-static const struct vsop mars_radius_r5[RADIUS_R5] = {
+static const struct ln_vsop mars_radius_r5[RADIUS_R5] = {
     {     0.00000000475,  2.47621038205,     6681.22485339960}, 
     {     0.00000000270,  2.90961348988,    10021.83728009940}, 
     {     0.00000000116,  1.76766655427,     3340.61242669980}, 
@@ -6521,7 +6524,7 @@ static const struct vsop mars_radius_r5[RADIUS_R5] = {
     {     0.00000000002,  0.40954426011,     9866.41688066520}, 
 };
 
-/*! \fn void get_mars_equ_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_mars_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position
 *
@@ -6534,9 +6537,7 @@ static const struct vsop mars_radius_r5[RADIUS_R5] = {
 *
 * The position returned is accurate to within 0.1 arcsecs.
 */ 
-void get_mars_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position)
+void ln_get_mars_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_mars;
 	struct ln_rect_posn g_sol, g_mars;
@@ -6544,14 +6545,13 @@ void get_mars_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, &g_sol);
+	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_rect_from_helio (&h_sol, &g_sol);
 	
-	do
-	{
+	do {
 		last = t;
-		get_mars_helio_coords (JD - t, &h_mars);
-		get_rect_from_helio (&h_mars, &g_mars);
+		ln_get_mars_helio_coords (JD - t, &h_mars);
+		ln_get_rect_from_helio (&h_mars, &g_mars);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mars.X;
@@ -6562,20 +6562,19 @@ void get_mars_equ_coords
 		delta = sqrt (delta);
 		t = delta * 0.0057755183;
 		diff = t - last;
-	}
-	while (diff > 0.0001 || diff < -0.0001);
+	} while (diff > 0.0001 || diff < -0.0001);
 		
 	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = range_degrees(rad_to_deg (ra));
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_range_degrees(ln_rad_to_deg (ra));
+	position->dec = ln_rad_to_deg (dec);
 }
 	
 
-/*! \fn void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
+/*! \fn void ln_get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store heliocentric position
 *
@@ -6585,7 +6584,7 @@ void get_mars_equ_coords
 */
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
+void ln_get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4, L5;
@@ -6593,8 +6592,7 @@ void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 	double R0, R1, R2, R3, R4, R5;
 	
 	/* check cache first */
-	if (JD == cJD)
-	{
+	if (JD == cJD) {
 		/* cache hit */
 		position->L = cL;
 		position->B = cB;
@@ -6610,40 +6608,40 @@ void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 	t5 = t4 * t;
 	
 	/* calc L series */
-	L0 = calc_series (mars_longitude_l0, LONG_L0, t);
-	L1 = calc_series (mars_longitude_l1, LONG_L1, t);
-	L2 = calc_series (mars_longitude_l2, LONG_L2, t);
-	L3 = calc_series (mars_longitude_l3, LONG_L3, t);
-	L4 = calc_series (mars_longitude_l4, LONG_L4, t);
-	L5 = calc_series (mars_longitude_l5, LONG_L5, t);
+	L0 = ln_calc_series (mars_longitude_l0, LONG_L0, t);
+	L1 = ln_calc_series (mars_longitude_l1, LONG_L1, t);
+	L2 = ln_calc_series (mars_longitude_l2, LONG_L2, t);
+	L3 = ln_calc_series (mars_longitude_l3, LONG_L3, t);
+	L4 = ln_calc_series (mars_longitude_l4, LONG_L4, t);
+	L5 = ln_calc_series (mars_longitude_l5, LONG_L5, t);
 	position->L = (L0 + L1 * t + L2 * t2 + L3 * t3 + L4 * t4 + L5 * t5);
 
 	/* calc B series */
-	B0 = calc_series (mars_latitude_b0, LAT_B0, t);
-	B1 = calc_series (mars_latitude_b1, LAT_B1, t);
-	B2 = calc_series (mars_latitude_b2, LAT_B2, t);
-	B3 = calc_series (mars_latitude_b3, LAT_B3, t);
-	B4 = calc_series (mars_latitude_b4, LAT_B4, t);
-	B5 = calc_series (mars_latitude_b5, LAT_B5, t);
+	B0 = ln_calc_series (mars_latitude_b0, LAT_B0, t);
+	B1 = ln_calc_series (mars_latitude_b1, LAT_B1, t);
+	B2 = ln_calc_series (mars_latitude_b2, LAT_B2, t);
+	B3 = ln_calc_series (mars_latitude_b3, LAT_B3, t);
+	B4 = ln_calc_series (mars_latitude_b4, LAT_B4, t);
+	B5 = ln_calc_series (mars_latitude_b5, LAT_B5, t);
 	position->B = (B0 + B1 * t + B2 * t2 + B3 * t3 + B4 * t4 + B5 * t5);
 
 
 	/* calc R series */
-	R0 = calc_series (mars_radius_r0, RADIUS_R0, t);
-	R1 = calc_series (mars_radius_r1, RADIUS_R1, t);
-	R2 = calc_series (mars_radius_r2, RADIUS_R2, t);
-	R3 = calc_series (mars_radius_r3, RADIUS_R3, t);
-	R4 = calc_series (mars_radius_r4, RADIUS_R4, t);
-	R5 = calc_series (mars_radius_r5, RADIUS_R5, t);
+	R0 = ln_calc_series (mars_radius_r0, RADIUS_R0, t);
+	R1 = ln_calc_series (mars_radius_r1, RADIUS_R1, t);
+	R2 = ln_calc_series (mars_radius_r2, RADIUS_R2, t);
+	R3 = ln_calc_series (mars_radius_r3, RADIUS_R3, t);
+	R4 = ln_calc_series (mars_radius_r4, RADIUS_R4, t);
+	R5 = ln_calc_series (mars_radius_r5, RADIUS_R5, t);
 	position->R = (R0 + R1 * t + R2 * t2 + R3 * t3 + R4 * t4 + R5 * t5);
 	
 	/* change to degrees in correct quadrant */
-	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
-	position->L = range_degrees(position->L);
+	position->L = ln_rad_to_deg(position->L);
+	position->B = ln_rad_to_deg(position->B);
+	position->L = ln_range_degrees(position->L);
 	
 	/* change to fk5 reference frame */
-	vsop87_to_fk5 (position, JD);
+	ln_vsop87_to_fk5 (position, JD);
 	
 	/* save cache */
 	cJD = JD;
@@ -6652,7 +6650,7 @@ void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 	cR = position->R;
 }
 
-/*! \fn double get_mars_earth_dist (double JD);
+/*! \fn double ln_get_mars_earth_dist (double JD);
 * \brief Calculate the distance between Mars and the Earth in AU.
 * \param JD Julian Day
 * \return Distance in AU
@@ -6660,19 +6658,19 @@ void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Earth and Mars for the given 
 * julian day.
 */
-double get_mars_earth_dist (double JD)
+double ln_get_mars_earth_dist (double JD)
 {
 	struct ln_helio_posn h_mars, h_earth;
 	struct ln_rect_posn g_mars, g_earth;
-	double x, y, z, au;
+	double x, y, z;
 	
 	/* get heliocentric positions */
-	get_mars_helio_coords (JD, &h_mars);
-	get_earth_helio_coords (JD, &h_earth);
+	ln_get_mars_helio_coords (JD, &h_mars);
+	ln_get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_mars, &g_mars);
-	get_rect_from_helio (&h_earth, &g_earth);
+	ln_get_rect_from_helio (&h_mars, &g_mars);
+	ln_get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_mars.X - g_earth.X;
@@ -6682,12 +6680,10 @@ double get_mars_earth_dist (double JD)
 	y = y * y;
 	z = z * z;
 
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return sqrt (x + y + z);
 }
 	
-/*! \fn double get_mars_sun_dist (double JD);
+/*! \fn double ln_get_mars_sun_dist (double JD);
 * \brief Calculate the distance between Mars and the Sun in AU
 * \param JD Julian Day.
 * \return Distance in AU.
@@ -6695,40 +6691,38 @@ double get_mars_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Mars for the given 
 * julian day.
 */ 
-double get_mars_sun_dist (double JD)
+double ln_get_mars_sun_dist (double JD)
 {
 	struct ln_helio_posn h_mars;
 
 	/* get heliocentric position */
-	get_mars_helio_coords (JD, &h_mars);
+	ln_get_mars_helio_coords (JD, &h_mars);
 	
-	return (h_mars.R);
+	return h_mars.R;
 }
 	
-/*! \fn double get_mars_magnitude (double JD);
+/*! \fn double ln_get_mars_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mars
 * \param JD Julian Day
 * \return Magnitude of Mars
 *
 * Calculate the visisble magnitude of Mars for given julian day.
 */ 
-double get_mars_magnitude (double JD)
+double ln_get_mars_magnitude (double JD)
 {
-	double mag, delta, r, i;
+	double delta, r, i;
 	
 	/* get distances */
-	r = get_mars_sun_dist (JD);
-	delta = get_mars_earth_dist (JD);
+	r = ln_get_mars_sun_dist (JD);
+	delta = ln_get_mars_earth_dist (JD);
 	
 	/* get phase */
-	i = get_mars_phase (JD);
+	i = ln_get_mars_phase (JD);
 	
-	mag = -1.52 + 5 * log10 (r * delta) + 0.016 * i;
-	
-	return (mag);
+	return -1.52 + 5 * log10 (r * delta) + 0.016 * i;
 }
 
-/*! \fn double get_mars_disk (double JD);
+/*! \fn double ln_get_mars_disk (double JD);
 * \brief Calculate the illuminated fraction of Mars disk
 * \param JD Julian Day.
 * \return Illuminated fraction of Mars disk (Value between 0 - 1)
@@ -6736,22 +6730,21 @@ double get_mars_magnitude (double JD)
 * Calculates the illuminated fraction of Mars disk for given julian day.
 */ 
 /* Chapter 41 */
-double get_mars_disk (double JD)
+double ln_get_mars_disk (double JD)
 {
-	double k,r,delta,R;	
+	double r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_mars_sun_dist (JD);
-	delta = get_mars_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_mars_sun_dist (JD);
+	delta = ln_get_mars_earth_dist (JD);
 	
 	/* calc fraction angle */
-	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
+	return (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
 	
-	return (k);
 }
 
-/*! \fn double get_mars_phase (double JD);
+/*! \fn double ln_get_mars_phase (double JD);
 * \brief Calculate the phase angle of Mars (Sun - Mars - Earth)
 * \param JD Julian Day
 * \return Phase angle of Mars (degrees)
@@ -6759,25 +6752,23 @@ double get_mars_disk (double JD)
 * Calculates the phase angle of Mars for the given julian day.
 */ 
 /* Chapter 41 */
-double get_mars_phase (double JD)
+double ln_get_mars_phase (double JD)
 {
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_mars_sun_dist (JD);
-	delta = get_mars_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_mars_sun_dist (JD);
+	delta = ln_get_mars_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
 	i = acos (i);
-	i = rad_to_deg (i);
-	
-	return (i);
+	return ln_rad_to_deg (i);
 }
 
 
-/*! \fn double get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -6789,41 +6780,39 @@ double get_mars_phase (double JD)
 * Note: this functions returns 1 if Mars is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_mars_equ_coords, STAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_mars_equ_coords, LN_STAR_STANDART_HORIZONT, rst);
 }
 
 
-/*! \fn double get_mars_sdiam (double JD)
+/*! \fn double ln_get_mars_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
 * Calculate the semidiameter of Mars in arc seconds for the 
 * given julian day.
 */
-double get_mars_sdiam (double JD)
+double ln_get_mars_sdiam (double JD)
 {
-	double S, So = 4.68; /* at 1 AU */
+	double So = 4.68; /* at 1 AU */
 	double dist;
 	
-	dist = get_mars_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_mars_earth_dist (JD);
+	return So / dist;
 }
 	
-/*! \fn void get_mars_rect_helio (double JD, struct ln_rect_posn * position)
+/*! \fn void ln_get_mars_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
 * \param position ointer to return position
 *
 * Calculate Mars rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
 */
-void get_mars_rect_helio (double JD, struct ln_rect_posn * position)
+void ln_get_mars_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn mars;
 		
-	get_mars_helio_coords (JD, &mars);
-	get_rect_from_helio (&mars, position);
+	ln_get_mars_helio_coords (JD, &mars);
+	ln_get_rect_from_helio (&mars, position);
 }

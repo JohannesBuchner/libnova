@@ -18,12 +18,37 @@ Copyright 2000 Liam Girdwood
  
 */
 
-#include "libnova.h"
-#include "aberration.h"
 #include <math.h>
 #include <stdlib.h>
+#include <libnova/aberration.h>
+#include <libnova/solar.h>
+#include <libnova/utility.h>
 
 #define TERMS 36
+
+/* data structures to hold arguments and coefficients of Ron-Vondrak theory */
+struct arg
+{
+	double a_L2;
+	double a_L3;
+	double a_L4;
+	double a_L5;
+	double a_L6;
+	double a_L7;
+	double a_L8;
+	double a_LL;
+	double a_D;
+	double a_MM;
+	double a_F;
+};
+
+struct XYZ
+{
+	double sin1;
+	double sin2;
+	double cos1;
+	double cos2;
+};
 
 const static struct arg arguments[TERMS] = {
 /* L2  3  4  5  6  7  8  LL D  MM F */
@@ -182,7 +207,7 @@ const static struct XYZ z_coefficients[TERMS] = {
 	{0, 0, -2, 0}
 };
 
-/*! \fn void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
@@ -192,14 +217,15 @@ const static struct XYZ z_coefficients[TERMS] = {
 */
 /* Equ 22.1, 22.1, 22.3, 22.4
 */
-void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
+void ln_get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
 	double mean_ra, mean_dec, delta_ra, delta_dec;
-	double L2, L3, L4, L5, L6, L7, L8, LL, D, MM , F, T, X, Y, Z, A, c;
+	double L2, L3, L4, L5, L6, L7, L8, LL, D, MM , F, T, X, Y, Z, A;
+	long double c;
 	int i;
 
 	/* speed of light in 10-8 au per day */
-	c = 17314463350;
+	c = 17314463350.0;
 
 	/* calc T */
 	T = (JD - 2451545) / 36525;
@@ -222,8 +248,7 @@ void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 	Z = 0;
 
 	/* sum the terms */
-	for (i=0; i<TERMS; i++)
-	{
+	for (i=0; i<TERMS; i++) {
 		A = arguments[i].a_L2 * L2 + arguments[i].a_L3 * L3 + arguments[i].a_L4 * L4 + arguments[i].a_L5 * L5 + arguments[i].a_L6 * L6 +
 			arguments[i].a_L7 * L7 + arguments[i].a_L8 * L8 + arguments[i].a_LL * LL + arguments[i].a_D * D + arguments[i].a_MM * MM +
 			arguments[i].a_F * F;
@@ -234,17 +259,17 @@ void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 	}
 
 	/* Equ 22.4 */
-	mean_ra = deg_to_rad (mean_position->ra);
-	mean_dec = deg_to_rad (mean_position->dec);
+	mean_ra = ln_deg_to_rad (mean_position->ra);
+	mean_dec = ln_deg_to_rad (mean_position->dec);
 
 	delta_ra = (Y * cos(mean_ra) - X * sin(mean_ra)) / (c * cos(mean_dec));
 	delta_dec = -((X * cos(mean_ra) + Y * sin(mean_ra)) * sin(mean_dec) - Z * cos(mean_dec)) / c;
 
-	position->ra = rad_to_deg(mean_ra + delta_ra);
-	position->dec = rad_to_deg(mean_dec + delta_dec);
+	position->ra = ln_rad_to_deg(mean_ra + delta_ra);
+	position->dec = ln_rad_to_deg(mean_dec + delta_dec);
 }
 
-/*! \fn void get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
+/*! \fn void ln_get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 * \param mean_position Mean position of object
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
@@ -254,37 +279,34 @@ void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 */
 /* Equ 22.2 pg 139
 */
-void get_ecl_aber
-	(struct ln_lnlat_posn * mean_position, 
-	double JD,
-	struct ln_lnlat_posn *position)
+void ln_get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn *position)
 	
 {
 	double delta_lng, delta_lat, mean_lng, mean_lat, e, t, k, true_longitude, T, T2;
 	struct ln_helio_posn sol_position;
 
 	/* constant of aberration */
-	k = deg_to_rad(20.49552 *  (1.0 / 3600.0));
+	k = ln_deg_to_rad(20.49552 *  (1.0 / 3600.0));
 
 	/* Equ 21.1 */
 	T = (JD - 2451545) / 36525;
 	T2 = T * T;
 
 	/* suns longitude in radians */
-	get_geom_solar_coords (JD, &sol_position);
-	true_longitude = deg_to_rad (sol_position.B);
+	ln_get_geom_solar_coords (JD, &sol_position);
+	true_longitude = ln_deg_to_rad (sol_position.B);
 
 	/* Earth orbit ecentricity */
 	e = 0.016708617 - 0.000042037 * T - 0.0000001236 * T2;
-	e = deg_to_rad (e);
+	e = ln_deg_to_rad (e);
 
 	/* longitude of perihelion Earths orbit */
 	t = 102.93735 + 1.71953 * T + 0.000046 * T2;
-	t = deg_to_rad (t);
+	t = ln_deg_to_rad (t);
 
 	/* change object long/lat to radians */
-	mean_lng = deg_to_rad(mean_position->lng);
-	mean_lat = deg_to_rad(mean_position->lat);
+	mean_lng = ln_deg_to_rad(mean_position->lng);
+	mean_lat = ln_deg_to_rad(mean_position->lat);
 
 	/* equ 22.2 */
 	delta_lng = (-k * cos (true_longitude - mean_lng) + e * k * cos (t - mean_lng)) / cos (mean_lat);
@@ -293,7 +315,6 @@ void get_ecl_aber
 	mean_lng += delta_lng;
 	mean_lat += delta_lat;
 
-	position->lng = rad_to_deg (mean_lng);
-	position->lat = rad_to_deg (mean_lat);
-
+	position->lng = ln_rad_to_deg (mean_lng);
+	position->lat = ln_rad_to_deg (mean_lat);
 }

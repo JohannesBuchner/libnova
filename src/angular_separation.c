@@ -16,10 +16,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright (C) 2003 Liam Girdwood <liam@gnova.org>
 */
  
-#include "libnova.h" 
 #include <math.h>
+#include <libnova/angular_separation.h>
+#include <libnova/utility.h>
 
-/*! \fn double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+/*! \fn double ln_get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
 * \param posn1 Equatorial position of body 1
 * \param posn2 Equatorial position of body 2
 * \return Angular separation in degrees
@@ -29,17 +30,17 @@ Copyright (C) 2003 Liam Girdwood <liam@gnova.org>
 * Royal Observatory Belgium.
 */	
 /* Chap 17 page 115 */
-double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2)
+double ln_get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2)
 {
 	double d;
 	double x,y,z;
 	double a1,a2,d1,d2;
 	
 	/* covert to radians */
-	a1 = deg_to_rad(posn1->ra);
-	d1 = deg_to_rad(posn1->dec);
-	a2 = deg_to_rad(posn2->ra);
-	d2 = deg_to_rad(posn2->dec);
+	a1 = ln_deg_to_rad(posn1->ra);
+	d1 = ln_deg_to_rad(posn1->dec);
+	a2 = ln_deg_to_rad(posn2->ra);
+	d2 = ln_deg_to_rad(posn2->dec);
 	
 	x = (cos(d1) * sin (d2)) 
 		- (sin(d1) * cos(d2) * cos(a2 - a1));
@@ -50,12 +51,10 @@ double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* po
 	y = y * y;
 	d = atan2(sqrt(x + y), z);
 	
-	d = rad_to_deg(d);
-	
-	return d;
+	return ln_rad_to_deg(d);
 }
 
-/*! \fn double get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+/*! \fn double ln_get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
 * \param posn1 Equatorial position of body 1
 * \param posn2 Equatorial position of body 2
 * \return Position angle in degrees
@@ -63,23 +62,21 @@ double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* po
 * Calculates the position angle of a body with respect to another body.
 */	
 /* Chapt 17, page 116 */
-double get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2)
+double ln_get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2)
 {
 	double P;
 	double a1,a2,d1,d2;
 	double x,y;
 	
 	/* covert to radians */
-	a1 = deg_to_rad(posn1->ra);
-	d1 = deg_to_rad(posn1->dec);
-	a2 = deg_to_rad(posn2->ra);
-	d2 = deg_to_rad(posn2->dec);
+	a1 = ln_deg_to_rad(posn1->ra);
+	d1 = ln_deg_to_rad(posn1->dec);
+	a2 = ln_deg_to_rad(posn2->ra);
+	d2 = ln_deg_to_rad(posn2->dec);
 	
 	y = sin (a1 - a2);
 	x = (cos(d2) * tan(d1)) - (sin(d2) * cos(a1 - a2));
 	
 	P = atan2(y, x);
-	P = rad_to_deg(P);
-	
-	return P;
+	return ln_rad_to_deg(P);
 }

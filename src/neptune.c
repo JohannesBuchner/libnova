@@ -22,10 +22,13 @@ Copyright 2000 Liam Girdwood
 */
 
 #include <math.h>
-#include "vsop87.h"
-#include "libnova.h"
-
-
+#include <libnova/neptune.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 #define LONG_L0 539
 #define LONG_L1 224
@@ -44,7 +47,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static const struct vsop neptune_longitude_l0[LONG_L0] = {
+static const struct ln_vsop neptune_longitude_l0[LONG_L0] = {
     {     5.31188633046,  0.00000000000,        0.00000000000}, 
     {     0.01798475530,  2.90101273890,       38.13303563780}, 
     {     0.01019727652,  0.48580922867,        1.48447270830}, 
@@ -587,7 +590,7 @@ static const struct vsop neptune_longitude_l0[LONG_L0] = {
 };
 
 
-static const struct vsop neptune_longitude_l1[LONG_L1] = {
+static const struct ln_vsop neptune_longitude_l1[LONG_L1] = {
     {    38.13303563957,  0.00000000000,        0.00000000000}, 
     {     0.00016604172,  4.86323329249,        1.48447270830}, 
     {     0.00015744045,  2.27887427527,       38.13303563780}, 
@@ -815,7 +818,7 @@ static const struct vsop neptune_longitude_l1[LONG_L1] = {
 };
 
 
-static const struct vsop neptune_longitude_l2[LONG_L2] = {
+static const struct ln_vsop neptune_longitude_l2[LONG_L2] = {
     {     0.00000286136,  1.18985661922,       38.13303563780}, 
     {     0.00000295650,  1.85520880574,        1.48447270830}, 
     {     0.00000102284,  0.00000000000,        0.00000000000}, 
@@ -878,7 +881,7 @@ static const struct vsop neptune_longitude_l2[LONG_L2] = {
 };
 
 
-static const struct vsop neptune_longitude_l3[LONG_L3] = {
+static const struct ln_vsop neptune_longitude_l3[LONG_L3] = {
     {     0.00000012472,  6.04427218715,        1.48447270830}, 
     {     0.00000011257,  6.11436681584,       38.13303563780}, 
     {     0.00000004354,  3.14159265359,        0.00000000000}, 
@@ -900,7 +903,7 @@ static const struct vsop neptune_longitude_l3[LONG_L3] = {
 };
 
 
-static const struct vsop neptune_latitude_b0[LAT_B0] = {
+static const struct ln_vsop neptune_latitude_b0[LAT_B0] = {
     {     0.03088622933,  1.44104372644,       38.13303563780}, 
     {     0.00027780087,  5.91271884599,       76.26607127560}, 
     {     0.00027623609,  0.00000000000,        0.00000000000}, 
@@ -1076,7 +1079,7 @@ static const struct vsop neptune_latitude_b0[LAT_B0] = {
 };
 
 
-static const struct vsop neptune_latitude_b1[LAT_B1] = {
+static const struct ln_vsop neptune_latitude_b1[LAT_B1] = {
     {     0.00005150897,  2.14270496419,       38.13303563780}, 
     {     0.00000258298,  5.46539598920,       76.26607127560}, 
     {     0.00000251862,  4.40444268588,       36.64856292950}, 
@@ -1129,7 +1132,7 @@ static const struct vsop neptune_latitude_b1[LAT_B1] = {
 };
 
 
-static const struct vsop neptune_latitude_b2[LAT_B2] = {
+static const struct ln_vsop neptune_latitude_b2[LAT_B2] = {
     {     0.00000042058,  1.91480759314,       38.13303563780}, 
     {     0.00000004359,  4.77459417163,       39.61750834610}, 
     {     0.00000004230,  1.12991232222,       36.64856292950}, 
@@ -1146,13 +1149,13 @@ static const struct vsop neptune_latitude_b2[LAT_B2] = {
 };
 
 
-static const struct vsop neptune_latitude_b3[LAT_B3] = {
+static const struct ln_vsop neptune_latitude_b3[LAT_B3] = {
     {     0.00000004131,  3.06928911462,       38.13303563780}, 
     {     0.00000000143,  4.00453590187,       36.64856292950}, 
 };
 
 
-static const struct vsop neptune_radius_r0[RADIUS_R0] = {
+static const struct ln_vsop neptune_radius_r0[RADIUS_R0] = {
     {    30.07013205828,  0.00000000000,        0.00000000000}, 
     {     0.27062259632,  1.32999459377,       38.13303563780}, 
     {     0.01691764014,  3.25186135653,       36.64856292950}, 
@@ -1752,7 +1755,7 @@ static const struct vsop neptune_radius_r0[RADIUS_R0] = {
 };
 
 
-static const struct vsop neptune_radius_r1[RADIUS_R1] = {
+static const struct ln_vsop neptune_radius_r1[RADIUS_R1] = {
     {     0.00236338618,  0.70497954792,       38.13303563780}, 
     {     0.00013220034,  3.32014387930,        1.48447270830}, 
     {     0.00008621779,  6.21626927537,       35.16409022120}, 
@@ -2007,7 +2010,7 @@ static const struct vsop neptune_radius_r1[RADIUS_R1] = {
 };
 
 
-static const struct vsop neptune_radius_r2[RADIUS_R2] = {
+static const struct ln_vsop neptune_radius_r2[RADIUS_R2] = {
     {     0.00004247776,  5.89911844921,       38.13303563780}, 
     {     0.00000217404,  0.34589546713,        1.48447270830}, 
     {     0.00000163025,  2.23872947130,      168.05251279940}, 
@@ -2082,7 +2085,7 @@ static const struct vsop neptune_radius_r2[RADIUS_R2] = {
 };
 
 
-static const struct vsop neptune_radius_r3[RADIUS_R3] = {
+static const struct ln_vsop neptune_radius_r3[RADIUS_R3] = {
     {     0.00000166556,  4.55393495836,       38.13303563780}, 
     {     0.00000022380,  3.94830879358,      168.05251279940}, 
     {     0.00000021348,  2.86296778794,      182.27960680100}, 
@@ -2109,7 +2112,7 @@ static const struct vsop neptune_radius_r3[RADIUS_R3] = {
 };
 
 
-static const struct vsop neptune_radius_r4[RADIUS_R4] = {
+static const struct ln_vsop neptune_radius_r4[RADIUS_R4] = {
     {     0.00000004227,  2.40375758563,      477.33083545520}, 
     {     0.00000004333,  0.10459484545,      395.57870223900}, 
     {     0.00000003545,  4.78431259422,     1028.36244155220}, 
@@ -2120,7 +2123,7 @@ static const struct vsop neptune_radius_r4[RADIUS_R4] = {
 };
 
 
-/*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position
 *
@@ -2133,9 +2136,7 @@ static const struct vsop neptune_radius_r4[RADIUS_R4] = {
 *
 * The position returned is accurate to within 0.1 arcsecs.
 */ 
-void get_neptune_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position)
+void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_neptune;
 	struct ln_rect_posn g_sol, g_neptune;
@@ -2143,14 +2144,13 @@ void get_neptune_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol,  &g_sol);
+	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_rect_from_helio (&h_sol,  &g_sol);
 	
-	do
-	{
+	do {
 		last = t;
-		get_neptune_helio_coords (JD - t, &h_neptune);
-		get_rect_from_helio (&h_neptune, &g_neptune);
+		ln_get_neptune_helio_coords (JD - t, &h_neptune);
+		ln_get_rect_from_helio (&h_neptune, &g_neptune);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_neptune.X;
@@ -2161,20 +2161,19 @@ void get_neptune_equ_coords
 		delta = sqrt (delta);
 		t = delta * 0.0057755183;
 		diff = t - last;
-	}
-	while (diff > 0.0001 || diff < -0.0001);
+	} while (diff > 0.0001 || diff < -0.0001);
 		
 	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = range_degrees(rad_to_deg (ra));
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_range_degrees(ln_rad_to_deg (ra));
+	position->dec = ln_rad_to_deg (dec);
 }
 	
 
-/*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
+/*! \fn void ln_get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store heliocentric position
 *
@@ -2184,7 +2183,7 @@ void get_neptune_equ_coords
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
+void ln_get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3;
@@ -2192,8 +2191,7 @@ void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 	double R0, R1, R2, R3, R4;
            
 	/* check cache first */
-	if (JD == cJD)
-	{
+	if (JD == cJD) {
 		/* cache hit */
 		position->L = cL;
 		position->B = cB;
@@ -2209,35 +2207,35 @@ void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 	t5 = t4 * t;
 	
 	/* calc L series */
-	L0 = calc_series (neptune_longitude_l0, LONG_L0, t);
-	L1 = calc_series (neptune_longitude_l1, LONG_L1, t);
-	L2 = calc_series (neptune_longitude_l2, LONG_L2, t);
-	L3 = calc_series (neptune_longitude_l3, LONG_L3, t);
+	L0 = ln_calc_series (neptune_longitude_l0, LONG_L0, t);
+	L1 = ln_calc_series (neptune_longitude_l1, LONG_L1, t);
+	L2 = ln_calc_series (neptune_longitude_l2, LONG_L2, t);
+	L3 = ln_calc_series (neptune_longitude_l3, LONG_L3, t);
 	position->L = (L0 + L1 * t + L2 * t2 + L3 * t3);
 
 	/* calc B series */
-	B0 = calc_series (neptune_latitude_b0, LAT_B0, t);
-	B1 = calc_series (neptune_latitude_b1, LAT_B1, t);
-	B2 = calc_series (neptune_latitude_b2, LAT_B2, t);
-	B3 = calc_series (neptune_latitude_b3, LAT_B3, t);
+	B0 = ln_calc_series (neptune_latitude_b0, LAT_B0, t);
+	B1 = ln_calc_series (neptune_latitude_b1, LAT_B1, t);
+	B2 = ln_calc_series (neptune_latitude_b2, LAT_B2, t);
+	B3 = ln_calc_series (neptune_latitude_b3, LAT_B3, t);
 	position->B = (B0 + B1 * t + B2 * t2 + B3 * t3);
 
 
 	/* calc R series */
-	R0 = calc_series (neptune_radius_r0, RADIUS_R0, t);
-	R1 = calc_series (neptune_radius_r1, RADIUS_R1, t);
-	R2 = calc_series (neptune_radius_r2, RADIUS_R2, t);
-	R3 = calc_series (neptune_radius_r3, RADIUS_R3, t);
-	R4 = calc_series (neptune_radius_r4, RADIUS_R4, t);
+	R0 = ln_calc_series (neptune_radius_r0, RADIUS_R0, t);
+	R1 = ln_calc_series (neptune_radius_r1, RADIUS_R1, t);
+	R2 = ln_calc_series (neptune_radius_r2, RADIUS_R2, t);
+	R3 = ln_calc_series (neptune_radius_r3, RADIUS_R3, t);
+	R4 = ln_calc_series (neptune_radius_r4, RADIUS_R4, t);
 	position->R = (R0 + R1 * t + R2 * t2 + R3 * t3 + R4 * t4);
 	
 	/* change to degrees in correct quadrant */
-	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
-	position->L = range_degrees(position->L);
+	position->L = ln_rad_to_deg(position->L);
+	position->B = ln_rad_to_deg(position->B);
+	position->L = ln_range_degrees(position->L);
 	
 	/* change to fk5 reference frame */
-	vsop87_to_fk5 (position, JD);
+	ln_vsop87_to_fk5 (position, JD);
 	
 	/* save cache */
 	cJD = JD;
@@ -2248,7 +2246,7 @@ void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 
 
 
-/*! \fn double get_neptune_earth_dist (double JD);
+/*! \fn double ln_get_neptune_earth_dist (double JD);
 * \brief Calculate the distance between Neptune and the Earth in AU
 * \param JD Julian day
 * \return Distance in AU
@@ -2256,19 +2254,19 @@ void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Earth and Neptune for 
 * the given julian day.
 */
-double get_neptune_earth_dist (double JD)
+double ln_get_neptune_earth_dist (double JD)
 {
 	struct ln_helio_posn h_neptune, h_earth;
 	struct ln_rect_posn g_neptune, g_earth;
-	double x, y, z, au;
+	double x, y, z;
 	
 	/* get heliocentric positions */
-	get_neptune_helio_coords (JD, &h_neptune);
-	get_earth_helio_coords (JD, &h_earth);
+	ln_get_neptune_helio_coords (JD, &h_neptune);
+	ln_get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_neptune, &g_neptune);
-	get_rect_from_helio (&h_earth, &g_earth);
+	ln_get_rect_from_helio (&h_neptune, &g_neptune);
+	ln_get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_neptune.X - g_earth.X;
@@ -2278,12 +2276,10 @@ double get_neptune_earth_dist (double JD)
 	y = y * y;
 	z = z * z;
 
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return sqrt (x + y + z);
 }
 	
-/*! \fn double get_neptune_sun_dist (double JD);
+/*! \fn double ln_get_neptune_sun_dist (double JD);
 * \brief Calculate the distance between Neptune and the Sun in AU
 * \param JD Julian day
 * \return distance in AU
@@ -2291,37 +2287,34 @@ double get_neptune_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Neptune
 * for the given julian day.
 */ 
-double get_neptune_sun_dist (double JD)
+double ln_get_neptune_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_neptune;
 
 	/* get heliocentric position */
-	get_neptune_helio_coords (JD, &h_neptune);
-	
-	return (h_neptune.R);
+	ln_get_neptune_helio_coords (JD, &h_neptune);
+	return h_neptune.R;
 }
 	
-/*! \fn double get_neptune_magnitude (double JD);
+/*! \fn double ln_get_neptune_magnitude (double JD);
 * \brief Calculate the visible magnitude of Neptune
 * \param JD Julian day
 * \return Visible magnitude of neptune
 *
 * Calculate the visible magnitude of Neptune for the given julian day.
 */ 
-double get_neptune_magnitude (double JD)
+double ln_get_neptune_magnitude (double JD)
 {
-	double mag, delta, r;
+	double delta, r;
 	
 	/* get distances */
-	r = get_neptune_sun_dist (JD);
-	delta = get_neptune_earth_dist (JD);
+	r = ln_get_neptune_sun_dist (JD);
+	delta = ln_get_neptune_earth_dist (JD);
 
-	mag = -6.87 + 5 * log10 (r * delta);
-	
-	return (mag);
+	return -6.87 + 5 * log10 (r * delta);
 }
 
-/*! \fn double get_neptune_disk (double JD);
+/*! \fn double ln_get_neptune_disk (double JD);
 * \brief Calculate the illuminated fraction of Neptune's disk
 * \param JD Julian day
 * \return Illuminated fraction of Neptune's disk
@@ -2330,22 +2323,20 @@ double get_neptune_magnitude (double JD)
 * day.
 */ 
 /* Chapter 41 */
-double get_neptune_disk (double JD)
+double ln_get_neptune_disk (double JD)
 {
-	double k,r,delta,R;	
+	double r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_neptune_sun_dist (JD);
-	delta = get_neptune_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_neptune_sun_dist (JD);
+	delta = ln_get_neptune_earth_dist (JD);
 	
 	/* calc fraction angle */
-	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
-	
-	return (k);
+	return (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
 }
 
-/*! \fn double get_neptune_phase (double JD);
+/*! \fn double ln_get_neptune_phase (double JD);
 * \param JD Julian day
 * \return Phase angle of Neptune (degrees)
 *
@@ -2353,25 +2344,23 @@ double get_neptune_disk (double JD)
 * Neptune - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
-double get_neptune_phase (double JD)
+double ln_get_neptune_phase (double JD)
 {
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_neptune_sun_dist (JD);
-	delta = get_neptune_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_neptune_sun_dist (JD);
+	delta = ln_get_neptune_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
 	i = acos (i);
-	i = rad_to_deg (i);
-	
-	return (i);
+	return ln_rad_to_deg (i);
 }
 
 
-/*! \fn double get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -2383,40 +2372,38 @@ double get_neptune_phase (double JD)
 * Note: this functions returns 1 if Neptune is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_neptune_equ_coords, STAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_neptune_equ_coords, LN_STAR_STANDART_HORIZONT, rst);
 }
 
-/*! \fn double get_neptune_sdiam (double JD)
+/*! \fn double ln_get_neptune_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
 * Calculate the semidiameter of Neptune in arc seconds for the 
 * given julian day.
 */
-double get_neptune_sdiam (double JD)
+double ln_get_neptune_sdiam (double JD)
 {
-	double S, So = 33.50; /* at 1 AU */
+	double So = 33.50; /* at 1 AU */
 	double dist;
 	
-	dist = get_neptune_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_neptune_earth_dist (JD);
+	return So / dist;
 }
 	
-/*! \fn void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
+/*! \fn void ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
 * \param position ointer to return position
 *
 * Calculate Neptunes rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
 */
-void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
+void ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn neptune;
 		
-	get_neptune_helio_coords (JD, &neptune);
-	get_rect_from_helio (&neptune, position);
+	ln_get_neptune_helio_coords (JD, &neptune);
+	ln_get_rect_from_helio (&neptune, position);
 }

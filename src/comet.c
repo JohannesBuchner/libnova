@@ -18,11 +18,13 @@ Copyright 2002 Liam Girdwood
  
 */
 
-#include "libnova.h"
 #include <math.h>
+#include <libnova/comet.h>
+#include <libnova/elliptic_motion.h>
+#include <libnova/parabolic_motion.h>
 
 /*!
-* \fn double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
+* \fn double ln_get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
 * \param JD Julian day.
 * \param orbit Orbital parameters
 * \param g Absolute magnitude
@@ -31,31 +33,28 @@ Copyright 2002 Liam Girdwood
 *
 * Calculate the visual magnitude of a comet in an elliptical orbit.
 */
-double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
+double ln_get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
 {
-	double mag;
 	double d, r;
 	double E,M;
 	
 	/* get mean anomaly */
 	if (orbit->n == 0)
-		orbit->n = get_ell_mean_motion (orbit->a);
-	M = get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
+		orbit->n = ln_get_ell_mean_motion (orbit->a);
+	M = ln_get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
 	
 	/* get eccentric anomaly */
-	E = solve_kepler (orbit->e, M);
+	E = ln_solve_kepler (orbit->e, M);
 	
 	/* get radius vector */
-	r = get_ell_radius_vector (orbit->a, orbit->e, E);
-	d = get_ell_body_solar_dist (JD, orbit);
+	r = ln_get_ell_radius_vector (orbit->a, orbit->e, E);
+	d = ln_get_ell_body_solar_dist (JD, orbit);
 	
-	mag = g + 5.0 * log10 (d) + k * log10 (r);
-	
-	return (mag);
+	return g + 5.0 * log10 (d) + k * log10 (r);
 }
 
 /*!
-* \fn double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
+* \fn double ln_get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
 * \param JD Julian day.
 * \param orbit Orbital parameters
 * \param g Absolute magnitude
@@ -64,19 +63,16 @@ double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, doub
 *
 * Calculate the visual magnitude of a comet in a parabolic orbit.
 */
-double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
+double ln_get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
 {
-	double mag;
 	double d,r,t;
 	
 	/* time since perihelion */
 	t = JD - orbit->JD;
 	
 	/* get radius vector */
-	r = get_par_radius_vector (orbit->q, t);
-	d = get_par_body_solar_dist (JD, orbit);
+	r = ln_get_par_radius_vector (orbit->q, t);
+	d = ln_get_par_body_solar_dist (JD, orbit);
 
-	mag = g + 5.0 * log10 (d) + k * log10 (r);
-	
-	return (mag);
+	return g + 5.0 * log10 (d) + k * log10 (r);
 }

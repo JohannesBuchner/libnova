@@ -17,12 +17,30 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 
 */
 
-#include "nutation.h"
-#include "libnova.h"
 #include <math.h>
+#include <libnova/nutation.h>
+#include <libnova/dynamical_time.h>
+#include <libnova/utility.h>
 
 #define TERMS 63
 #define LN_NUTATION_EPOCH_THRESHOLD 0.1
+
+struct nutation_arguments
+{
+    double D;
+    double M;
+    double MM;
+    double F;
+    double O;
+};
+
+struct nutation_coefficients
+{
+    double longitude1;
+    double longitude2;
+    double obliquity1;
+    double obliquity2;
+};
 
 /* arguments and coefficients taken from table 21A on page 133 */
 
@@ -160,7 +178,7 @@ const static struct nutation_coefficients coefficients[TERMS] = {
 static double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0; 
 
 	
-/*! \fn void get_nutation (double JD, struct ln_nutation * nutation)
+/*! \fn void ln_get_nutation (double JD, struct ln_nutation * nutation)
 * \param JD Julian Day.
 * \param nutation Pointer to store nutation
 *
@@ -169,7 +187,7 @@ static double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0
 /* Chapter 21 pg 131-134 Using Table 21A 
 */
 
-void get_nutation (double JD, struct ln_nutation * nutation)
+void ln_get_nutation (double JD, struct ln_nutation * nutation)
 {
 	
 	double D,M,MM,F,O,T,T2,T3,JDE;
@@ -177,8 +195,7 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 	int i;
 
 	/* should we bother recalculating nutation */
-	if (fabs(JD - c_JD) > LN_NUTATION_EPOCH_THRESHOLD)
-	{
+	if (fabs(JD - c_JD) > LN_NUTATION_EPOCH_THRESHOLD) {
 		/* set the new epoch */
 		c_JD = JD;
 
@@ -186,7 +203,7 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 		c_ecliptic = 23.0 + 26.0 / 60.0 + 27.407 / 3600.0;
 		
 		/* get julian ephemeris day */
-		JDE = get_jde (JD);
+		JDE = ln_get_jde (JD);
 		
 		/* calc T */
 		T = (JDE - 2451545.0)/36525;
@@ -201,42 +218,36 @@ void get_nutation (double JD, struct ln_nutation * nutation)
 		O = 125.04452 - 1934.136261 * T + 0.0020708 * T2 + T3 / 450000.0;
 	
 		/* convert to radians */
-		D = deg_to_rad (D);
-		M = deg_to_rad (M);
-		MM = deg_to_rad (MM);
-		F = deg_to_rad (F);
-		O = deg_to_rad (O);
+		D = ln_deg_to_rad (D);
+		M = ln_deg_to_rad (M);
+		MM = ln_deg_to_rad (MM);
+		F = ln_deg_to_rad (F);
+		O = ln_deg_to_rad (O);
 
 		/* calc sum of terms in table 21A */
-		for (i=0; i< TERMS; i++)
-		{
+		for (i=0; i< TERMS; i++) {
 			/* calc coefficients of sine and cosine */
 			coeff_sine = (coefficients[i].longitude1 + (coefficients[i].longitude2 * T));
 			coeff_cos = (coefficients[i].obliquity1 + (coefficients[i].obliquity2 * T));
 			
 			/* sum the arguments */
-			if (arguments[i].D != 0)
-			{
+			if (arguments[i].D != 0) {
 				c_longitude += coeff_sine * (sin (arguments[i].D * D));
 				c_obliquity += coeff_cos * (cos (arguments[i].D * D));
 			}
-			if (arguments[i].M != 0)
-			{
+			if (arguments[i].M != 0) {
 				c_longitude += coeff_sine * (sin (arguments[i].M * M));
 				c_obliquity += coeff_cos * (cos (arguments[i].M * M));
 			}
-			if (arguments[i].MM != 0)
-			{
+			if (arguments[i].MM != 0) {
 				c_longitude += coeff_sine * (sin (arguments[i].MM * MM));
 				c_obliquity += coeff_cos * (cos (arguments[i].MM * MM));
 			}
-			if (arguments[i].F != 0)
-			{
+			if (arguments[i].F != 0) {
 				c_longitude += coeff_sine * (sin (arguments[i].F * F));
 				c_obliquity += coeff_cos * (cos (arguments[i].F * F));
 			}
-			if (arguments[i].O != 0)
-			{
+			if (arguments[i].O != 0) {
 				c_longitude += coeff_sine * (sin (arguments[i].O * O));
 				c_obliquity += coeff_cos * (cos (arguments[i].O * O));
 			}

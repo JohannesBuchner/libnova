@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = libnova
+
 lib_LTLIBRARIES = libnova.la
 
 libnova_la_SOURCES = \
@@ -29,28 +31,10 @@ libnova_la_SOURCES = \
 	asteroid.c \
 	comet.c \
 	parabolic_motion.c \
-	misc.c \
+	utility.c \
 	refraction.c \
 	rise_set.c \
 	angular_separation.c
-
-
-include_HEADERS = libnova.h  
-
-noinst_HEADERS = \
-	julian_day.h \
-	dynamical_time.h \
-	sidereal_time.h \
-	transform.h \
-	nutation.h \
-	aberration.h \
-	apparent_position.h \
-	precession.h  \
-	proper_motion.h \
-	vsop87.h \
-	pluto.h \
-	lunar.h 
-  
 
 libnova_la_LDFLAGS = \
 	-version-info $(LT_VERSION) \

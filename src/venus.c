@@ -22,9 +22,13 @@ Copyright 2000 Liam Girdwood
 */
 
 #include <math.h>
-#include "vsop87.h"
-#include "libnova.h"
-
+#include <libnova/venus.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 #define LONG_L0 416
 #define LONG_L1 235
@@ -48,7 +52,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static const struct vsop venus_longitude_l0[LONG_L0] = {
+static const struct ln_vsop venus_longitude_l0[LONG_L0] = {
     {     3.17614666774,  0.00000000000,        0.00000000000}, 
     {     0.01353968419,  5.59313319619,    10213.28554621100}, 
     {     0.00089891645,  5.30650047764,    20426.57109242200}, 
@@ -468,7 +472,7 @@ static const struct vsop venus_longitude_l0[LONG_L0] = {
 };
 
 
-static const struct vsop venus_longitude_l1[LONG_L1] = {
+static const struct ln_vsop venus_longitude_l1[LONG_L1] = {
     { 10213.28554621638,  0.00000000000,        0.00000000000}, 
     {     0.00095617813,  2.46406511110,    10213.28554621100}, 
     {     0.00007787201,  0.62478482220,    20426.57109242200}, 
@@ -707,7 +711,7 @@ static const struct vsop venus_longitude_l1[LONG_L1] = {
 };
 
 
-static const struct vsop venus_longitude_l2[LONG_L2] = {
+static const struct ln_vsop venus_longitude_l2[LONG_L2] = {
     {     0.00003894209,  0.34823650721,    10213.28554621100}, 
     {     0.00000595403,  2.01456107998,    20426.57109242200}, 
     {     0.00000287868,  0.00000000000,        0.00000000000}, 
@@ -783,7 +787,7 @@ static const struct vsop venus_longitude_l2[LONG_L2] = {
 };
 
 
-static const struct vsop venus_longitude_l3[LONG_L3] = {
+static const struct ln_vsop venus_longitude_l3[LONG_L3] = {
     {     0.00000136328,  4.79698723753,    10213.28554621100}, 
     {     0.00000030661,  3.71663788064,    20426.57109242200}, 
     {     0.00000003041,  3.14159265359,        0.00000000000}, 
@@ -794,7 +798,7 @@ static const struct vsop venus_longitude_l3[LONG_L3] = {
 };
 
 
-static const struct vsop venus_longitude_l4[LONG_L4] = {
+static const struct ln_vsop venus_longitude_l4[LONG_L4] = {
     {     0.00000001636,  2.50540811485,    10213.28554621100}, 
     {     0.00000001080,  5.10106236574,    20426.57109242200}, 
     {     0.00000000018,  0.88315856739,    30639.85663863300}, 
@@ -802,13 +806,13 @@ static const struct vsop venus_longitude_l4[LONG_L4] = {
 };
 
 
-static const struct vsop venus_longitude_l5[LONG_L5] = {
+static const struct ln_vsop venus_longitude_l5[LONG_L5] = {
     {     0.00000000122,  1.88711724630,    10213.28554621100}, 
     {     0.00000000043,  0.42125909290,    20426.57109242200}, 
 };
 
 
-static const struct vsop venus_latitude_b0[LAT_B0] = {
+static const struct ln_vsop venus_latitude_b0[LAT_B0] = {
     {     0.05923638472,  0.26702775812,    10213.28554621100}, 
     {     0.00040107978,  1.14737178112,    20426.57109242200}, 
     {     0.00032814918,  3.14159265359,        0.00000000000}, 
@@ -1022,7 +1026,7 @@ static const struct vsop venus_latitude_b0[LAT_B0] = {
 };
 
 
-static const struct vsop venus_latitude_b1[LAT_B1] = {
+static const struct ln_vsop venus_latitude_b1[LAT_B1] = {
     {     0.00287821243,  1.88964962838,    10213.28554621100}, 
     {     0.00003499578,  3.71117560516,    20426.57109242200}, 
     {     0.00001257844,  0.00000000000,        0.00000000000}, 
@@ -1147,7 +1151,7 @@ static const struct vsop venus_latitude_b1[LAT_B1] = {
 };
 
 
-static const struct vsop venus_latitude_b2[LAT_B2] = {
+static const struct ln_vsop venus_latitude_b2[LAT_B2] = {
     {     0.00012657745,  3.34796457029,    10213.28554621100}, 
     {     0.00000151225,  0.00000000000,        0.00000000000}, 
     {     0.00000037476,  5.34638962141,    20426.57109242200}, 
@@ -1202,7 +1206,7 @@ static const struct vsop venus_latitude_b2[LAT_B2] = {
 };
 
 
-static const struct vsop venus_latitude_b3[LAT_B3] = {
+static const struct ln_vsop venus_latitude_b3[LAT_B3] = {
     {     0.00000376505,  4.87650249694,    10213.28554621100}, 
     {     0.00000012587,  3.14159265359,        0.00000000000}, 
     {     0.00000004809,  0.43423918018,    20426.57109242200}, 
@@ -1218,7 +1222,7 @@ static const struct vsop venus_latitude_b3[LAT_B3] = {
 };
 
 
-static const struct vsop venus_latitude_b4[LAT_B4] = {
+static const struct ln_vsop venus_latitude_b4[LAT_B4] = {
     {     0.00000008558,  0.17181972054,    10213.28554621100}, 
     {     0.00000000114,  2.50366130090,    20426.57109242200}, 
     {     0.00000000115,  3.14159265359,        0.00000000000}, 
@@ -1226,7 +1230,7 @@ static const struct vsop venus_latitude_b4[LAT_B4] = {
 };
 
 
-static const struct vsop venus_latitude_b5[LAT_B5] = {
+static const struct ln_vsop venus_latitude_b5[LAT_B5] = {
     {     0.00000000149,  1.67437168506,    10213.28554621100}, 
     {     0.00000000023,  0.00000000000,        0.00000000000}, 
     {     0.00000000008,  3.73924477319,    20426.57109242200}, 
@@ -1234,7 +1238,7 @@ static const struct vsop venus_latitude_b5[LAT_B5] = {
 };
 
 
-static const struct vsop venus_radius_r0[RADIUS_R0] = {
+static const struct ln_vsop venus_radius_r0[RADIUS_R0] = {
     {     0.72334820891,  0.00000000000,        0.00000000000}, 
     {     0.00489824182,  4.02151831717,    10213.28554621100}, 
     {     0.00001658058,  4.90206728031,    20426.57109242200}, 
@@ -1561,7 +1565,7 @@ static const struct vsop venus_radius_r0[RADIUS_R0] = {
 };
 
 
-static const struct vsop venus_radius_r1[RADIUS_R1] = {
+static const struct ln_vsop venus_radius_r1[RADIUS_R1] = {
     {     0.00034551041,  0.89198706276,    10213.28554621100}, 
     {     0.00000234203,  1.77224942363,    20426.57109242200}, 
     {     0.00000233998,  3.14159265359,        0.00000000000}, 
@@ -1739,7 +1743,7 @@ static const struct vsop venus_radius_r1[RADIUS_R1] = {
 };
 
 
-static const struct vsop venus_radius_r2[RADIUS_R2] = {
+static const struct ln_vsop venus_radius_r2[RADIUS_R2] = {
     {     0.00001406587,  5.06366395112,    10213.28554621100}, 
     {     0.00000015529,  5.47321056992,    20426.57109242200}, 
     {     0.00000013059,  0.00000000000,        0.00000000000}, 
@@ -1805,7 +1809,7 @@ static const struct vsop venus_radius_r2[RADIUS_R2] = {
 };
 
 
-static const struct vsop venus_radius_r3[RADIUS_R3] = {
+static const struct ln_vsop venus_radius_r3[RADIUS_R3] = {
     {     0.00000049582,  3.22264415899,    10213.28554621100}, 
     {     0.00000000831,  3.21255590531,    20426.57109242200}, 
     {     0.00000000112,  3.14159265359,        0.00000000000}, 
@@ -1817,19 +1821,19 @@ static const struct vsop venus_radius_r3[RADIUS_R3] = {
 };
 
 
-static const struct vsop venus_radius_r4[RADIUS_R4] = {
+static const struct ln_vsop venus_radius_r4[RADIUS_R4] = {
     {     0.00000000573,  0.92253525592,    10213.28554621100}, 
     {     0.00000000039,  0.95696787303,    20426.57109242200}, 
     {     0.00000000006,  3.14159265359,        0.00000000000}, 
 };
 
 
-static const struct vsop venus_radius_r5[RADIUS_R5] = {
+static const struct ln_vsop venus_radius_r5[RADIUS_R5] = {
     {     0.00000000045,  0.30037014808,    10213.28554621100}, 
     {     0.00000000002,  5.33215705373,    20426.57109242200}, 
 };
 
-/*! \fn void get_venus_equ_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD Julian Day
 * \param position Pointer to store position
 *
@@ -1842,9 +1846,7 @@ static const struct vsop venus_radius_r5[RADIUS_R5] = {
 *
 * The position returned is accurate to within 0.1 arcsecs..
 */ 
-void get_venus_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position)
+void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_venus;
 	struct ln_rect_posn g_sol, g_venus;
@@ -1852,14 +1854,13 @@ void get_venus_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol,  &g_sol);
+	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_rect_from_helio (&h_sol,  &g_sol);
 	
-	do
-	{
+	do {
 		last = t;
-		get_venus_helio_coords (JD - t, &h_venus);
-		get_rect_from_helio (&h_venus, &g_venus);
+		ln_get_venus_helio_coords (JD - t, &h_venus);
+		ln_get_rect_from_helio (&h_venus, &g_venus);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_venus.X;
@@ -1870,19 +1871,18 @@ void get_venus_equ_coords
 		delta = sqrt (delta);
 		t = delta * 0.0057755183;
 		diff = t - last;
-	}
-	while (diff > 0.0001 || diff < -0.0001);
+	} while (diff > 0.0001 || diff < -0.0001);
 		
 	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = range_degrees(rad_to_deg (ra));
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_range_degrees(ln_rad_to_deg (ra));
+	position->dec = ln_rad_to_deg (dec);
 }
 	
-/*! \fn void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
+/*! \fn void ln_get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
@@ -1892,7 +1892,7 @@ void get_venus_equ_coords
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
+void ln_get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4, L5;
@@ -1900,8 +1900,7 @@ void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 	double R0, R1, R2, R3, R4, R5;
            	
 	/* check cache first */
-	if (JD == cJD)
-	{
+	if (JD == cJD) {
 		/* cache hit */
 		position->L = cL;
 		position->B = cB;
@@ -1917,40 +1916,40 @@ void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 	t5 = t4 * t;
 	
 	/* calc L series */
-	L0 = calc_series (venus_longitude_l0, LONG_L0, t);
-	L1 = calc_series (venus_longitude_l1, LONG_L1, t);
-	L2 = calc_series (venus_longitude_l2, LONG_L2, t);
-	L3 = calc_series (venus_longitude_l3, LONG_L3, t);
-	L4 = calc_series (venus_longitude_l4, LONG_L4, t);
-	L5 = calc_series (venus_longitude_l5, LONG_L5, t);
+	L0 = ln_calc_series (venus_longitude_l0, LONG_L0, t);
+	L1 = ln_calc_series (venus_longitude_l1, LONG_L1, t);
+	L2 = ln_calc_series (venus_longitude_l2, LONG_L2, t);
+	L3 = ln_calc_series (venus_longitude_l3, LONG_L3, t);
+	L4 = ln_calc_series (venus_longitude_l4, LONG_L4, t);
+	L5 = ln_calc_series (venus_longitude_l5, LONG_L5, t);
 	position->L = (L0 + L1 * t + L2 * t2 + L3 * t3 + L4 * t4 + L5 * t5);
 
 	/* calc B series */
-	B0 = calc_series (venus_latitude_b0, LAT_B0, t);
-	B1 = calc_series (venus_latitude_b1, LAT_B1, t);
-	B2 = calc_series (venus_latitude_b2, LAT_B2, t);
-	B3 = calc_series (venus_latitude_b3, LAT_B3, t);
-	B4 = calc_series (venus_latitude_b4, LAT_B4, t);
-	B5 = calc_series (venus_latitude_b5, LAT_B5, t);
+	B0 = ln_calc_series (venus_latitude_b0, LAT_B0, t);
+	B1 = ln_calc_series (venus_latitude_b1, LAT_B1, t);
+	B2 = ln_calc_series (venus_latitude_b2, LAT_B2, t);
+	B3 = ln_calc_series (venus_latitude_b3, LAT_B3, t);
+	B4 = ln_calc_series (venus_latitude_b4, LAT_B4, t);
+	B5 = ln_calc_series (venus_latitude_b5, LAT_B5, t);
 	position->B = (B0 + B1 * t + B2 * t2 + B3 * t3 + B4 * t4 + B5 * t5);
 
 
 	/* calc R series */
-	R0 = calc_series (venus_radius_r0, RADIUS_R0, t);
-	R1 = calc_series (venus_radius_r1, RADIUS_R1, t);
-	R2 = calc_series (venus_radius_r2, RADIUS_R2, t);
-	R3 = calc_series (venus_radius_r3, RADIUS_R3, t);
-	R4 = calc_series (venus_radius_r4, RADIUS_R4, t);
-	R5 = calc_series (venus_radius_r5, RADIUS_R5, t);
+	R0 = ln_calc_series (venus_radius_r0, RADIUS_R0, t);
+	R1 = ln_calc_series (venus_radius_r1, RADIUS_R1, t);
+	R2 = ln_calc_series (venus_radius_r2, RADIUS_R2, t);
+	R3 = ln_calc_series (venus_radius_r3, RADIUS_R3, t);
+	R4 = ln_calc_series (venus_radius_r4, RADIUS_R4, t);
+	R5 = ln_calc_series (venus_radius_r5, RADIUS_R5, t);
 	position->R = (R0 + R1 * t + R2 * t2 + R3 * t3 + R4 * t4 + R5 * t5);
 	
 	/* change to degrees in correct quadrant */
-	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
-	position->L = range_degrees(position->L);
+	position->L = ln_rad_to_deg(position->L);
+	position->B = ln_rad_to_deg(position->B);
+	position->L = ln_range_degrees(position->L);
 	
 	/* change to fk5 reference frame */
-	vsop87_to_fk5 (position, JD);
+	ln_vsop87_to_fk5 (position, JD);
 	
 	/* save cache */
 	cJD = JD;
@@ -1959,7 +1958,7 @@ void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 	cR = position->R;
 }
 
-/*! \fn double get_venus_earth_dist (double JD);
+/*! \fn double ln_get_venus_earth_dist (double JD);
 * \param JD Julian day
 * \brief Calculate the distance between Venus and the Earth in AU
 * \return Distance in AU
@@ -1967,19 +1966,19 @@ void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Earth and Venus for the
 * given julian day.
 */
-double get_venus_earth_dist (double JD)
+double ln_get_venus_earth_dist (double JD)
 {
 	struct ln_helio_posn h_venus, h_earth;
 	struct ln_rect_posn g_venus, g_earth;
-	double x, y, z, au;
+	double x, y, z;
 	
 	/* get heliocentric positions */
-	get_venus_helio_coords (JD, &h_venus);
-	get_earth_helio_coords (JD, &h_earth);
+	ln_get_venus_helio_coords (JD, &h_venus);
+	ln_get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_venus, &g_venus);
-	get_rect_from_helio (&h_earth, &g_earth);
+	ln_get_rect_from_helio (&h_venus, &g_venus);
+	ln_get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_venus.X - g_earth.X;
@@ -1989,12 +1988,10 @@ double get_venus_earth_dist (double JD)
 	x = x * x;
 	y = y * y;
 	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return sqrt (x + y + z);
 }
 
-/*! \fn double get_venus_sun_dist (double JD);
+/*! \fn double ln_get_venus_sun_dist (double JD);
 * \param JD Julian day
 * \brief Calculate the distance between Venus and the Sun in AU
 * \return Distance in AU
@@ -2002,17 +1999,17 @@ double get_venus_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Venus for
 * the given julian day.
 */ 
-double get_venus_sun_dist (double JD)
+double ln_get_venus_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_venus;
 
 	/* get heliocentric position */
-	get_venus_helio_coords (JD, &h_venus);
+	ln_get_venus_helio_coords (JD, &h_venus);
 
-	return (h_venus.R);
+	return h_venus.R;
 }
 	
-/*! \fn double get_venus_magnitude (double JD);
+/*! \fn double ln_get_venus_magnitude (double JD);
 * \param JD Julian day
 * \brief Calculate the visible magnitude of Venus
 * \return Visible magnitude of venus
@@ -2020,25 +2017,23 @@ double get_venus_sun_dist (double JD)
 * Calculate the visible magnitude of Venus for the 
 * given julian day.
 */ 
-double get_venus_magnitude (double JD)
+double ln_get_venus_magnitude (double JD)
 {
-	double mag, delta, r, i, i2, i3;
+	double delta, r, i, i2, i3;
 	
 	/* get distances */
-	r = get_venus_sun_dist (JD);
-	delta = get_venus_earth_dist (JD);
+	r = ln_get_venus_sun_dist (JD);
+	delta = ln_get_venus_earth_dist (JD);
 	
 	/* get phase */
-	i = get_venus_phase (JD);
+	i = ln_get_venus_phase (JD);
 	i2 = i * i;
 	i3 = i2 * i;
 	
-	mag = -4.40 + 5 * log10 (r * delta) + 0.0009 * i + 0.000239 * i2 - 0.00000065 * i3;
-	
-	return (mag);
+	return -4.40 + 5 * log10 (r * delta) + 0.0009 * i + 0.000239 * i2 - 0.00000065 * i3;
 }
 
-/*! \fn double get_venus_disk (double JD);
+/*! \fn double ln_get_venus_disk (double JD);
 * \param JD Julian day
 * \brief Calculate the illuminated fraction of Venus disk
 * \return Illuminated fraction of venus disk
@@ -2047,22 +2042,20 @@ double get_venus_magnitude (double JD)
 * day
 */ 
 /* Chapter 41 */
-double get_venus_disk (double JD)
+double ln_get_venus_disk (double JD)
 {
-	double k,r,delta,R;	
+	double r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_venus_sun_dist (JD);
-	delta = get_venus_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_venus_sun_dist (JD);
+	delta = ln_get_venus_earth_dist (JD);
 	
 	/* calc fraction angle */
-	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
-	
-	return (k);
+	return (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
 }
 
-/*! \fn double get_venus_phase (double JD);
+/*! \fn double ln_get_venus_phase (double JD);
 * \param JD Julian day
 * \brief Calculate the phase angle of Venus (Sun - Venus - Earth)
 * \return Phase angle of Venus (degrees)
@@ -2071,25 +2064,23 @@ double get_venus_disk (double JD)
 * Venus - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
-double get_venus_phase (double JD)
+double ln_get_venus_phase (double JD)
 {
 	double i,r,delta,R;
 	
 	/* get distances */
-	R = get_earth_sun_dist (JD);
-	r = get_venus_sun_dist (JD);
-	delta = get_venus_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	r = ln_get_venus_sun_dist (JD);
+	delta = ln_get_venus_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
 	i = acos (i);
-	i = rad_to_deg (i);
-	
-	return (i);
+	return ln_rad_to_deg (i);
 }
 
 
-/*! \fn double get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -2101,41 +2092,39 @@ double get_venus_phase (double JD)
 * Note: this functions returns 1 if Venus is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_venus_equ_coords, STAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_venus_equ_coords, LN_STAR_STANDART_HORIZONT, rst);
 }
 
 
-/*! \fn double get_venus_sdiam (double JD)
+/*! \fn double ln_get_venus_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
 * Calculate the semidiameter of Venus in arc seconds for the 
 * given julian day.
 */
-double get_venus_sdiam (double JD)
+double ln_get_venus_sdiam (double JD)
 {
-	double S, So = 8.41; /* at 1 AU, using atmosphere value, not crust (8.34) */
+	double So = 8.41; /* at 1 AU, using atmosphere value, not crust (8.34) */
 	double dist;
 	
-	dist = get_venus_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_venus_earth_dist (JD);
+	return So / dist;
 }
 	
-/*! \fn void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
+/*! \fn void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
 * \param position ointer to return position
 *
 * Calculate Venus rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
 */
-void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
+void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn venus;
 		
-	get_venus_helio_coords (JD, &venus);
-	get_rect_from_helio (&venus, position);
+	ln_get_venus_helio_coords (JD, &venus);
+	ln_get_rect_from_helio (&venus, position);
 }

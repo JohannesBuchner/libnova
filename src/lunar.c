@@ -20,9 +20,14 @@ Michelle Chapront-Touze and Jean Chapront.
 
 */
 
-#include "libnova.h"
-#include "lunar.h"
 #include <math.h>
+#include <libnova/lunar.h>
+#include <libnova/vsop87.h>
+#include <libnova/solar.h>
+#include <libnova/earth.h>
+#include <libnova/transform.h>
+#include <libnova/rise_set.h>
+#include <libnova/utility.h>
 
 /* AU in KM */
 #define AU			149597870
@@ -99,6 +104,41 @@ Michelle Chapront-Touze and Jean Chapront.
 #define		Q3		0.1265417e-8
 #define		Q4		-0.1371808e-11
 #define		Q5		-0.320334e-14
+
+/* used for elp1 - 3 */
+struct main_problem
+{
+	int ilu[4];
+	double A;
+	double B[5];
+};
+
+/* used for elp 4 - 9 */
+struct earth_pert
+{
+	int iz;
+	int ilu[4];
+	double O;
+	double A;
+	double P;
+}; 
+
+/* used for elp 10 - 21 */
+struct planet_pert
+{
+	int ipla[11];
+	double theta;
+	double O;
+	double P;
+};
+
+typedef struct earth_pert tidal_effects;
+typedef struct earth_pert moon_pert;
+typedef struct earth_pert rel_pert;
+typedef struct earth_pert plan_sol_pert;
+ 
+/* initialise lunar constants */
+void init_lunar_constants ();
 
 /* cache values */
 static double c_JD = 0;
@@ -38214,18 +38254,16 @@ static const plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] =
 };
 
 /* sum lunar elp1 series */
-double sum_series_elp1 (double* t)
+static double sum_series_elp1 (double* t)
 {
 	double result = 0;
 	double x,y;
 	double tgv;
 	int i,j,k;
 	
-  	for (j=0; j< ELP1_SIZE; j++)
-	{
+  	for (j=0; j< ELP1_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(main_elp1[j].A) > pre[0])
-		{
+		if (fabs(main_elp1[j].A) > pre[0]) {
 			/* derivatives of A */
 			tgv = main_elp1[j].B[0] + DTASM * main_elp1[j].B[4];
 			x = main_elp1[j].A + tgv * (DELNP - AM * DELNU) + 
@@ -38233,34 +38271,30 @@ double sum_series_elp1 (double* t)
 				DELE + main_elp1[j].B[3] * DELEP;
 		
 			y = 0;
-			for (k = 0; k < 5; k++)
-			{
+			for (k = 0; k < 5; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += main_elp1[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
+			
 			/* y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += x * sin (y);
+		}
 	}
-	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp2 series */
-double sum_series_elp2 (double* t)
+static double sum_series_elp2 (double* t)
 {
 	double result = 0;
 	double x,y;
 	double tgv;
 	int i,j,k;
 	
-  	for (j=0; j< ELP2_SIZE; j++)
-	{
+  	for (j=0; j< ELP2_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(main_elp2[j].A) > pre[1])
-		{
+		if (fabs(main_elp2[j].A) > pre[1]) {
 			/* derivatives of A */
 			tgv = main_elp2[j].B[0] + DTASM * main_elp2[j].B[4];
 			x = main_elp2[j].A + tgv * (DELNP - AM * DELNU) + 
@@ -38268,34 +38302,29 @@ double sum_series_elp2 (double* t)
 				DELE + main_elp2[j].B[3] * DELEP;
 		
 			y = 0;
-			for (k = 0; k < 5; k++)
-			{
+			for (k = 0; k < 5; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += main_elp2[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp3 series */
-double sum_series_elp3 (double* t)
+static double sum_series_elp3 (double* t)
 {
 	double result = 0;
 	double x,y;
 	double tgv;
 	int i,j,k;
 	
-  	for (j=0; j< ELP3_SIZE; j++)
-	{
+  	for (j=0; j< ELP3_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(main_elp3[j].A) > pre[2])
-		{
+		if (fabs(main_elp3[j].A) > pre[2]) {
 			/* derivatives of A */
 			tgv = main_elp3[j].B[0] + DTASM * main_elp3[j].B[4];
 			x = main_elp3[j].A + tgv * (DELNP - AM * DELNU) + 
@@ -38303,1024 +38332,844 @@ double sum_series_elp3 (double* t)
 				DELE + main_elp3[j].B[3] * DELEP;
 		
 			y = 0;
-			for (k = 0; k < 5; k++)
-			{
+			for (k = 0; k < 5; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += main_elp3[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			y += (M_PI_2);
 			/* y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 
 /* sum lunar elp4 series */
-double sum_series_elp4 (double *t)
+static double sum_series_elp4 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP4_SIZE; j++)
-	{
+	for (j=0; j< ELP4_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp4[j].A) > pre[0])
-		{
+		if (fabs(earth_pert_elp4[j].A) > pre[0]) {
 			y = earth_pert_elp4[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++)  {
 				y += earth_pert_elp4[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp4[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += earth_pert_elp4[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp5 series */
-double sum_series_elp5 (double *t)
+static double sum_series_elp5 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP5_SIZE; j++)
-	{
+	for (j=0; j< ELP5_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp5[j].A) > pre[1])
-		{
+		if (fabs(earth_pert_elp5[j].A) > pre[1]) {
 			y = earth_pert_elp5[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += earth_pert_elp5[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp5[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += earth_pert_elp5[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 
 /* sum lunar elp6 series */
-double sum_series_elp6 (double *t)
+static double sum_series_elp6 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP6_SIZE; j++)
-	{
+	for (j=0; j< ELP6_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp6[j].A) > pre[2])
-		{
+		if (fabs(earth_pert_elp6[j].A) > pre[2]) {
 			y = earth_pert_elp6[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += earth_pert_elp6[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp6[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += earth_pert_elp6[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp7 series */
-double sum_series_elp7 (double *t)
+static double sum_series_elp7 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP7_SIZE; j++)
-	{
+	for (j=0; j< ELP7_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp7[j].A) > pre[0])
-		{
+		if (fabs(earth_pert_elp7[j].A) > pre[0]) {
 			A = earth_pert_elp7[j].A * t[1];
 			y = earth_pert_elp7[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += earth_pert_elp7[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp7[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp8 series */
-double sum_series_elp8 (double *t)
+static double sum_series_elp8 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP8_SIZE; j++)
-	{
+	for (j=0; j< ELP8_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp8[j].A) > pre[1])
-		{
+		if (fabs(earth_pert_elp8[j].A) > pre[1]) {
 			y = earth_pert_elp8[j].O * DEG;
 			A = earth_pert_elp8[j].A * t[1];
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += earth_pert_elp8[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp8[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp9 series */
-double sum_series_elp9 (double *t)
+static double sum_series_elp9 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP9_SIZE; j++)
-	{
+	for (j=0; j< ELP9_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(earth_pert_elp9[j].A) > pre[2])
-		{
+		if (fabs(earth_pert_elp9[j].A) > pre[2]) {
 			A = earth_pert_elp9[j].A * t[1];
 			y = earth_pert_elp9[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += earth_pert_elp9[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += earth_pert_elp9[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp10 series */
-double sum_series_elp10 (double *t)
+static double sum_series_elp10 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP10_SIZE; j++)
-	{
+	for (j=0; j< ELP10_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp10[j].O) > pre[0])
-		{
+		if (fabs(plan_pert_elp10[j].O) > pre[0]) {
 			y = plan_pert_elp10[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += (plan_pert_elp10[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp10[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp10[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp10[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp10[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp11 series */
-double sum_series_elp11 (double *t)
+static double sum_series_elp11 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP11_SIZE; j++)
-	{
+	for (j=0; j< ELP11_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp11[j].O) > pre[1])
-		{
+		if (fabs(plan_pert_elp11[j].O) > pre[1]) {
 			y = plan_pert_elp11[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++)  {
 				y += (plan_pert_elp11[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp11[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp11[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp11[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp11[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp12 series */
-double sum_series_elp12 (double *t)
+static double sum_series_elp12 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP12_SIZE; j++)
-	{
+	for (j=0; j< ELP12_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp12[j].O) > pre[2])
-		{
+		if (fabs(plan_pert_elp12[j].O) > pre[2]) {
 			y = plan_pert_elp12[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += (plan_pert_elp12[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp12[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp12[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp12[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp12[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp13 series */
-double sum_series_elp13 (double *t)
+static double sum_series_elp13 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP13_SIZE; j++)
-	{
+	for (j=0; j< ELP13_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp13[j].O) > pre[0])
-		{
+		if (fabs(plan_pert_elp13[j].O) > pre[0]) {
 			y = plan_pert_elp13[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += (plan_pert_elp13[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp13[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp13[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp13[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp13[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp14 series */
-double sum_series_elp14 (double *t)
+static double sum_series_elp14 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP14_SIZE; j++)
-	{
+	for (j=0; j< ELP14_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp14[j].O) > pre[1])
-		{
+		if (fabs(plan_pert_elp14[j].O) > pre[1]) {
 			y = plan_pert_elp14[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++)  {
 				y += (plan_pert_elp14[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp14[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp14[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp14[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp14[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 
 /* sum lunar elp15 series */
-double sum_series_elp15 (double *t)
+static double sum_series_elp15 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP15_SIZE; j++)
-	{
+	for (j=0; j< ELP15_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp15[j].O) > pre[2])
-		{
+		if (fabs(plan_pert_elp15[j].O) > pre[2]) {
 			y = plan_pert_elp15[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += (plan_pert_elp15[j].ipla[8] * del[0][k] 
 				+ plan_pert_elp15[j].ipla[9] * del[2][k] 
 				+ plan_pert_elp15[j].ipla[10] * del [3][k]) * t[k];
 				for (i = 0; i < 8; i++) 
-				{
 					y += plan_pert_elp15[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp15[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp16 series */
-double sum_series_elp16 (double *t)
+static double sum_series_elp16 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP16_SIZE; j++)
-	{
+	for (j=0; j< ELP16_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp16[j].O) > pre[0])
-		{
+		if (fabs(plan_pert_elp16[j].O) > pre[0]) {
 			y = plan_pert_elp16[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp16[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp16[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp16[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-double sum_series_elp17 (double *t)
+static double sum_series_elp17 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP17_SIZE; j++)
-	{
+	for (j=0; j< ELP17_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp17[j].O) > pre[1])
-		{
+		if (fabs(plan_pert_elp17[j].O) > pre[1]) {
 			y = plan_pert_elp17[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp17[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp17[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp17[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-double sum_series_elp18 (double *t)
+static double sum_series_elp18 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP18_SIZE; j++)
-	{
+	for (j=0; j< ELP18_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp18[j].O) > pre[2])
-		{
+		if (fabs(plan_pert_elp18[j].O) > pre[2]) {
 			y = plan_pert_elp18[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp18[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp18[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += plan_pert_elp18[j].O * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-double sum_series_elp19 (double *t)
+static double sum_series_elp19 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP19_SIZE; j++)
-	{
+	for (j=0; j< ELP19_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp19[j].O) > pre[0])
-		{
+		if (fabs(plan_pert_elp19[j].O) > pre[0]) {
 			y = plan_pert_elp19[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp19[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp19[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp19[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-double sum_series_elp20 (double *t)
+static double sum_series_elp20 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP20_SIZE; j++)
-	{
+	for (j=0; j< ELP20_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp20[j].O) > pre[1])
-		{
+		if (fabs(plan_pert_elp20[j].O) > pre[1]) {
 			y = plan_pert_elp20[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp20[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp20[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp20[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-double sum_series_elp21 (double *t)
+static double sum_series_elp21 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y,x;
 	
-	for (j=0; j< ELP21_SIZE; j++)
-	{
+	for (j=0; j< ELP21_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_pert_elp21[j].O) > pre[2])
-		{
+		if (fabs(plan_pert_elp21[j].O) > pre[2]) {
 			y = plan_pert_elp21[j].theta * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_pert_elp21[j].ipla[i + 7] * del[i][k] * t[k];
-				}
 				for (i = 0; i < 7; i++) 
-				{
 					y += plan_pert_elp21[j].ipla[i] * p[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			x = plan_pert_elp21[j].O * t[1];
 			result += x * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp22 series */
-double sum_series_elp22 (double *t)
+static double sum_series_elp22 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP22_SIZE; j++)
-	{
+	for (j=0; j< ELP22_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp22[j].A) > pre[0])
-		{
+		if (fabs(tidal_effects_elp22[j].A) > pre[0]) {
 			y = tidal_effects_elp22[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp22[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp22[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += tidal_effects_elp22[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp23 series */
-double sum_series_elp23 (double *t)
+static double sum_series_elp23 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP23_SIZE; j++)
-	{
+	for (j=0; j< ELP23_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp23[j].A) > pre[1])
-		{
+		if (fabs(tidal_effects_elp23[j].A) > pre[1]) {
 			y = tidal_effects_elp23[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp23[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp23[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += tidal_effects_elp23[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp24 series */
-double sum_series_elp24 (double *t)
+static double sum_series_elp24 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP24_SIZE; j++)
-	{
+	for (j=0; j< ELP24_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp24[j].A) > pre[2])
-		{
+		if (fabs(tidal_effects_elp24[j].A) > pre[2]) {
 			y = tidal_effects_elp24[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp24[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp24[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += tidal_effects_elp24[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp25 series */
-double sum_series_elp25 (double *t)
+static double sum_series_elp25 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP25_SIZE; j++)
-	{
+	for (j=0; j< ELP25_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp25[j].A) > pre[0])
-		{
+		if (fabs(tidal_effects_elp25[j].A) > pre[0]) {
 			A = tidal_effects_elp25[j].A * t[1];
 			y = tidal_effects_elp25[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp25[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp25[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp26 series */
-double sum_series_elp26 (double *t)
+static double sum_series_elp26 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP26_SIZE; j++)
-	{
+	for (j=0; j< ELP26_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp26[j].A) > pre[1])
-		{
+		if (fabs(tidal_effects_elp26[j].A) > pre[1]) {
 			A = tidal_effects_elp26[j].A * t[1];
 			y = tidal_effects_elp26[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp26[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp26[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp27 series */
-double sum_series_elp27 (double *t)
+static double sum_series_elp27 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP27_SIZE; j++)
-	{
+	for (j=0; j< ELP27_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(tidal_effects_elp27[j].A) > pre[2])
-		{
+		if (fabs(tidal_effects_elp27[j].A) > pre[2]) {
 			A = tidal_effects_elp27[j].A * t[1];
 			y = tidal_effects_elp27[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += tidal_effects_elp27[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += tidal_effects_elp27[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp28 series */
-double sum_series_elp28 (double *t)
+static double sum_series_elp28 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP28_SIZE; j++)
-	{
+	for (j=0; j< ELP28_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(moon_pert_elp28[j].A) > pre[0])
-		{
+		if (fabs(moon_pert_elp28[j].A) > pre[0]) {
 			y = moon_pert_elp28[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += moon_pert_elp28[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += moon_pert_elp28[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += moon_pert_elp28[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp29 series */
-double sum_series_elp29 (double *t)
+static double sum_series_elp29 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP29_SIZE; j++)
-	{
+	for (j=0; j< ELP29_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(moon_pert_elp29[j].A) > pre[1])
-		{
+		if (fabs(moon_pert_elp29[j].A) > pre[1]) {
 			y = moon_pert_elp29[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += moon_pert_elp29[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += moon_pert_elp29[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += moon_pert_elp29[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 
 /* sum lunar elp30 series */
-double sum_series_elp30 (double *t)
+static double sum_series_elp30 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP30_SIZE; j++)
-	{
+	for (j=0; j< ELP30_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(moon_pert_elp30[j].A) > pre[2])
-		{
+		if (fabs(moon_pert_elp30[j].A) > pre[2]) {
 			y = moon_pert_elp30[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += moon_pert_elp30[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += moon_pert_elp30[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += moon_pert_elp30[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 
 /* sum lunar elp31 series */
-double sum_series_elp31 (double *t)
+static double sum_series_elp31 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP31_SIZE; j++)
-	{
+	for (j=0; j< ELP31_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(rel_pert_elp31[j].A) > pre[0])
-		{
+		if (fabs(rel_pert_elp31[j].A) > pre[0]) {
 			y = rel_pert_elp31[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += rel_pert_elp31[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += rel_pert_elp31[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += rel_pert_elp31[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp32 series */
-double sum_series_elp32 (double *t)
+static double sum_series_elp32 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP32_SIZE; j++)
-	{
+	for (j=0; j< ELP32_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(rel_pert_elp32[j].A) > pre[1])
-		{
+		if (fabs(rel_pert_elp32[j].A) > pre[1]) {
 			y = rel_pert_elp32[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += rel_pert_elp32[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += rel_pert_elp32[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += rel_pert_elp32[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp33 series */
-double sum_series_elp33 (double *t)
+static double sum_series_elp33 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y;
 	
-	for (j=0; j< ELP33_SIZE; j++)
-	{
+	for (j=0; j< ELP33_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(rel_pert_elp33[j].A) > pre[2])
-		{
+		if (fabs(rel_pert_elp33[j].A) > pre[2]) {
 			y = rel_pert_elp33[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += rel_pert_elp33[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += rel_pert_elp33[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += rel_pert_elp33[j].A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp34 series */
-double sum_series_elp34 (double *t)
+static double sum_series_elp34 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP34_SIZE; j++)
-	{
+	for (j=0; j< ELP34_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_sol_pert_elp34[j].A) > pre[0])
-		{
+		if (fabs(plan_sol_pert_elp34[j].A) > pre[0]) {
 			A = plan_sol_pert_elp34[j].A * t[2];
 			y = plan_sol_pert_elp34[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += plan_sol_pert_elp34[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_sol_pert_elp34[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 /* sum lunar elp35 series */
-double sum_series_elp35 (double *t)
+static double sum_series_elp35 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP35_SIZE; j++)
-	{
+	for (j=0; j< ELP35_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_sol_pert_elp35[j].A) > pre[1])
-		{
+		if (fabs(plan_sol_pert_elp35[j].A) > pre[1]) {
 			A = plan_sol_pert_elp35[j].A * t[2];
 			y = plan_sol_pert_elp35[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += plan_sol_pert_elp35[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_sol_pert_elp35[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
 /* sum lunar elp36 series */
-double sum_series_elp36 (double *t)
+static double sum_series_elp36 (double *t)
 {
 	double result = 0;
 	int i,j,k;
 	double y, A;
 	
-	for (j=0; j< ELP36_SIZE; j++)
-	{
+	for (j=0; j< ELP36_SIZE; j++) {
 		/* do we need to calc this value */
-		if (fabs(plan_sol_pert_elp36[j].A) > pre[2])
-		{
+		if (fabs(plan_sol_pert_elp36[j].A) > pre[2]) {
 			A = plan_sol_pert_elp36[j].A * t[2];
 			y = plan_sol_pert_elp36[j].O * DEG;
-			for (k = 0; k < 2; k++) 
-			{
+			for (k = 0; k < 2; k++) {
 				y += plan_sol_pert_elp36[j].iz * zeta[k] * t[k];
 				for (i = 0; i < 4; i++) 
-				{
 					y += plan_sol_pert_elp36[j].ilu[i] * del[i][k] * t[k];
-				}
 			}
 			/* put y in correct quad */
-			y = range_radians2 (y);
+			y = ln_range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
-	return (result);
+	return result;
 }
 
-/*! \fn void get_lunar_geo_posn (double JD, struct ln_rect_posn * pos, double precision);
+/*! \fn void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * pos, double precision);
 * \param JD Julian day.
 * \param pos Pointer to a geocentric position structure to held result.
 * \param precision The truncation level of the series in radians for longitude 
@@ -39336,7 +39185,7 @@ double sum_series_elp36 (double *t)
 * Paris.
 */ 
 /* ELP 2000-82B theory */
-void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision)
+void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision)
 {
 	double t[5];
 	double elp[36];
@@ -39344,14 +39193,12 @@ void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision
 	double x,y,z;
 	double pw,qw, pwqw, pw2, qw2, ra;
 	
-	
 	/* is precision too low ? */
 	if (precision > 0.01)
 		precision = 0.01;
 	
 	/* is value in cache ? */
-	if (JD == c_JD && precision >= c_precision)
-	{
+	if (JD == c_JD && precision >= c_precision) {
 		moon->X = c_X;
 		moon->Y = c_Y;
 		moon->Z = c_Z;
@@ -39433,8 +39280,8 @@ void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision
 	qw = (Q1 + Q2 * t[1] + Q3 * t[2] + Q4 * t[3] + Q5 * t[4]) * t[1];
 	ra = 2.0 * sqrt(1 - pw * pw - qw * qw);
 	pwqw = 2.0 * pw * qw;
-	pw2 = 1 - 2.0 * pw * pw;
-	qw2 = 1 - 2.0 * qw * qw;
+	pw2 = 1.0 - 2.0 * pw * pw;
+	qw2 = 1.0 - 2.0 * qw * qw;
 	pw = pw * ra;
 	qw = qw * ra;
 	a = pw2 * x + pwqw * y + pw * z;
@@ -39448,7 +39295,7 @@ void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision
 	c_Z = moon->Z = c;
 }
 
-/*! \fn void get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
 * \param JD Julian Day
 * \param position Pointer to a struct ln_lnlat_posn to store result.
 * \param precision The truncation level of the series in radians for longitude 
@@ -39458,24 +39305,20 @@ void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision
 * Calculate the lunar RA and DEC for Julian day JD. 
 * Accuracy is better than 10 arcsecs in right ascension and 4 arcsecs in declination.
 */ 
-void get_lunar_equ_coords 
-	(double JD,
-	struct ln_equ_posn * position, double precision)
+void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision)
 {
 	struct ln_lnlat_posn ecl;
 		
-	get_lunar_ecl_coords (JD, &ecl, precision);
-	get_equ_from_ecl (&ecl, JD, position);
+	ln_get_lunar_ecl_coords (JD, &ecl, precision);
+	ln_get_equ_from_ecl (&ecl, JD, position);
 }
 
-void get_lunar_equ_coords_wo_precision
-	(double JD,
-	 struct ln_equ_posn * position)
+void ln_get_lunar_equ_coords_wo_precision (double JD, struct ln_equ_posn * position)
 {
-	get_lunar_equ_coords (JD, position, 0);
+	ln_get_lunar_equ_coords (JD, position, 0);
 }
 
-/*! \fn void get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
+/*! \fn void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
 * \param JD Julian Day
 * \param position Pointer to a struct ln_lnlat_posn to store result.
 * \param precision The truncation level of the series in radians for longitude 
@@ -39485,23 +39328,21 @@ void get_lunar_equ_coords_wo_precision
 * Calculate the lunar longitude and latitude for Julian day JD.
 * Accuracy is better than 10 arcsecs in longitude and 4 arcsecs in latitude.
 */ 
-void get_lunar_ecl_coords 
-	(double JD,
-	struct ln_lnlat_posn * position, double precision)
+void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision)
 {
 	struct ln_rect_posn moon;
 	
 	/* get lunar geocentric position */
-	get_lunar_geo_posn (JD, &moon, precision);
+	ln_get_lunar_geo_posn (JD, &moon, precision);
 	
 	/* convert to long and lat */
 	position->lng = atan2 (moon.Y, moon.X);
 	position->lat = atan2 (moon.Z, (sqrt((moon.X * moon.X) + (moon.Y * moon.Y))));
-	position->lng = range_degrees (rad_to_deg (position->lng));
-	position->lat = rad_to_deg (position->lat);
+	position->lng = ln_range_degrees (ln_rad_to_deg (position->lng));
+	position->lat = ln_rad_to_deg (position->lat);
 }
 
-/*! \fn double get_lunar_earth_dist (double JD);
+/*! \fn double ln_get_lunar_earth_dist (double JD);
 * \param JD Julian Day
 * \return The distance between the Earth and Moon in km.
 * \ingroup lunar
@@ -39509,26 +39350,23 @@ void get_lunar_ecl_coords
 * Calculates the distance between the centre of the Earth and the
 * centre of the Moon in km.
 */ 
-double get_lunar_earth_dist (double JD)
+double ln_get_lunar_earth_dist (double JD)
 {
-	double dist = 0;
 	struct ln_rect_posn moon;
 		
-	get_lunar_geo_posn (JD, &moon, 0.00001);
-	dist = sqrt ((moon.X * moon.X) + (moon.Y * moon.Y) + (moon.Z * moon.Z));
-	
-	return (dist);
+	ln_get_lunar_geo_posn (JD, &moon, 0.00001);
+	return sqrt ((moon.X * moon.X) + (moon.Y * moon.Y) + (moon.Z * moon.Z));
 }
 
 
-/*! \fn double get_lunar_phase (double JD);
+/*! \fn double ln_get_lunar_phase (double JD);
 * \param JD Julian Day
 * \return Phase angle. (Value between 0 and 180)
 * \ingroup lunar
 *
 * Calculates the angle Sun - Moon - Earth.
 */ 
-double get_lunar_phase (double JD)
+double ln_get_lunar_phase (double JD)
 {
 	double phase = 0;
 	struct ln_lnlat_posn moon, sun;
@@ -39536,23 +39374,21 @@ double get_lunar_phase (double JD)
 	double R, delta;
 		
 	/* get lunar and solar long + lat */
-	get_lunar_ecl_coords (JD, &moon, 0.0001);
-	get_ecl_solar_coords (JD, &sun);
+	ln_get_lunar_ecl_coords (JD, &moon, 0.0001);
+	ln_get_ecl_solar_coords (JD, &sun);
 	
 	/* calc lunar geocentric elongation equ 48.2 */
-	lunar_elong = acos ( cos (deg_to_rad(moon.lat)) * cos (deg_to_rad(sun.lng - moon.lng)));
+	lunar_elong = acos (cos (ln_deg_to_rad(moon.lat)) * cos (ln_deg_to_rad(sun.lng - moon.lng)));
 	
 	/* now calc phase Equ 48.2 */
-	R = get_earth_sun_dist (JD);
-	delta = get_lunar_earth_dist (JD);
+	R = ln_get_earth_sun_dist (JD);
+	delta = ln_get_lunar_earth_dist (JD);
 	R = R * AU; /* convert R to km */
 	phase = atan2 ((R * sin (lunar_elong)), (delta - R * cos (lunar_elong)));
-	phase = rad_to_deg (phase);
-	
-	return (phase);
+	return ln_rad_to_deg (phase);
 }
 
-/*! \fn double get_lunar_disk (double JD);
+/*! \fn double ln_get_lunar_disk (double JD);
 * \param JD Julian Day
 * \return Illuminated fraction. (Value between 0 and 1)
 * \brief Calculate the illuminated fraction of the moons disk
@@ -39560,19 +39396,16 @@ double get_lunar_phase (double JD)
 *
 * Calculates the illuminated fraction of the Moon's disk. 
 */ 
-double get_lunar_disk (double JD)
+double ln_get_lunar_disk (double JD)
 {
-	double disk = 0;
 	double i;
 	
 	/* Equ 48.1 */
-	i = deg_to_rad (get_lunar_phase (JD));
-	disk = (1.0 + cos(i)) / 2.0;
-	
-	return (disk);
+	i = ln_deg_to_rad (ln_get_lunar_phase (JD));
+	return (1.0 + cos(i)) / 2.0;
 }
 
-/*! \fn double get_lunar_bright_limb (double JD);
+/*! \fn double ln_get_lunar_bright_limb (double JD);
 * \param JD Julian Day
 * \return The position angle in degrees.
 * \brief Calculate the position angle of the Moon's bright limb.
@@ -39584,7 +39417,7 @@ double get_lunar_disk (double JD)
 * The angle is near 270 deg for first quarter and near 90 deg after a full moon.
 * The position angle of the cusps are +90 deg and -90 deg. 
 */ 
-double get_lunar_bright_limb (double JD)
+double ln_get_lunar_bright_limb (double JD)
 {
 	double angle;
 	double x,y;
@@ -39592,23 +39425,22 @@ double get_lunar_bright_limb (double JD)
 	struct ln_equ_posn moon, sun;
 		
 	/* get lunar and solar long + lat */
-	get_lunar_equ_coords (JD, &moon, 0.0001);
-	get_equ_solar_coords (JD, &sun);
+	ln_get_lunar_equ_coords (JD, &moon, 0.0001);
+	ln_get_equ_solar_coords (JD, &sun);
 	
 	/* Equ 48.5 */
-	x = cos (deg_to_rad(sun.dec)) * sin (deg_to_rad(sun.ra - moon.ra));
-	y = sin ((deg_to_rad(sun.dec)) * cos (deg_to_rad(moon.dec))) 
-		- (cos (deg_to_rad(sun.dec)) * sin (deg_to_rad(moon.dec)) 
-		* cos (deg_to_rad(sun.ra - moon.ra)));
+	x = cos (ln_deg_to_rad(sun.dec)) * sin (ln_deg_to_rad(sun.ra - moon.ra));
+	y = sin ((ln_deg_to_rad(sun.dec)) * cos (ln_deg_to_rad(moon.dec))) 
+		- (cos (ln_deg_to_rad(sun.dec)) * sin (ln_deg_to_rad(moon.dec)) 
+		* cos (ln_deg_to_rad(sun.ra - moon.ra)));
 	angle = atan2 (x,y);
 
-	angle = range_radians (angle);
-	angle = rad_to_deg (angle);
-	return (angle);
+	angle = ln_range_radians (angle);
+	return ln_rad_to_deg (angle);
 }
 
 
-/*! \fn double get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param rst Pointer to store Rise, Set and Transit time in JD
@@ -39621,12 +39453,12 @@ double get_lunar_bright_limb (double JD)
 * Note: this functions returns 1 if the Moon is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
+int ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return get_body_rst_horizont (JD, observer, get_lunar_equ_coords_wo_precision, LUNAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_lunar_equ_coords_wo_precision, LN_LUNAR_STANDART_HORIZONT, rst);
 }
 
-/*! \fn double get_lunar_sdiam (double JD)
+/*! \fn double ln_get_lunar_sdiam (double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 * \todo Use Topocentric distance.
@@ -39634,25 +39466,23 @@ int get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_tim
 * Calculate the semidiameter of the Moon in arc seconds for the 
 * given julian day.
 */
-double get_lunar_sdiam (double JD)
+double ln_get_lunar_sdiam (double JD)
 {
-	double S, So = 358473400; 
+	double So = 358473400; 
 	double dist;
 	
-	dist = get_lunar_earth_dist (JD);
-	S = So / dist;
-	
-	return (S);
+	dist = ln_get_lunar_earth_dist (JD);
+	return So / dist;
 }
 
-/*! \fn double get_lunar_long_asc_node (double JD);
+/*! \fn double ln_get_lunar_long_asc_node (double JD);
 * \param JD Julian Day.
 * \return Longitude of ascending node in degrees.
 *
 * Calculate the mean longitude of the Moons ascening node
 * for the given Julian day.
 */ 
-double get_lunar_long_asc_node (double JD)
+double ln_get_lunar_long_asc_node (double JD)
 {
 	/* calc julian centuries */
 	double T = (JD - 2451545.0) / 36525.0;
@@ -39663,17 +39493,17 @@ double get_lunar_long_asc_node (double JD)
 	
 	/* equ 47.7 */
 	omega -= 1934.1362891 * T + 0.0020754 * T2 + T3 / 467441.0 - T4 / 60616000.0;
-	return (omega);
+	return omega;
 }
 
 
-/*! \fn double get_lunar_long_perigee (double JD);
+/*! \fn double ln_get_lunar_long_perigee (double JD);
 * \param JD Julian Day
 * \return Longitude of Moons mean perigee in degrees.
 *
 * Calculate the longitude of the Moon's mean perigee.
 */ 
-double get_lunar_long_perigee (double JD)
+double ln_get_lunar_long_perigee (double JD)
 {
 	/* calc julian centuries */
 	double T = (JD - 2451545.0) / 36525.0;
@@ -39684,5 +39514,5 @@ double get_lunar_long_perigee (double JD)
 	
 	/* equ 47.7 */
 	per += 4069.0137287 * T - 0.0103200 * T2 - T3 / 80053.0 + T4 / 18999000.0;
-	return (per);
+	return per;
 }

@@ -18,15 +18,14 @@ Copyright 2000 Liam Girdwood
  
 */
 
-#include "libnova.h"
-#include "proper_motion.h"
-#include <stdlib.h>
+#include <libnova/proper_motion.h>
+#include <libnova/utility.h>
 
 /*
 ** Proper Motion.
 */
 
-/*! \fn void get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object.
 * \param proper_motion Proper motion of object.
 * \param JD Julian Day.
@@ -37,25 +36,21 @@ Copyright 2000 Liam Girdwood
 */ 
 /* Equ 20.2, 20.3, 20.4 pg 126 
 */
-void get_equ_pm 
-	(struct ln_equ_posn * mean_position, 
-	struct ln_equ_posn * proper_motion, 
-	double JD,
-	struct ln_equ_posn * position)
+void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 {
 	double mean_ra, mean_dec, T;
 	
 	T = (JD - 2451545.0) / 365.25;
 	
 	/* change original ra and dec to radians */
-	mean_ra = deg_to_rad(mean_position->ra);
-	mean_dec = deg_to_rad(mean_position->dec);
+	mean_ra = ln_deg_to_rad(mean_position->ra);
+	mean_dec = ln_deg_to_rad(mean_position->dec);
 
 	/* calc proper motion */
-	mean_ra += T * deg_to_rad(proper_motion->ra);
-	mean_dec += T * deg_to_rad(proper_motion->dec);
+	mean_ra += T * ln_deg_to_rad(proper_motion->ra);
+	mean_dec += T * ln_deg_to_rad(proper_motion->dec);
 	
 	/* change to degrees */
-	position->ra = rad_to_deg (mean_ra);
-	position->dec = rad_to_deg (mean_dec);
+	position->ra = ln_rad_to_deg (mean_ra);
+	position->dec = ln_rad_to_deg (mean_dec);
 }

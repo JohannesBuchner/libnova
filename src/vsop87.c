@@ -18,26 +18,26 @@ Copyright 2000 Liam Girdwood
  
 */
 
-#include "vsop87.h"
-#include "libnova.h"
-#include <math.h>
 
-double calc_series (const struct vsop * data, int terms, double t)
+#include <math.h>
+#include <libnova/vsop87.h>
+#include <libnova/utility.h>
+
+double ln_calc_series (const struct ln_vsop * data, int terms, double t)
 {
 	double value = 0;
 	int i;
 	
-	for (i=0; i<terms; i++)
-	{
+	for (i=0; i<terms; i++) {
 		value += data->A * cos(data->B + data->C * t);
 		data++;
 	}
 	
-	return (value);
+	return value;
 }
 
 
-/*! \fn void vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
+/*! \fn void ln_vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
 * \param position Position to transform. 
 * \param JD Julian day
 *
@@ -45,7 +45,7 @@ double calc_series (const struct vsop * data, int terms, double t)
 */
 /* Equation 31.3 Pg 207.         
 */
-void vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
+void ln_vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
 {
 	double LL, T, delta_L, delta_B, B;
 	
@@ -53,8 +53,8 @@ void vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
 	T = (JD - 2451545.0)/ 36525.0;
 	
 	LL = position->L - 1.397 * T - 0.00031 * T * T;
-	LL = deg_to_rad (LL);
-	B = deg_to_rad(position->B);
+	LL = ln_deg_to_rad (LL);
+	B = ln_deg_to_rad(position->B);
 	
 	delta_L = (-0.09033 / 3600.0) + (0.03916 / 3600.0) * (cos (LL) + sin (LL)) * tan (B);
 	delta_B = (0.03916 / 3600.0) * (cos(LL) - sin(LL));

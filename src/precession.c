@@ -18,16 +18,15 @@ Copyright 2000 Liam Girdwood
  
 */
 
-#include "libnova.h"
-#include "precession.h"
 #include <math.h>
-
+#include <libnova/precession.h>
+#include <libnova/utility.h>
 
 /*
 ** Precession
 */
 
-/*! \fn void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
+/*! \fn void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean object position
 * \param JD Julian day
 * \param position Pointer to store new object position.
@@ -38,13 +37,13 @@ Copyright 2000 Liam Girdwood
 */
 /* Equ 20.2, 20.3, 20.4 pg 126 
 */
-void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
+void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
 	double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T;
 	
 	/* change original ra and dec to radians */
-	mean_ra = deg_to_rad(mean_position->ra);
-	mean_dec = deg_to_rad(mean_position->dec);
+	mean_ra = ln_deg_to_rad(mean_position->ra);
+	mean_dec = ln_deg_to_rad(mean_position->dec);
 
 	/* calc t, T, zeta, eta and theta for J2000.0 Equ 20.3 */
 	t = (JD - 2451545.0) / 36525.0;
@@ -55,9 +54,9 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 	zeta = 2306.2181 * t + 0.30188 * t2 + 0.017998 * t3;
 	eta = 2306.2181 * t + 1.09468 * t2 + 0.041833 * t3;
 	theta = 2004.3109 * t - 0.42665 * t2 - 0.041833 * t3;
-	zeta = deg_to_rad(zeta);
-	eta = deg_to_rad(eta);
-	theta = deg_to_rad(theta); 
+	zeta = ln_deg_to_rad(zeta);
+	eta = ln_deg_to_rad(eta);
+	theta = ln_deg_to_rad(theta); 
 /*	zeta = range_radians(zeta);
 	eta = range_radians(eta);
 	theta = range_radians(theta);
@@ -71,23 +70,21 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 	ra = atan2 (A,B) + eta;
 	
 	/* check for object near celestial pole */
-	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI))
-	{
+	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
 		/* close to pole */
 		dec = acos(sqrt(A * A + B * B));
-	}
-	else
-	{
+	} else {
 		/* not close to pole */
 		dec = asin (C);
 	}
 
 	/* change to degrees */
-	position->ra = rad_to_deg (ra);
-	position->dec = rad_to_deg (dec);
+	position->ra = ln_rad_to_deg (ra);
+	position->dec = ln_rad_to_deg (dec);
 }
 
-/*! \fn void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
+
+/*! \fn void ln_get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 * \param mean_position Mean object position
 * \param JD Julian day
 * \param position Pointer to store new object position.
@@ -99,7 +96,7 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 */
 /* Equ 20.5, 20.6 pg 128
 */
-void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
+void ln_get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 {
 
 }

@@ -18,10 +18,11 @@ Copyright 2002 Liam Girdwood
  
 */
 
-#include "libnova.h"
 #include <math.h>
+#include <libnova/refraction.h>
+#include <libnova/utility.h>
 
-/*! \fn double get_refraction_adj (double altitude, double atm_pres, double temp)
+/*! \fn double ln_get_refraction_adj (double altitude, double atm_pres, double temp)
 * \param altitude The altitude of the object above the horizon in degrees
 * \param atm_pres Atmospheric pressure in milibars
 * \param temp Temperature in degrees C.
@@ -33,11 +34,11 @@ Copyright 2002 Liam Girdwood
 * Note: Default values for pressure and teperature are 1010 and 10 
 * respectively.
 */
-double get_refraction_adj (double altitude, double atm_pres, double temp)
+double ln_get_refraction_adj (double altitude, double atm_pres, double temp)
 {
 	double R;
 
-	altitude = deg_to_rad (altitude);
+	altitude = ln_deg_to_rad (altitude);
 	
 	/* equ 16.3 */
 	R = 1.0 / tan (altitude + (7.31 / (altitude + 4.4)));
@@ -49,5 +50,5 @@ double get_refraction_adj (double altitude, double atm_pres, double temp)
 	/* convert from arcminutes to degrees */
 	R /= 60.0;
 	
-	return (R);
+	return R;
 }
