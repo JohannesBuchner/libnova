@@ -1,5 +1,30 @@
 ChangeLog
 
+20041003
+	-src/aberration.c
+	-src/nutation.c
+	-src/transform.c
+	-src/precession.c
+	-src/utility.c
+	-lntest/test.c
+	
+	Used long doubles internally.
+	Fixed bug in ln_dms negative bit.
+	
+	Liam Girdwood
+
+20040703
+	-src/*.c
+	-src/libnova/*.h
+	-lntest/*.c
+	-examples/*.c
+	
+	Created new API with ln_ prefix.
+	All headers are now in src/libnova/ and are installed in 
+	$(prefix)/libnova/
+	
+	Liam Girdwood, Peter Williams
+
 20042001
 	-src/transform.c
 	-src/libnova.h
