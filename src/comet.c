@@ -31,7 +31,7 @@ Copyright 2002 Liam Girdwood
 *
 * Calculate the visual magnitude of a comet in an elliptical orbit.
 */
-double get_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
+double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
 {
 	double mag;
 	double d, r;
@@ -50,6 +50,8 @@ double get_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k
 	d = get_ell_body_solar_dist (JD, orbit);
 	
 	mag = g + 5.0 * log10 (d) + k * log10 (r);
+	
+	return (mag);
 }
 
 /*!
@@ -73,6 +75,8 @@ double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, doub
 	/* get radius vector */
 	r = get_par_radius_vector (orbit->q, t);
 	d = get_par_body_solar_dist (JD, orbit);
-	
+
 	mag = g + 5.0 * log10 (d) + k * log10 (r);
+	
+	return (mag);
 }
