@@ -21,4 +21,57 @@ Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 #define LN_LUNAR_H
 #include "libnova.h"
 
+/* used for elp1 - 3 */
+struct main_problem
+{
+	int i1;
+	int i2;
+	int i3;
+	int i4;
+	double A;
+	double B1;
+	double B2;
+	double B3;
+	double B4;
+	double B5;
+	double B6;
+};
+
+/* used for elp 4 - 9 */
+struct earth_pert
+{
+	int i1;
+	int i2;
+	int i3;
+	int i4;
+	int i5;
+	double O;
+	double A;
+	double P;
+}; 
+
+/* used for elp 10 - 21 */
+struct planet_pert
+{
+	int i1;
+	int i2;
+	int i3;
+	int i4;
+	int i5;
+	int i6;
+	int i7;
+	int i8;
+	int i9;
+	int i10;
+	int i11;
+	double theta;
+	double O;
+	double P;
+};
+
+typedef struct earth_pert tidal_effects;
+typedef struct earth_pert moon_pert;
+typedef struct earth_pert rel_pert;
+typedef struct earth_pert plan_sol_pert;
+ 
 #endif

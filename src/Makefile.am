@@ -25,7 +25,8 @@ libnova_la_SOURCES = \
 	uranus.c  \
 	neptune.c  \
 	pluto.c \
-	vsop87.c
+	vsop87.c \
+	lunar.c
 
 
 include_HEADERS = libnova.h  
@@ -44,7 +45,8 @@ noinst_HEADERS = \
 	precession.h  \
 	proper_motion.h \
 	vsop87.h \
-	pluto.h
+	pluto.h \
+	lunar.h
   
 
 libnova_la_LDFLAGS = \
