@@ -31,4 +31,5 @@ include_HEADERS = \
 	rise_set.h \
 	angular_separation.h \
 	ln_types.h \
-	utility.h
+	utility.h \
+	hyperbolic_motion.h

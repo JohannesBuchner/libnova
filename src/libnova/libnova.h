@@ -123,5 +123,6 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 #include <libnova/angular_separation.h>
 #include <libnova/ln_types.h>
 #include <libnova/utility.h>
+#include <libnova/hyperbolic_motion.h>
 
 #endif

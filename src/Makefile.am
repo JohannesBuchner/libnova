@@ -33,7 +33,8 @@ libnova_la_SOURCES = \
 	utility.c \
 	refraction.c \
 	rise_set.c \
-	angular_separation.c
+	angular_separation.c \
+	hyperbolic_motion.c
 
 libnova_la_LDFLAGS = \
 	-version-info $(LT_VERSION) \
