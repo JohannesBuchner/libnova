@@ -1,6 +1,10 @@
 ChangeLog
 
 20032003
+	-src/elliptic motion.c
+	
+	removed an intentional change.
+
 	-src/libnova.h
 	-src/elliptic_motion.c
 	
