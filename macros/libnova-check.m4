@@ -82,4 +82,4 @@ main ()
 		AC_MSG_ERROR([libnova is required to compile Nova. Please check config.log.])
 	fi
 
-])
+], [define libnovaconfig])

@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.6 2005-03-05 18:00:57 l_girdwood Exp $
+/* $Id: utility.c,v 1.7 2005-03-20 20:58:16 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -131,26 +131,6 @@ void ln_deg_to_hms (double degrees, struct ln_hms * hms)
 
     /* divide remainder by 60 to get seconds */
     hms->seconds = dtemp * 60.0;
-	
-	/* handle overflows */
-	if (hms->seconds < 60.0 - 1e-9)
-		return;
-	else {
-		hms->seconds = 0;
-		hms->minutes ++;
-	}
-
-	if (hms->minutes < 60.0)
-		return; 
-	else {
-		hms->minutes = 0;
-		hms->hours++;
-	}
-
-	if (hms->hours < 24)
-		return;
-	else 
-		hms->hours -=24;
 }
 
 /* convert radians to hh:mm:ss */
@@ -172,26 +152,6 @@ void ln_rad_to_hms (double radians, struct ln_hms * hms)
 
     /* divide remainder by 60 to get seconds */
     hms->seconds = dtemp * 60.0;
-	
-	/* handle overflows */
-	if (hms->seconds < 60.0 - 1e-9)
-		return;
-	else {
-		hms->seconds = 0;
-		hms->minutes ++;
-	}
-
-	if (hms->minutes < 60.0)
-		return; 
-	else {
-		hms->minutes = 0;
-		hms->hours++;
-	}
-
-	if (hms->hours < 24)
-		return;
-	else 
-		hms->hours -=24;
 }
 
 
@@ -234,37 +194,20 @@ void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 {
     double dtemp;
     
-	/* floor degrees */
-	degrees = fabs(degrees);
-    dms->degrees = (int)degrees;
-    dtemp = degrees - dms->degrees;
+	dms->degrees = (int)degrees;
 	
-    /* divide remainder by 60 to get minutes */
+	if (degrees >= 0)
+		dtemp = degrees - dms->degrees;
+	else
+		dtemp = dms->degrees - degrees;
+
+	/* divide remainder by 60 to get minutes */
     dms->minutes = dtemp = dtemp * 60;
     dtemp -= dms->minutes;
     
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
-
-	/* handle overflows */
-	if (dms->seconds < 60.0 - 1e-9)
-		return;
-	else {
-		dms->seconds = 0;
-		dms->minutes ++;
-	}
-
-	if (dms->minutes < 60.0)
-		return; 
-	else {
-		dms->minutes = 0;
-		dms->degrees++;
-	}
-
-	if (dms->degrees < 360)
-		return;
-	else 
-		dms->degrees -=360;
+printf("deg %d\n", dms->degrees);
 }
 
 /* convert radians to dms */
@@ -275,10 +218,11 @@ void ln_rad_to_dms (double radians, struct ln_dms * dms)
 	
     degrees = radians * 360.0 / (2.0 * M_PI);
     
-   	/* floor degrees */
-	degrees = fabs(degrees);
-    dms->degrees = (int)degrees ;
-    dtemp = degrees - dms->degrees;
+    dms->degrees = (int)degrees;
+   	if (degrees >= 0)
+		dtemp = degrees - dms->degrees;
+	else
+		dtemp = dms->degrees - degrees;
 
     /* divide remainder by 60 to get minutes */
     dms->minutes = dtemp = dtemp * 60;
@@ -286,26 +230,6 @@ void ln_rad_to_dms (double radians, struct ln_dms * dms)
 
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
-	
-	/* handle overflows */
-	if (dms->seconds < 60.0 - 1e-9)
-		return;
-	else {
-		dms->seconds = 0;
-		dms->minutes ++;
-	}
-
-	if (dms->minutes < 60.0)
-		return; 
-	else {
-		dms->minutes = 0;
-		dms->degrees++;
-	}
-
-	if (dms->degrees < 360)
-		return;
-	else 
-		dms->degrees -=360;
 }
 
 

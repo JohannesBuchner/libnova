@@ -819,6 +819,18 @@ int angular_test ()
 	return failed;
 }
 
+int utility_test()
+{
+	struct ln_dms dms;
+	double deg = -1.23, deg2 = 1.23;
+	
+	ln_deg_to_dms (deg, &dms);
+	printf("deg %d min %d sec %f\n", dms.degrees, dms.minutes, dms.seconds); 
+	ln_deg_to_dms (deg2, &dms);
+	printf("deg %d min %d sec %f\n", dms.degrees, dms.minutes, dms.seconds); 
+	return 0;
+}
+
 int main ()
 {
 	int failed = 0;
@@ -839,6 +851,7 @@ int main ()
 	failed += hyperbolic_motion_test ();
 	failed += rst_test ();
 	failed += angular_test();
+	failed += utility_test();
 	
 	printf ("Test completed: %d errors.\n",failed);
 		
