@@ -39321,7 +39321,6 @@ double sum_series_elp36 (double *t)
 }
 
 /*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * pos, double precision);
-* \brief Calculate the rectangular geocentric lunar cordinates.
 * \param JD Julian day.
 * \param pos Pointer to a geocentric position structure to held result.
 * \param precision The truncation level of the series in radians for longitude 
@@ -39455,7 +39454,6 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 * \param position Pointer to a struct ln_lnlat_posn to store result.
 * \param precision The truncation level of the series in radians for longitude 
 * and latitude and in km for distance. (Valid range 0 - 0.01, 0 being highest accuracy) 
-* \brief get Lunar equatorial coordinates
 * \ingroup lunar
 *
 * Calculate the lunar RA and DEC for Julian day JD. 
@@ -39476,7 +39474,6 @@ void get_lunar_equ_coords
 * \param position Pointer to a struct ln_lnlat_posn to store result.
 * \param precision The truncation level of the series in radians for longitude 
 * and latitude and in km for distance. (Valid range 0 - 0.01, 0 being highest accuracy) 
-* \brief get Lunar ecliptical coordinates
 * \ingroup lunar
 *
 * Calculate the lunar longitude and latitude for Julian day JD.
@@ -39501,7 +39498,6 @@ void get_lunar_ecl_coords
 /*! \fn double get_lunar_earth_dist (double JD);
 * \param JD Julian Day
 * \return The distance between the Earth and Moon in km.
-* \brief Calculate the distance between the earth and the moon in km.
 * \ingroup lunar
 *
 * Calculates the distance between the centre of the Earth and the
@@ -39522,7 +39518,6 @@ double get_lunar_earth_dist (double JD)
 /*! \fn double get_lunar_phase (double JD);
 * \param JD Julian Day
 * \return Phase angle. (Value between 0 and 1)
-* \brief Calculate the phase angle of the moon (sun - moon - earth)
 * \ingroup lunar
 *
 * Calculates the selenocentric elongation of the Earth from the Sun.

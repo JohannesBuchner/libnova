@@ -34,11 +34,11 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Precession
 * - Proper Motion
 * - Sidereal Time
-* - Solar Coordinates
+* - Solar Coordinates (using VSOP87)
 * - Coordinate Transformations
 * - Planetary Positions (Mercury - Neptune using VSOP87)
 * - Planetary Magnitude, illuminated disk and phase angle.
-* - Lunar Position, phase.
+* - Lunar Position (using ELP82), phase angle.
 *
 * \section docs Documentation
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
@@ -267,12 +267,11 @@ struct ln_orbit
 /*! \defgroup version Libnova library version information
 */
 
-/*! \fn char * get_ln_version (void)
+/*! \fn const char * get_ln_version (void)
 * \brief Library Version Number
 * \ingroup version
 */
-
-char * get_ln_version (void);
+const char * get_ln_version (void);
 
 
 /*! \defgroup calendar General Calendar Functions 
@@ -375,7 +374,7 @@ char *get_humanr_location(double location);
 
 /*! \fn double get_dynamical_time_diff (double JD)
 * \ingroup dynamical
-* \brief Calculate approximate dynamical time difference from JD in seconds
+* \brief Calculate approximate dynamical time difference from julian day in seconds
 */
 double get_dynamical_time_diff (double JD);
 
@@ -529,7 +528,7 @@ double range_degrees (double angle);
 double range_radians (double angle);
 double range_radians2 (double angle);
 
-/*! \defgroup transform Transformation of Coordinates using apparent positions
+/*! \defgroup transform Transformation of Coordinates
 *
 * Transformations from one coordinate system to another.
 */
@@ -603,13 +602,17 @@ void vsop87_to_fk5 (struct ln_helio_posn * position, double JD);
 
 
 /*! \defgroup earth Earth
+*
+* Functions relating to the planet Earth.
+*
+* All angles are expressed in degrees.
 */
 
-/*! \fn void get_earth_centre_dist (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
+/*! \fn void get_earth_centre_dist (float height, double latitude, double * p_sin_o, double * p_cos_o);
 * \ingroup earth
-* \brief get Earth globe centre dist
+* \brief Calculate Earth globe centre distance.
 */
-void get_earth_centre_dist (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
+void get_earth_centre_dist (float height, double latitude, double * p_sin_o, double * p_cos_o);
 
 /*! \defgroup nutation Nutation
 *
@@ -828,10 +831,14 @@ double get_mercury_disk (double JD);
 double get_mercury_phase (double JD);
 
 /*! \defgroup venus Venus
+*
+* Functions relating to the planet Venus.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_venus_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief get venus heliocentric coordinates 
+* \brief Calvulate Venus heliocentric coordinates 
 * \ingroup venus
 */
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -841,7 +848,7 @@ void get_venus_helio_coords
 
 
 /*! \fn void get_venus_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Venus heliocentric coordinates
+* \brief Calculate Venus equatorial coordinates
 * \ingroup venus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -850,17 +857,17 @@ void get_venus_equ_coords
 	struct ln_equ_posn * position);
 
 /*! \fn double get_venus_earth_dist (double JD);
-* \brief Calculate the distance between venus and the earth in AU
+* \brief Calculate the distance between Venus and the Earth.
 * \ingroup venus
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_venus_earth_dist (double JD);
 	
 /*! \fn double get_venus_sun_dist (double JD);
-* \brief Calculate the distance between venus and the sun in AU
+* \brief Calculate the distance between Venus and the Sun.
 * \ingroup venus
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_venus_sun_dist (double JD);
@@ -868,7 +875,7 @@ double get_venus_sun_dist (double JD);
 /*! \fn double get_venus_magnitude (double JD);
 * \brief Calculate the visible magnitude of Venus
 * \ingroup venus
-* \return magnitude of Venus
+* \return Visible magnitude of Venus
 */ 
 /* Chapter ?? */
 double get_venus_magnitude (double JD);
@@ -876,15 +883,15 @@ double get_venus_magnitude (double JD);
 /*! \fn double get_venus_disk (double JD);
 * \brief Calculate the illuminated fraction of Venus disk
 * \ingroup venus
-* \return illuminated fraction of venus disk
+* \return Illuminated fraction of Venus disk
 */ 
 /* Chapter 41 */
 double get_venus_disk (double JD);
 
 /*! \fn double get_venus_phase (double JD);
-* \brief Calculate the phase angle of venus (sun - venus - earth)
+* \brief Calculate the phase angle of Venus.
 * \ingroup venus
-* \return phase angle of venus (degrees)
+* \return Phase angle of Venus (degrees)
 */ 
 /* Chapter 41 */
 double get_venus_phase (double JD);
@@ -894,7 +901,7 @@ double get_venus_phase (double JD);
 */
 
 /*! \fn void get_earth_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate earth heliocentric coordinates
+* \brief Calculate Earth's heliocentric coordinates
 * \ingroup earth
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -903,18 +910,22 @@ void get_earth_helio_coords
 	struct ln_helio_posn * position);
 
 /*! \fn void get_earth_sun_dist (double JD);
-* \brief Calculate the distance between earth and the sun in AU
+* \brief Calculate the distance between Earth and the Sun.
 * \ingroup earth
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_earth_sun_dist (double JD);
 
 /*! \defgroup mars Mars
+*
+* Functions relating to the planet Mars.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_mars_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate mars heliocentric coordinates
+* \brief Calculate Mars heliocentric coordinates
 * \ingroup mars
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -923,7 +934,7 @@ void get_mars_helio_coords
 	struct ln_helio_posn * position);
 
 /*! \fn void get_mars_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Mars heliocentric coordinates
+* \brief Calculate Mars equatorial coordinates
 * \ingroup mars
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -931,18 +942,18 @@ void get_mars_equ_coords
 	(double JD,
 	struct ln_equ_posn * position);
 
-	/*! \fn double get_mars_earth_dist (double JD);
-* \brief Calculate the distance between mars and the earth in AU
+/*! \fn double get_mars_earth_dist (double JD);
+* \brief Calculate the distance between Mars and the Earth.
 * \ingroup mars
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_mars_earth_dist (double JD);
 	
 /*! \fn double get_mars_sun_dist (double JD);
-* \brief Calculate the distance between mars and the sun in AU
+* \brief Calculate the distance between Mars and the Sun.
 * \ingroup mars
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_mars_sun_dist (double JD);
@@ -950,7 +961,7 @@ double get_mars_sun_dist (double JD);
 /*! \fn double get_mars_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mars
 * \ingroup mars
-* \return magnitude of Mars
+* \return Visible magnitude of Mars
 */ 
 /* Chapter ?? */
 double get_mars_magnitude (double JD);
@@ -958,24 +969,28 @@ double get_mars_magnitude (double JD);
 /*! \fn double get_mars_disk (double JD);
 * \brief Calculate the illuminated fraction of Mars disk
 * \ingroup mars
-* \return illuminated fraction of mars disk
+* \return Illuminated fraction of Mars disk
 */ 
 /* Chapter 41 */
 double get_mars_disk (double JD);
 
 /*! \fn double get_mars_phase (double JD);
-* \brief Calculate the phase angle of mars (sun - mars - earth)
+* \brief Calculate the phase angle of Mars.
 * \ingroup mars
-* \return phase angle of mars (degrees)
+* \return Phase angle of Mars (degrees)
 */ 
 /* Chapter 41 */
 double get_mars_phase (double JD);
 
 /*! \defgroup jupiter Jupiter
+*
+* Functions relating to the planet Jupiter.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate jupiter heliocentric coordinates
+* \brief Calculate Jupiter's heliocentric coordinates
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -983,7 +998,7 @@ void get_jupiter_helio_coords
 	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Jupiter equatorial coordinates coordinates
+* \brief Calculate Jupiter's equatorial coordinates.
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -992,17 +1007,17 @@ void get_jupiter_equ_coords
 	struct ln_equ_posn * position);
 
 /*! \fn double get_jupiter_earth_dist (double JD);
-* \brief Calculate the distance between jupiter and the earth in AU
+* \brief Calculate the distance between Jupiter and the Earth.
 * \ingroup jupiter
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_jupiter_earth_dist (double JD);
 	
 /*! \fn double get_jupiter_sun_dist (double JD);
-* \brief Calculate the distance between jupiter and the sun in AU
+* \brief Calculate the distance between Jupiter and the Sun.
 * \ingroup jupiter
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_jupiter_sun_dist (double JD);
@@ -1010,7 +1025,7 @@ double get_jupiter_sun_dist (double JD);
 /*! \fn double get_jupiter_magnitude (double JD);
 * \brief Calculate the visible magnitude of Jupiter
 * \ingroup jupiter
-* \return magnitude of Jupiter
+* \return Visible magnitude of Jupiter
 */ 
 /* Chapter ?? */
 double get_jupiter_magnitude (double JD);
@@ -1018,24 +1033,28 @@ double get_jupiter_magnitude (double JD);
 /*! \fn double get_jupiter_disk (double JD);
 * \brief Calculate the illuminated fraction of Jupiter's disk
 * \ingroup jupiter
-* \return illuminated fraction of jupiters disk
+* \return Illuminated fraction of Jupiter's disk
 */ 
 /* Chapter 41 */
 double get_jupiter_disk (double JD);
 
 /*! \fn double get_jupiter_phase (double JD);
-* \brief Calculate the phase angle of jupiter (sun - jupiter - earth)
+* \brief Calculate the phase angle of Jupiter.
 * \ingroup jupiter
-* \return phase angle of jupiter (degrees)
+* \return Phase angle of Jupiter (degrees)
 */ 
 /* Chapter 41 */
 double get_jupiter_phase (double JD);
 
 /*! \defgroup saturn Saturn
+*
+* Functions relating to the planet Saturn.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_saturn_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate saturn heliocentric coordinates
+* \brief Calculate Saturn's heliocentric coordinates.
 * \ingroup saturn
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -1044,7 +1063,7 @@ void get_saturn_helio_coords
 
 
 /*! \fn void get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Saturn heliocentric coordinates
+* \brief Calculate Saturn's equatorial coordinates.
 * \ingroup saturn
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -1053,17 +1072,17 @@ void get_saturn_equ_coords
 	struct ln_equ_posn * position);
 
 /*! \fn double get_saturn_earth_dist (double JD);
-* \brief Calculate the distance between saturn and the earth in AU
+* \brief Calculate the distance between Saturn and the Earth.
 * \ingroup saturn
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_saturn_earth_dist (double JD);
 	
 /*! \fn double get_saturn_sun_dist (double JD);
-* \brief Calculate the distance between Saturn and the sun in AU
+* \brief Calculate the distance between Saturn and the Sun.
 * \ingroup saturn
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_saturn_sun_dist (double JD);
@@ -1071,7 +1090,7 @@ double get_saturn_sun_dist (double JD);
 /*! \fn double get_saturn_magnitude (double JD);
 * \brief Calculate the visible magnitude of Saturn
 * \ingroup saturn
-* \return magnitude of Saturn
+* \return Visible magnitude of Saturn
 */ 
 /* Chapter ?? */
 double get_saturn_magnitude (double JD);
@@ -1079,20 +1098,24 @@ double get_saturn_magnitude (double JD);
 /*! \fn double get_saturn_disk (double JD);
 * \brief Calculate the illuminated fraction of Saturn's disk
 * \ingroup saturn
-* \return illuminated fraction of Saturns disk
+* \return Illuminated fraction of Saturn's disk
 */ 
 /* Chapter 41 */
 double get_saturn_disk (double JD);
 
 /*! \fn double get_saturn_phase (double JD);
-* \brief Calculate the phase angle of saturn (sun - saturn - earth)
+* \brief Calculate the phase angle of Saturn.
 * \ingroup saturn
-* \return phase angle of saturn (degrees)
+* \return Phase angle of Saturn (degrees)
 */ 
 /* Chapter 41 */
 double get_saturn_phase (double JD);
 
 /*! \defgroup uranus Uranus
+*
+* Functions relating to the planet Uranus.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_uranus_helio_coords (double JD, struct ln_helio_posn * position);
@@ -1104,7 +1127,7 @@ void get_uranus_helio_coords
 	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Uranus heliocentric coordinates
+* \brief Calculate Uranus equatorial coordinates.
 * \ingroup uranus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -1113,17 +1136,17 @@ void get_uranus_equ_coords
 	struct ln_equ_posn * position);
 
 /*! \fn double get_uranus_earth_dist (double JD);
-* \brief Calculate the distance between uranus and the earth in AU
+* \brief Calculate the distance between Uranus and the Earth.
 * \ingroup uranus
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_uranus_earth_dist (double JD);
 	
 /*! \fn double get_uranus_sun_dist (double JD);
-* \brief Calculate the distance between uranus and the sun in AU
+* \brief Calculate the distance between Uranus and the Sun.
 * \ingroup uranus
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_uranus_sun_dist (double JD);
@@ -1131,7 +1154,7 @@ double get_uranus_sun_dist (double JD);
 /*! \fn double get_uranus_magnitude (double JD);
 * \brief Calculate the visible magnitude of Uranus
 * \ingroup uranus
-* \return magnitude of Uranus
+* \return Visible magnitude of Uranus
 */ 
 /* Chapter ?? */
 double get_uranus_magnitude (double JD);
@@ -1139,24 +1162,28 @@ double get_uranus_magnitude (double JD);
 /*! \fn double get_uranus_disk (double JD);
 * \brief Calculate the illuminated fraction of Uranus's disk
 * \ingroup uranus
-* \return illuminated fraction of uranus disk
+* \return Illuminated fraction of Uranus disk
 */ 
 /* Chapter 41 */
 double get_uranus_disk (double JD);
 
 /*! \fn double get_uranus_phase (double JD);
-* \brief Calculate the phase angle of uranus (sun - uranus - earth)
+* \brief Calculate the phase angle of Uranus.
 * \ingroup uranus
-* \return phase angle of uranus (degrees)
+* \return Phase angle of Uranus (degrees)
 */ 
 /* Chapter 41 */
 double get_uranus_phase (double JD);
 
 /*! \defgroup neptune Neptune
+*
+* Functions relating to the planet Neptune.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate neptune heliocentric coordinates
+* \brief Calculate Neptune's heliocentric coordinates.
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -1165,7 +1192,7 @@ void get_neptune_helio_coords
 
 
 /*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Neptune heliocentric coordinates
+* \brief Calculate Neptune's equatorial coordinates.
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
@@ -1174,50 +1201,54 @@ void get_neptune_equ_coords
 	struct ln_equ_posn * position);
 		
 /*! \fn double get_neptune_earth_dist (double JD);
-* \brief Calculate the distance between neptune and the earth in AU
+* \brief Calculate the distance between Neptune and the Earth.
 * \ingroup neptune
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_neptune_earth_dist (double JD);
 	
 /*! \fn double get_neptune_sun_dist (double JD);
-* \brief Calculate the distance between neptune and the sun in AU
+* \brief Calculate the distance between Neptune and the Sun.
 * \ingroup neptune
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter ?? */
 double get_neptune_sun_dist (double JD);
 	
 /*! \fn double get_neptune_magnitude (double JD);
-* \brief Calculate the visible magnitude of Neptune
+* \brief Calculate the visible magnitude of Neptune.
 * \ingroup neptune
-* \return magnitude of Neptune
+* \return Visisble magnitude of Neptune.
 */ 
 /* Chapter ?? */
 double get_neptune_magnitude (double JD);
 
 /*! \fn double get_neptune_disk (double JD);
-* \brief Calculate the illuminated fraction of Neptune's disk
+* \brief Calculate the illuminated fraction of Neptune's disk.
 * \ingroup neptune
-* \return illuminated fraction of neptunes disk
+* \return Illuminated fraction of Neptune's disk.
 */ 
 /* Chapter 41 */
 double get_neptune_disk (double JD);
 
 /*! \fn double get_neptune_phase (double JD);
-* \brief Calculate the phase angle of neptune (sun - neptune - earth)
+* \brief Calculate the phase angle of Neptune.
 * \ingroup neptune
-* \return phase angle of neptune (degrees)
+* \return Phase angle of Neptune (degrees)
 */ 
 /* Chapter 41 */
 double get_neptune_phase (double JD);
 
 /*! \defgroup pluto Pluto
+*
+* Functions relating to the planet Pluto.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_pluto_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calculate pluto heliocentric coordinates
+* \brief Calculate Pluto's heliocentric coordinates.
 * \ingroup pluto
 */ 
 /* Chapter 37 Pg 263  */
@@ -1225,7 +1256,7 @@ void get_pluto_helio_coords
 	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_pluto_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief Calculate Pluto heliocentric coordinates
+* \brief Calculate Pluto's equatorial coordinates.
 * \ingroup pluto
 */ 
 /* Chapter 37 */
@@ -1234,7 +1265,7 @@ void get_pluto_equ_coords
 	struct ln_equ_posn * position);
 		
 /*! \fn double get_pluto_earth_dist (double JD);
-* \brief Calculate the distance between pluto and the earth in AU
+* \brief Calculate the distance between Pluto and the Earth.
 * \ingroup pluto
 * \return distance in AU
 */ 
@@ -1242,9 +1273,9 @@ void get_pluto_equ_coords
 double get_pluto_earth_dist (double JD);
 	
 /*! \fn double get_pluto_sun_dist (double JD);
-* \brief Calculate the distance between pluto and the sun in AU
+* \brief Calculate the distance between Pluto and the Sun.
 * \ingroup pluto
-* \return distance in AU
+* \return Distance in AU
 */ 
 /* Chapter 37 */
 double get_pluto_sun_dist (double JD);
@@ -1252,7 +1283,7 @@ double get_pluto_sun_dist (double JD);
 /*! \fn double get_pluto_magnitude (double JD);
 * \brief Calculate the visible magnitude of Pluto
 * \ingroup pluto
-* \return magnitude of Pluto
+* \return Visible magnitude of Pluto.
 */ 
 /* Chapter 41 */
 double get_pluto_magnitude (double JD);
@@ -1260,20 +1291,24 @@ double get_pluto_magnitude (double JD);
 /*! \fn double get_pluto_disk (double JD);
 * \brief Calculate the illuminated fraction of Pluto's disk
 * \ingroup pluto
-* \return illuminated fraction of plutos disk
+* \return Illuminated fraction of Pluto's disk
 */ 
 /* Chapter 41 */
 double get_pluto_disk (double JD);
 
 /*! \fn double get_pluto_phase (double JD);
-* \brief Calculate the phase angle of pluto (sun - pluto - earth)
+* \brief Calculate the phase angle of Pluto. 
 * \ingroup pluto
-* \return phase angle of pluto (degrees)
+* \return Phase angle of Pluto (degrees).
 */ 
 /* Chapter 41 */
 double get_pluto_phase (double JD);
 
 /*! \defgroup lunar Lunar
+*
+* Functions relating to the Moon.
+*
+* All angles are expressed in degrees.
 */
 
 /*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
@@ -1284,7 +1319,7 @@ double get_pluto_phase (double JD);
 void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
 
 /*! \fn void get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
-* \brief Calculate Lunar equatorial coordinates
+* \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 
 void get_lunar_equ_coords 
@@ -1292,7 +1327,7 @@ void get_lunar_equ_coords
 	struct ln_equ_posn * position, double precision);
 
 /*! \fn void get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
-* \brief Calculate Lunar ecliptical coordinates
+* \brief Calculate lunar ecliptical coordinates.
 * \ingroup lunar
 */ 
 void get_lunar_ecl_coords 
@@ -1300,19 +1335,19 @@ void get_lunar_ecl_coords
 	struct ln_lnlat_posn * position, double precision);
 
 /*! \fn double get_lunar_phase (double JD);
-* \brief Calculate the phase angle of the moon (sun - moon - earth)
+* \brief Calculate the phase angle of the Moon.
 * \ingroup lunar
 */ 
 double get_lunar_phase (double JD);
 
 /*! \fn double get_lunar_disk (double JD);
-* \brief Calculate the illuminated fraction of the moons disk
+* \brief Calculate the illuminated fraction of the Moons disk
 * \ingroup lunar
 */ 
 double get_lunar_disk (double JD);
 	
 /*! \fn double get_lunar_earth_dist (double JD);
-* \brief Calculate the distance between the earth and the moon in km.
+* \brief Calculate the distance between the Earth and the Moon.
 * \ingroup lunar
 */ 
 double get_lunar_earth_dist (double JD);	

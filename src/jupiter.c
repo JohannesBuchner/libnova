@@ -3812,8 +3812,8 @@ void get_jupiter_equ_coords
 * Calculate Jupiters heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
 * Longitude and Latitude are in degrees, whilst radius vector is in AU.
-*
-* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
+*/
+/* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position)
 {
@@ -3997,7 +3997,6 @@ double get_jupiter_disk (double JD)
 
 /*! \fn double get_jupiter_phase (double JD);
 * \param JD Julian Day
-* \brief Calculate the phase angle of Jupiter (Sun - Jupiter - Earth)
 * \return Phase angle of Jupiter (degrees)
 *
 * Calculates the phase angle of Jupiter, that is, the angle Sun -

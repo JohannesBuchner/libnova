@@ -20,18 +20,19 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "earth_globe.h"
 #include "math.h"
 
-/*! \fn void get_earth_centre_distance (float height, double latitude, double *p_sin_o, double *p_cos_o)
+/*! \fn void get_earth_centre_dist (float height, double latitude, double *p_sin_o, double *p_cos_o);
 * \param height Height above sea level in metres.
 * \param latitude latitude in degrees.
 * \param p_sin_o Pointer to hold p_sin_o
 * \param p_cos_o Pointer to hold p_cos_o
+* \ingroup earth
 * 
 * Calculate the quantaties "p sin o" and "p cos o" needed in calculations for
 * diurnal parallaxes, eclipses and occultations given the observers height
-* in metres above sea level and there latitude in degrees. pg 78
+* in metres above sea level and there latitude in degrees.
 */
 
-void get_earth_centre_distance (float height, double latitude, double *p_sin_o, double *p_cos_o)
+void get_earth_centre_dist (float height, double latitude, double *p_sin_o, double *p_cos_o)
 {
      double a,b,f,u;
      

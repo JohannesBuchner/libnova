@@ -2686,14 +2686,14 @@ static const struct vsop earth_radius_r5[RADIUS_R5] = {
 };
 
 /*! \fn void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
-* \param JD Julian Day
-* \param Position ointer to store heliocentric position
+* \param JD Julian day
+* \param position Pointer to store heliocentric position
 *
 * Calculate Earths heliocentric (refered to the centre of the Sun) coordinates 
 * for given julian day.
 * Longitude and Latitude are in degrees, whilst radius vector is in AU.
-* 
-* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
+*/ 
+/* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 {
@@ -2763,9 +2763,8 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 }
 	
 /*! \fn double get_earth_sun_dist (double JD);
-* \brief Calculate the distance between earth and the sun in AU.
 * \param JD Julian day.
-* \return distance in AU
+* \return Distance in AU
 *
 * Calculates the distance in AU between the Sun and Earth for 
 * the given julian day.

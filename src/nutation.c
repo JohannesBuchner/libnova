@@ -26,7 +26,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 
 /* arguments and coefficients taken from table 21A on page 133 */
 
-static struct nutation_arguments arguments[TERMS] = {
+const static struct nutation_arguments arguments[TERMS] = {
     {0.0,	0.0,	0.0,	0.0,	1.0},
     {-2.0,	0.0,	0.0,	2.0,	2.0},
     {0.0,	0.0,	0.0,	2.0,	2.0},
@@ -91,7 +91,7 @@ static struct nutation_arguments arguments[TERMS] = {
     {0.0,	0.0,	3.0,	2.0,	2.0},
     {2.0,	-1.0,	0.0,	2.0,	2.0}};
 
-static struct nutation_coefficients coefficients[TERMS] = {
+const static struct nutation_coefficients coefficients[TERMS] = {
     {-171996.0,	-174.2,	92025.0,8.9},
     {-13187.0,	-1.6,  	5736.0,	-3.1},
     {-2274.0, 	 0.2,  	977.0,	-0.5},
@@ -163,7 +163,8 @@ static struct nutation_coefficients coefficients[TERMS] = {
 * \param ecliptic Pointer to store returned ecliptic.
 *
 * Calculate nutation of longitude and obliquity in degrees from Julian Ephemeris Day 
-* Chapter 21 pg 131-134 Using Table 21A 
+*/
+/* Chapter 21 pg 131-134 Using Table 21A 
 */
 
 void get_nutation (double JD, double * longitude, double * obliquity, double *ecliptic)
@@ -269,6 +270,3 @@ void get_nutation (double JD, double * longitude, double * obliquity, double *ec
 
 }
 
-    
-    
-    

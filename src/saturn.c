@@ -6551,8 +6551,8 @@ void get_saturn_equ_coords
 * Calculate Saturns heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
 * Longitude and Latitude are in degrees, whilst radius vector is in AU.
-* 
-* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
+*/ 
+/* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_saturn_helio_coords (double JD, struct ln_helio_posn * position)
 {

@@ -27,7 +27,7 @@ Copyright (C) 2001 Liam Girdwood <liam@nova-ioe.org>
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct pluto_argument argument[PLUTO_COEFFS] = {
+static const struct pluto_argument argument[PLUTO_COEFFS] = {
 	{0, 0, 1},
 	{0, 0, 2},
 	{0, 0, 3},
@@ -74,7 +74,7 @@ static struct pluto_argument argument[PLUTO_COEFFS] = {
 };
 
 
-static struct pluto_longitude longitude[PLUTO_COEFFS] = {
+static const struct pluto_longitude longitude[PLUTO_COEFFS] = {
 	{-19799805, 19850055},
 	{897144, -4954829},
 	{611149, 1211027},
@@ -120,7 +120,7 @@ static struct pluto_longitude longitude[PLUTO_COEFFS] = {
 	{0,0}
 };
 
-static struct pluto_latitude latitude[PLUTO_COEFFS] = {
+static const struct pluto_latitude latitude[PLUTO_COEFFS] = {
 	{-5452852, -14974862},
 	{3527812, 1672790},
 	{-1050748, 327647},
@@ -166,7 +166,7 @@ static struct pluto_latitude latitude[PLUTO_COEFFS] = {
 	{1, 0}
 }; 	
 
-static struct pluto_radius radius[PLUTO_COEFFS] = {
+static const struct pluto_radius radius[PLUTO_COEFFS] = {
 	{66865439, 68951812},
 	{-11827535, -332538},
 	{1593179, -1438890},
@@ -217,7 +217,7 @@ static struct pluto_radius radius[PLUTO_COEFFS] = {
 * \param JD julian Day
 * \param position Pointer to store position
 *
-* Calculates Pluto's equatorial position for Julian Day JD.
+* Calculates Pluto's equatorial position for the given julian day.
 */ 
 void get_pluto_equ_coords 
 	(double JD,
@@ -269,8 +269,13 @@ void get_pluto_equ_coords
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
-* Calculate Plutos heliocentric coordinates.  
-* Chap 37. Equ 37.1
+* Calculate Pluto's heliocentric coordinates for the given julian day. 
+* This function is accurate to within 0.07" in longitude, 0.02" in latitude 
+* and 0.000006 AU in radius vector.
+*
+* Note: This function is not valid outside the period of 1885-2099. 
+*/
+/* Chap 37. Equ 37.1
 */
 
 void get_pluto_helio_coords (double JD, struct ln_helio_posn * position)
@@ -331,10 +336,11 @@ void get_pluto_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 /*! \fn double get_pluto_earth_dist (double JD);
-* \brief Calculate the distance between pluto and the earth in AU
-* \return distance in AU
+* \param JD Julian day
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Earth and Pluto.
+* Calculates the distance in AU between the Earth and Pluto for the
+* given julian day.
 */
 double get_pluto_earth_dist (double JD)
 {
@@ -364,10 +370,11 @@ double get_pluto_earth_dist (double JD)
 }
 	
 /*! \fn double get_pluto_sun_dist (double JD);
-* \brief Calculate the distance between pluto and the sun in AU
-* \return distance in AU
+* \param JD Julian day
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Sun and Pluto.
+* Calculates the distance in AU between the Sun and Pluto for the
+* given julian day.
 */ 
 double get_pluto_sun_dist (double JD)
 {
@@ -396,10 +403,11 @@ double get_pluto_sun_dist (double JD)
 }
 	
 /*! \fn double get_pluto_magnitude (double JD);
-* \brief Calculate the visible magnitude of Pluto
-* \return magnitude of Pluto
+* \param JD Julian day
+* \return Visible magnitude of Pluto
 *
-* Calculate the magnitude of Pluto.
+* Calculate the visible magnitude of Pluto for the given
+* julian day.
 */ 
 double get_pluto_magnitude (double JD)
 {
@@ -415,8 +423,11 @@ double get_pluto_magnitude (double JD)
 }
 
 /*! \fn double get_pluto_disk (double JD);
-* \brief Calculate the illuminated fraction of Pluto's disk
-* \return illuminated fraction of plutos disk
+* \param JD Julian day
+* \return Illuminated fraction of Plutos disk
+*
+* Calculate the illuminated fraction of Pluto's disk for
+* the given julian day.
 */ 
 /* Chapter 41 */
 double get_pluto_disk (double JD)
@@ -435,8 +446,11 @@ double get_pluto_disk (double JD)
 }
 
 /*! \fn double get_pluto_phase (double JD);
-* \brief Calculate the phase angle of pluto (sun - pluto - earth)
-* \return phase angle of pluto (degrees)
+* \param JD Julian day
+* \return Phase angle of Pluto (degrees)
+*
+* Calculate the phase angle of Pluto (Sun - Pluto - Earth)
+* for the given julian day.
 */ 
 /* Chapter 41 */
 double get_pluto_phase (double JD)

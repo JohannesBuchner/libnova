@@ -26,7 +26,8 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \return Mean sidereal time.
 *
 * Calculate the mean sidereal time at the meridian of Greenwich of a given date.
-* Formula 11.1, 11.4 pg 83 
+*/
+/* Formula 11.1, 11.4 pg 83 
 */
 
 double get_mean_sidereal_time (double JD)
@@ -53,7 +54,8 @@ double get_mean_sidereal_time (double JD)
 * /return Apparent sidereal time.
 *
 * Calculate the apparent sidereal time at the meridian of Greenwich of a given date. 
-* Formula 11.1, 11.4 pg 83 
+*/
+/* Formula 11.1, 11.4 pg 83 
 */
 
 double get_apparent_sidereal_time (double JD)

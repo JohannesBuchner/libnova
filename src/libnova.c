@@ -22,14 +22,15 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include <config.h>
  
 
-static char ln_version[10];
+static char ln_version[16];
 
 /*! \fn char * get_ln_version (void)
 * \return Null terminated version string.
 *
-* Return a version number string
+* Return the libnova library version number string
+* e.g. "0.4.0"
 */
-char * get_ln_version (void)
+const char * get_ln_version (void)
 {
     strcpy (ln_version, VERSION);
     return (ln_version);

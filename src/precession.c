@@ -58,17 +58,17 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 	zeta = deg_to_rad(zeta);
 	eta = deg_to_rad(eta);
 	theta = deg_to_rad(theta); 
-	zeta = range_radians(zeta);
+/*	zeta = range_radians(zeta);
 	eta = range_radians(eta);
 	theta = range_radians(theta);
-	
+*/	
 
 	/* calc A,B,C equ 20.4 */
 	A = cos(mean_dec) * sin(mean_ra + zeta);
 	B = cos(theta) * cos(mean_dec) * cos(mean_ra + zeta) - sin(theta) * sin (mean_dec);
 	C = sin(theta) * cos (mean_dec) * cos(mean_ra + zeta) + cos(theta) * sin(mean_dec);
 	
-	ra = atan (A/B) + eta;
+	ra = atan2 (A,B) + eta;
 	
 	/* check for object near celestial pole */
 	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI))
@@ -81,7 +81,7 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 		/* not close to pole */
 		dec = asin (C);
 	}
-	
+
 	/* change to degrees */
 	position->ra = rad_to_deg (ra);
 	position->dec = rad_to_deg (dec);

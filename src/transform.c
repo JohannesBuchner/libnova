@@ -25,8 +25,10 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \param JD Julian Day
 * \param position Pointer to store new position
 *
-* Transform heliocentric coordinates into geocentric coordinates
-* Equ 37.1 Pg 264
+* Transform an objects heliocentric coordinates into geocentric coordinates.
+* This function includes the effects of nutation.
+*/
+/* Equ 37.1 Pg 264
 */
 void get_geo_from_helio 
 	(struct ln_helio_posn *object,  
@@ -65,8 +67,10 @@ void get_geo_from_helio
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
-* Transform equatorial coordinates to horizontal coordinates.
-* Equ 12.1,12.2 pg 88 
+* Transform an objects equatorial coordinates into horizontal coordinates
+* for the given julian day and observers position.
+*/
+/* Equ 12.1,12.2 pg 88 
 *
 * TODO:
 * Transform horizontal coordinates to galactic coordinates.
@@ -117,7 +121,8 @@ void get_hrz_from_equ
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
-* Transform horizontal coordinates into equatorial coordinates 
+* Transform an objects horizontal coordinates into equatorial coordinates
+* for the given julian day and observers position.
 */
 void get_equ_from_hrz 
 	(struct ln_hrz_posn * object, 
@@ -158,8 +163,10 @@ void get_equ_from_hrz
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
-* get equatorial coordinates from ecliptical coordinates 
-* Equ 12.3, 12.4 pg 89 
+* Transform an objects ecliptical coordinates into equatorial coordinates
+* for the given julian day.
+*/
+/* Equ 12.3, 12.4 pg 89 
 */
 void get_equ_from_ecl 
 	(struct ln_lnlat_posn * object,
@@ -204,8 +211,10 @@ void get_equ_from_ecl
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
-* get ecliptical cordinates from equatorial coordinates 
-* Equ 12.1, 12.2 Pg 88 
+* Transform an objects equatorial cordinates into ecliptical coordinates
+* for the given julian day.
+*/
+/* Equ 12.1, 12.2 Pg 88 
 */
 void get_ecl_from_equ 
 	(struct ln_equ_posn * object, 

@@ -23,9 +23,9 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 
 /*! \fn double get_julian_day (struct ln_date * date)
 * \param date Date required.
-* \return Julian ay
+* \return Julian day
 *
-* Calculate the julian day (JD) from a calendar day. 
+* Calculate the julian day from a calendar day. 
 * Valid for positive and negative years but not for negative JD.
 */
 /* Formula 7.1 on pg 61 
