@@ -206,8 +206,9 @@ struct ln_equ_posn
 
 struct ln_hrz_posn
 {
-    double az;	/*!< AZ. Object azimuth. */
-    double alt;	/*!< ALT. Object altitude. */
+    double az;	/*!< AZ. Object azimuth. 
+		  0 deg = South, 90 deg = West, 180 deg = Nord, 270 deg = East */
+    double alt;	/*!< ALT. Object altitude. 0 deg = horizon, 90 deg = zenit, -90 deg = nadir */
 };
 
 
@@ -541,6 +542,12 @@ void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos);
 * \ingroup conversion
 */
 void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos);
+
+/*! \fn const char * hrz_to_nswe (struct ln_hrz_posn * pos);
+ * \brief returns direction of given azimut - like N,S,W,E,NSW,...
+ * \ingroup conversion
+ */ 
+const char * hrz_to_nswe (struct ln_hrz_posn * pos);
 	
 /*! \fn void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
@@ -595,14 +602,25 @@ double get_light_time (double dist);
 * \brief Calculate horizontal coordinates from equatorial coordinates 
 * \ingroup transform 
 */
-/* Equ 12.5,12.6 pg 88 */
+/* Use get_mean_sidereal_time, get_hrz_from_equ_siderealtime */
 void get_hrz_from_equ 
 	 (struct ln_equ_posn * object, 
 	 struct ln_lnlat_posn * observer, 
 	 double JD, struct ln_hrz_posn *position);
 
+/*! \fn void get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double sidereal_time, struct ln_hrz_posn *position);
+* \brief Calculate horizontal coordinates from equatorial coordinates,
+* using mean sidereal time.
+* \ingroup transform 
+*/
+/* Equ 12.5,12.6 pg 88 */
+void get_hrz_from_equ_sidereal_time 
+	 (struct ln_equ_posn * object, 
+	 struct ln_lnlat_posn * observer, 
+	 double sidereal, struct ln_hrz_posn *position);
+
 /*! \fn void get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position);
-* \brief Calculate equatorial coordinates from ecliptical coordinates 
+* \brief Calculate equatorial coordinates from ecliptical coordinates
 * \ingroup transform
 */
 /* Equ 12.3, 12.4 pg 89 */

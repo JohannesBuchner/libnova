@@ -78,17 +78,29 @@ void get_hrz_from_equ
 	double JD, 
 	struct ln_hrz_posn * position)
 {
-	double H, ra, longitude, latitude, declination, A, Ac, As, h, Z, Zs, sidereal;
+	double sidereal;
 
 
-	/* get mean sidereal time in hours and change it to radians*/
+	/* get mean sidereal time in hours*/
 	sidereal = get_mean_sidereal_time (JD);
+	get_hrz_from_equ_sidereal_time (object, observer, sidereal, position);
+}
+
+
+void get_hrz_from_equ_sidereal_time
+	(struct ln_equ_posn * object, 
+	struct ln_lnlat_posn * observer, 
+	double sidereal, 
+	struct ln_hrz_posn * position)
+{
+	double H, ra, latitude, declination, A, Ac, As, h, Z, Zs;
+
+	/* change sidereal_time from hours to radians*/
 	sidereal *= 2.0 * M_PI / 24.0;
 
 	/* calculate hour angle of object at observers position */
 	ra = deg_to_rad (object->ra);
-	longitude = deg_to_rad (observer->lng);
-	H = sidereal - longitude - ra;
+	H = sidereal - deg_to_rad (observer->lng) - ra;
 
 	/* hence formula 12.5 and 12.6 give */
 	/* convert to radians - hour angle, observers latitude, object declination */

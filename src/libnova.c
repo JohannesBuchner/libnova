@@ -364,6 +364,17 @@ void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 	deg_to_dms (pos->alt, &hpos->alt);
 	deg_to_dms (pos->az, &hpos->az);
 }
+
+/*! \fn const char * hrz_to_nswe (struct ln_hrz_posn * pos);
+ * \brief returns direction of given azimut - like N,S,W,E,NSW,...
+ * \ingroup conversion
+ */ 
+const char * hrz_to_nswe (struct ln_hrz_posn * pos)
+{
+	char * directions[] = {"S", "SSW", "SW", "SWW", "W", "NWW", "NW", "NNW", "N", "NNE", "NE", "NEE", 
+		"E", "SEE", "SE", "SSE"};
+	return directions[(int)(pos->az / 22.5)];
+}
 	
 /*! \fn void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
