@@ -173,7 +173,9 @@ struct lnh_hrz_posn
 
 struct lnh_lnlat_posn
 {
-    struct ln_dms lng; /*!< longitude. Object longitude */
+    struct ln_dms lng; /*!< longitude. Object longitude.
+			 Negative East of Greenwinch, 
+			 positive West of Greenwinch */
     struct ln_dms lat; /*!< latitude. Object latitude */
 };
 
@@ -217,7 +219,9 @@ struct ln_hrz_posn
 
 struct ln_lnlat_posn
 {
-    double lng; /*!< longitude. Object longitude */
+    double lng; /*!< longitude. Object longitude. 
+		  Negative East of Greenwinch, 
+		  positive West of Greenwinch */
     double lat; /*!< latitude. Object latitude */
 };
 
