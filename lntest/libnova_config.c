@@ -19,6 +19,7 @@ Copyright 2001 Liam Girdwood
 #include "libnova.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 void usage ()

@@ -270,10 +270,10 @@ void precession_test(void)
 	hobject.dec.seconds = 42.48;
 
 	JD = 2462088.69;
-
+	hequ_to_equ (&hobject, &object);
 	get_equ_prec (&object, JD, &pos);
-	test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 0.37058589);
-	test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 54.70071733);
+	test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.54306131);
+	test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.34921505);
 }
 
 void apparent_position_test(void)
@@ -328,8 +328,8 @@ void vsop87_test(void)
 #endif
 	
 	get_equ_solar_coords (JD, &equ);
-	test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 41.55553862);
-	test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, 49.35034910);
+	test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.31990965);
+	test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43182047);
 	
 	get_mercury_helio_coords(JD, &pos);
 	printf("Mercury L %f B %f R %f\n", pos.L, pos.B, pos.R);
