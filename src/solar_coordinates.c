@@ -34,7 +34,7 @@ Copyright 2000 Liam Girdwood
 void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
 {		
 	/* get earths heliocentric position */
-	get_earth_heliocentric_coordinates (JD, position);
+	get_earth_helio_coords (JD, position);
 
 	position->L += 180.0;
 	position->L = range_degrees (position->L);
@@ -88,7 +88,7 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 	double aberration, longitude, obliquity, ecliptic;
 	
 	/* get geometric coords */
-	get_geo_solar_coords (JD, &sol);
+	get_geom_solar_coords (JD, &sol);
 	
 	/* add nutation */
 	get_nutation (JD, &longitude, &obliquity, &ecliptic);
@@ -102,14 +102,14 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 	position->lat = sol.B;
 }
 
-/*! \fn void get_geoc_solar_coords (double JD, struct ln_geo_posn * position)
+/*! \fn void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
 * Calculate geocentric coordinates (rectangular)
 * accuracy 0.01 arc second error - uses VSOP87 
 */
-void get_geoc_solar_coords (double JD, struct ln_geo_posn * position)
+void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
 {		
 	/* get earths's heliocentric position */
 	struct ln_helio_posn sol;

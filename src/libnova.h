@@ -662,11 +662,11 @@ void get_ecl_solar_coords
 	(double JD,
 	struct ln_lnlat_posn * position);
 
-/*! \fn void get_geoc_solar_coords (double JD, struct ln_solar_position * position)
+/*! \fn void get_geo_solar_coords (double JD, struct ln_solar_position * position)
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
-void get_geoc_solar_coords (double JD, struct ln_geo_posn * position);
+void get_geo_solar_coords (double JD, struct ln_geo_posn * position);
 	
 
 /*! \defgroup mercury Mercury

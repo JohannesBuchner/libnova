@@ -270,7 +270,7 @@ void get_ecl_aber
 	T2 = T * T;
 
 	/* suns longitude in radians */
-	get_geometric_solar_coordinates (JD, &sol_position);
+	get_geom_solar_coords (JD, &sol_position);
 	true_longitude = deg_to_rad (sol_position.B);
 
 	/* Earth orbit ecentricity */

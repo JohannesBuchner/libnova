@@ -6534,7 +6534,7 @@ void get_mars_equ_coords
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geo_solar_coords (JD, &h_sol);
+	get_geom_solar_coords (JD, &h_sol);
 	get_geo_from_helio (&h_sol, JD,  &g_sol);
 	
 	do

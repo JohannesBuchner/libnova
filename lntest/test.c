@@ -22,7 +22,35 @@ Copyright 2000 Liam Girdwood  */
 #include <stdio.h>
 #include <stdlib.h>
 
-void julian_test (void)
+double compare_results (double calc, double expect)
+{
+	if (calc != expect)
+		return ( 1.0 / (expect / (calc - expect)));
+	else
+		return (0);
+}
+
+int test_result (char * test, double calc, double expect)
+{
+	double diff;
+	
+	printf ("TEST %s....", test);
+	
+	diff = compare_results (calc, expect);
+	if (diff)
+	{
+		printf ("[FAILED]\n");
+		printf ("	Expected %8.8f but got %8.8f %f % error.\n", expect, calc, diff);
+		return 1;
+	}
+	else
+	{
+		printf ("[OK]\n");
+		return 0;
+	}
+}
+
+int julian_test (void)
 { 
 	double JD;
 	int wday;
@@ -34,10 +62,8 @@ void julian_test (void)
 	date.hours = 19;
 	date.minutes = 0;
 	date.seconds = 0;
-
 	JD = get_julian_day (&date);
-
-	printf("JD is %f \n",JD);
+	test_result ("JD for 4/10/1957 19:00:00", JD, 2456789.0);
 
 	date.years = 333;
 	date.months = 1;
@@ -110,12 +136,12 @@ void nutation_test (void)
 
 void transform_test(void)
 {
-	struct lnh_equ_position hobject, hpollux, hequ;
-	struct lnh_horiz_position hhrz;
-	struct lnh_long_lat_position hobserver, hecl;
-	struct ln_equ_position object, pollux, equ;
-	struct ln_horiz_position hrz;
-	struct ln_long_lat_position observer, ecl;
+	struct lnh_equ_posn hobject, hpollux, hequ;
+	struct lnh_hrz_posn hhrz;
+	struct lnh_lnlat_posn hobserver, hecl;
+	struct ln_equ_posn object, pollux, equ;
+	struct ln_hrz_posn hrz;
+	struct ln_lnlat_posn observer, ecl;
 	double JD;
 	struct ln_date date;
 
@@ -145,13 +171,13 @@ void transform_test(void)
 	JD = get_julian_day (&date);
 	
 	hequ_to_equ (&hobject, &object);
-	hlong_lat_to_long_lat (&hobserver, &observer);
+	hlnlat_to_lnlat (&hobserver, &observer);
 	
-	get_horizontal_from_equatorial (&object, &observer, JD, &hrz);
-	horiz_to_hhoriz (&hrz, &hhrz);
+	get_hrz_from_equ (&object, &observer, JD, &hrz);
+	hrz_to_hhrz (&hrz, &hhrz);
 	printf("Alt %d:%d:%f\nAz %d:%d:%f\n",hhrz.alt.degrees, hhrz.alt.minutes, hhrz.alt.seconds, hhrz.az.degrees, hhrz.az.minutes, hhrz.az.seconds);
 
-	get_equatorial_from_horizontal (&hrz, &observer, JD, &equ);
+	get_equ_from_hrz (&hrz, &observer, JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 
@@ -163,11 +189,11 @@ void transform_test(void)
 	hpollux.dec.seconds = 34.26;
 
 	hequ_to_equ (&hpollux, &pollux);
-	get_ecliptical_from_equatorial(&pollux, JD, &ecl);
+	get_ecl_from_equ(&pollux, JD, &ecl);
 	
-	long_lat_to_hlong_lat (&ecl, &hecl);
+	lnlat_to_hlnlat (&ecl, &hecl);
 	printf("Long %d:%d:%f\nLat %d:%d:%f\n",hecl.lng.degrees, hecl.lng.minutes, hecl.lng.seconds, hecl.lat.degrees, hecl.lat.minutes, hecl.lat.seconds);
-	get_equatorial_from_ecliptical(&ecl, JD, &equ);
+	get_equ_from_ecl(&ecl, JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 }    
@@ -202,9 +228,9 @@ void sidereal_test ()
 
 void solar_coord_test (void)
 {
-	struct ln_heliocentric_position pos;
+	struct ln_helio_position pos;
 	printf("\n\nSolar Coords Test....\n");
-	get_geometric_solar_coordinates (2448908.5, &pos);
+	get_geometric_solar_coords (2448908.5, &pos);
 	printf("long %f lat %f radius vec %f\n", pos.L, pos.B, pos.R);
 }
 
@@ -234,7 +260,7 @@ void aberration_test (void)
 	JD = get_julian_day (&date);
 
 	hequ_to_equ (&hobject, &object);
-	get_aberration_equatorial (&object, JD, &pos);
+	get_aberration_equ (&object, JD, &pos);
 	equ_to_hequ(&pos, &hpos);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);
 }
@@ -256,7 +282,7 @@ void precession_test(void)
 
 	JD = 2462088.69;
 
-	get_precession_equatorial (&object, JD, &pos);
+	get_precession_equ (&object, JD, &pos);
 	equ_to_hequ (&pos, &hpos);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);	
 }
@@ -293,7 +319,7 @@ void apparent_position_test(void)
 
 void vsop87_test(void)
 {
-	struct ln_heliocentric_position pos;
+	struct ln_helio_position pos;
 	struct lnh_equ_position hequ;
 	struct ln_equ_position equ;
 	double JD = 2448976.5;
@@ -312,19 +338,19 @@ void vsop87_test(void)
 #endif
 	printf("\n\nVSOP87 Test... for Julian Day %f\n",JD);
 	
-	get_solar_coordinates_equatorial (JD, &equ);
+	get_solar_coords_equ (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Sun RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	
-	get_mercury_heliocentric_coordinates(JD, &pos);
+	get_mercury_helio_coords(JD, &pos);
 	printf("Mercury L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_mercury_equatorial_coordinates (JD, &equ);
+	get_mercury_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Mercury RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_mercury_earth_distance (JD);
-	printf ("mercury -> Earth distance (AU) %f\n",au);
-	au = get_mercury_sun_distance (JD);
-	printf ("mercury -> Sun distance (AU) %f\n",au);
+	au = get_mercury_earth_dist (JD);
+	printf ("mercury -> Earth dist (AU) %f\n",au);
+	au = get_mercury_sun_dist (JD);
+	printf ("mercury -> Sun dist (AU) %f\n",au);
 	au = get_mercury_disk (JD);
 	printf ("mercury -> illuminated disk %f\n",au);
 	au = get_mercury_magnitude (JD);
@@ -332,15 +358,15 @@ void vsop87_test(void)
 	au = get_mercury_phase (JD);
 	printf ("mercury -> phase %f\n",au);
 	
-	get_venus_heliocentric_coordinates(JD, &pos);
+	get_venus_helio_coords(JD, &pos);
 	printf("Venus L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_venus_equatorial_coordinates (JD, &equ);
+	get_venus_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Venus RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_venus_earth_distance (JD);
-	printf ("venus -> Earth distance (AU) %f\n",au);
-	au = get_venus_sun_distance (JD);
-	printf ("venus -> Sun distance (AU) %f\n",au);
+	au = get_venus_earth_dist (JD);
+	printf ("venus -> Earth dist (AU) %f\n",au);
+	au = get_venus_sun_dist (JD);
+	printf ("venus -> Sun dist (AU) %f\n",au);
 	au = get_venus_disk (JD);
 	printf ("venus -> illuminated disk %f\n",au);
 	au = get_venus_magnitude (JD);
@@ -348,20 +374,20 @@ void vsop87_test(void)
 	au = get_venus_phase (JD);
 	printf ("venus -> phase %f\n",au);
 	
-	get_earth_heliocentric_coordinates(JD, &pos);
+	get_earth_helio_coords(JD, &pos);
 	printf("Earth L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	au = get_earth_sun_distance (JD);
-	printf ("earth -> Sun distance (AU) %f\n",au);
+	au = get_earth_sun_dist (JD);
+	printf ("earth -> Sun dist (AU) %f\n",au);
 
-	get_mars_heliocentric_coordinates(JD, &pos);	
+	get_mars_helio_coords(JD, &pos);	
 	printf("Mars L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_mars_equatorial_coordinates (JD, &equ);
+	get_mars_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Mars RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_mars_earth_distance (JD);
-	printf ("mars -> Earth distance (AU) %f\n",au);
-	au = get_mars_sun_distance (JD);
-	printf ("mars -> Sun distance (AU) %f\n",au);
+	au = get_mars_earth_dist (JD);
+	printf ("mars -> Earth dist (AU) %f\n",au);
+	au = get_mars_sun_dist (JD);
+	printf ("mars -> Sun dist (AU) %f\n",au);
 	au = get_mars_disk (JD);
 	printf ("mars -> illuminated disk %f\n",au);
 	au = get_mars_magnitude (JD);
@@ -369,15 +395,15 @@ void vsop87_test(void)
 	au = get_mars_phase (JD);
 	printf ("mars -> phase %f\n",au);
 	
-	get_jupiter_heliocentric_coordinates(JD, &pos);
+	get_jupiter_helio_coords(JD, &pos);
 	printf("Jupiter L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_jupiter_equatorial_coordinates (JD, &equ);
+	get_jupiter_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Jupiter RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_jupiter_earth_distance (JD);
-	printf ("jupiter -> Earth distance (AU) %f\n",au);
-	au = get_jupiter_sun_distance (JD);
-	printf ("jupiter -> Sun distance (AU) %f\n",au);
+	au = get_jupiter_earth_dist (JD);
+	printf ("jupiter -> Earth dist (AU) %f\n",au);
+	au = get_jupiter_sun_dist (JD);
+	printf ("jupiter -> Sun dist (AU) %f\n",au);
 	au = get_jupiter_disk (JD);
 	printf ("jupiter -> illuminated disk %f\n",au);
 	au = get_jupiter_magnitude (JD);
@@ -385,15 +411,15 @@ void vsop87_test(void)
 	au = get_jupiter_phase (JD);
 	printf ("jupiter -> phase %f\n",au);
 	
-	get_saturn_heliocentric_coordinates(JD, &pos);
+	get_saturn_helio_coords(JD, &pos);
 	printf("Saturn L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_saturn_equatorial_coordinates (JD, &equ);
+	get_saturn_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Saturn RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_saturn_earth_distance (JD);
-	printf ("saturn -> Earth distance (AU) %f\n",au);
-	au = get_saturn_sun_distance (JD);
-	printf ("saturn -> Sun distance (AU) %f\n",au);
+	au = get_saturn_earth_dist (JD);
+	printf ("saturn -> Earth dist (AU) %f\n",au);
+	au = get_saturn_sun_dist (JD);
+	printf ("saturn -> Sun dist (AU) %f\n",au);
 	au = get_saturn_disk (JD);
 	printf ("saturn -> illuminated disk %f\n",au);
 	au = get_saturn_magnitude (JD);
@@ -401,15 +427,15 @@ void vsop87_test(void)
 	au = get_saturn_phase (JD);
 	printf ("saturn -> phase %f\n",au);
 	
-	get_uranus_heliocentric_coordinates(JD, &pos);	
+	get_uranus_helio_coords(JD, &pos);	
 	printf("Uranus L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_uranus_equatorial_coordinates (JD, &equ);
+	get_uranus_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Uranus RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_uranus_earth_distance (JD);
-	printf ("uranus -> Earth distance (AU) %f\n",au);
-	au = get_uranus_sun_distance (JD);
-	printf ("uranus -> Sun distance (AU) %f\n",au);
+	au = get_uranus_earth_dist (JD);
+	printf ("uranus -> Earth dist (AU) %f\n",au);
+	au = get_uranus_sun_dist (JD);
+	printf ("uranus -> Sun dist (AU) %f\n",au);
 	au = get_uranus_disk (JD);
 	printf ("uranus -> illuminated disk %f\n",au);
 	au = get_uranus_magnitude (JD);
@@ -417,15 +443,15 @@ void vsop87_test(void)
 	au = get_uranus_phase (JD);
 	printf ("uranus -> phase %f\n",au);
 	
-	get_neptune_heliocentric_coordinates(JD, &pos);
+	get_neptune_helio_coords(JD, &pos);
 	printf("Neptune L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_neptune_equatorial_coordinates (JD, &equ);
+	get_neptune_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Neptune RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_neptune_earth_distance (JD);
-	printf ("neptune -> Earth distance (AU) %f\n",au);
-	au = get_neptune_sun_distance (JD);
-	printf ("neptune -> Sun distance (AU) %f\n",au);
+	au = get_neptune_earth_dist (JD);
+	printf ("neptune -> Earth dist (AU) %f\n",au);
+	au = get_neptune_sun_dist (JD);
+	printf ("neptune -> Sun dist (AU) %f\n",au);
 	au = get_neptune_disk (JD);
 	printf ("neptune -> illuminated disk %f\n",au);
 	au = get_neptune_magnitude (JD);
@@ -433,15 +459,15 @@ void vsop87_test(void)
 	au = get_neptune_phase (JD);
 	printf ("neptune -> phase %f\n",au);
 	
-	get_pluto_heliocentric_coordinates(JD, &pos);
+	get_pluto_helio_coords(JD, &pos);
 	printf("Pluto L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	get_pluto_equatorial_coordinates (JD, &equ);
+	get_pluto_equ_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Pluto RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-	au = get_pluto_earth_distance (JD);
-	printf ("pluto -> Earth distance (AU) %f\n",au);
-	au = get_pluto_sun_distance (JD);
-	printf ("pluto -> Sun distance (AU) %f\n",au);
+	au = get_pluto_earth_dist (JD);
+	printf ("pluto -> Earth dist (AU) %f\n",au);
+	au = get_pluto_sun_dist (JD);
+	printf ("pluto -> Sun dist (AU) %f\n",au);
 	au = get_pluto_disk (JD);
 	printf ("pluto -> illuminated disk %f\n",au);
 	au = get_pluto_magnitude (JD);

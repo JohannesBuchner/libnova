@@ -7425,10 +7425,10 @@ double get_mercury_sun_dist (double JD)
 	double x, y, z, au;
 	
 	/* get heliocentric position */
-	get_mercury_helioc_coords (JD, &h_mercury);
+	get_mercury_helio_coords (JD, &h_mercury);
 	
 	/* get geocentric position */
-	get_geoc_solar_coords (JD, &g_sol);
+	get_geo_solar_coords (JD, &g_sol);
 	get_geo_from_helio (&h_mercury, JD, &g_mercury);
 	
 	/* use pythag */
