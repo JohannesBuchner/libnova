@@ -1,5 +1,13 @@
 ChangeLog
 
+20041804
+	-src/elliptic_motion.c
+	-src/parabolic_motion.c
+	
+	Change RST to use IAU longitudes.
+	
+	Liam Girdwood
+
 20041704
 	-src/rise_set.c
 	
