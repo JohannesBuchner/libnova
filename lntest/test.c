@@ -40,22 +40,25 @@ int test_result (char * test, double calc, double expect)
 	if (diff)
 	{
 		printf ("[FAILED]\n");
-		printf ("	Expected %8.8f but got %8.8f %f %% error.\n", expect, calc, diff);
+		printf ("	Expected %8.8f but calculated %8.8f %f %% error.\n\n", expect, calc, diff);
 		return 1;
 	}
 	else
 	{
-		printf ("[OK]\n");
+		printf ("[PASSED]\n");
+		printf ("	Expected and calculated %8.8f.\n\n", calc);
 		return 0;
 	}
 }
 
+/* test julian day calculations */
 int julian_test (void)
 { 
 	double JD;
 	int wday;
 	struct ln_date date, pdate;
 
+	/* Get julian day for 04/10/1957 19:00:00 */
 	date.years = 1957;
 	date.months = 10;
 	date.days = 4; 
@@ -63,31 +66,29 @@ int julian_test (void)
 	date.minutes = 0;
 	date.seconds = 0;
 	JD = get_julian_day (&date);
-	test_result ("JD for 4/10/1957 19:00:00", JD, 2456789.0);
+	test_result ("(Julian Day) JD for 4/10/1957 19:00:00", JD, 2436116.29166667);
 
+	/* Get julian day for 27/01/333 12:00:00 */
 	date.years = 333;
 	date.months = 1;
 	date.days = 27;
 	date.hours = 12;
-
 	JD = get_julian_day (&date);
+	test_result ("(Julian Day) JD for 27/01/333 12:00:00", JD, 1842713.0);
 
-	printf("JD is %f \n",JD);  
-
+	/* Get julian day for 30/06/1954 00:00:00 */
 	date.years = 1954;
 	date.months = 6;
 	date.days = 30;
 	date.hours = 0;
-
 	JD = get_julian_day (&date);
-
-	printf("JD is %f \n",JD); 
+	test_result ("(Julian Day) JD for 30/06/1954 00:00:00", JD, 2434923.5);
+	
 	wday = get_day_of_week(&date);
-	printf("Weekday No is %d\n",wday);
+	printf("TEST: (Julian Day) Weekday No is %d",wday);
 
-	JD = 2436116.31;
 	get_date (JD, &pdate);
-	printf("%d:%d:%d:%d:%d:%f\n",pdate.years, pdate.months, pdate.days, pdate.hours, pdate.minutes, pdate.seconds);
+	printf(" for %d/%d/%d  %d:%d:%f\n",pdate.days, pdate.months, pdate.years, pdate.hours, pdate.minutes, pdate.seconds);
 }
 
 void dynamical_test ()
@@ -95,20 +96,17 @@ void dynamical_test ()
 	struct ln_date date;
 	double TD,JD;
 
-	printf("\n\nDynamical time test.....\n");
-
+	/* Dynamical Time test for 01/01/2000 00:00:00 */
 	date.years = 2000;
-	date.months = 0;
-	date.days = 0;
+	date.months = 1;
+	date.days = 1;
 	date.hours = 0;
 	date.minutes = 0;
 	date.seconds = 0;
 
 	JD = get_julian_day (&date);
-	printf("JD is %f\n",JD);
-
 	TD = get_jde (JD);
-	printf("JDE is %f\n",TD);
+	test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50065885);
 }
 
 void nutation_test (void)
@@ -116,22 +114,16 @@ void nutation_test (void)
 	double JDE, JD, nutation_longitude, nutation_obliquity, nutation_ecliptic;
 	struct ln_dms hmst;
 		
-	printf("\n\nNutation test.....\n");
 	JD = 2446895.5;
-
 	JDE = get_jde (JD);
-	printf("JDE is %f\n",JDE);
 
 	get_nutation (JD, &nutation_longitude, &nutation_obliquity, &nutation_ecliptic);
-	printf("Nutation in longitude (deg) %f \n",nutation_longitude);
+	test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation_longitude, -0.00100558);
+	
 	deg_to_dms (nutation_longitude, &hmst);
-	printf("                      H:M:S %d:%d:%12.12f\n", hmst.degrees, hmst.minutes, hmst.seconds);
-	printf("Nutation in obliquity (deg) %f \n",nutation_obliquity);
-	deg_to_dms (nutation_obliquity, &hmst);
-	printf("                      H:M:S %d:%d:%12.12f\n", hmst.degrees, hmst.minutes, hmst.seconds);
-	printf("Nutation in ecliptic (deg) %f \n",nutation_ecliptic);
-	deg_to_dms (nutation_ecliptic, &hmst);
-	printf("                      H:M:S %d:%d:%12.12f\n", hmst.degrees, hmst.minutes, hmst.seconds);
+	test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation_obliquity, 0.00273287);
+	
+	test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation_ecliptic, 23.44367926);
 }
 
 void transform_test(void)
@@ -145,8 +137,7 @@ void transform_test(void)
 	double JD;
 	struct ln_date date;
 
-	printf ("\n\nTransformations Test \n");
-
+	/* observers position */
 	hobserver.lng.degrees = 77;
 	hobserver.lng.minutes = 03;
 	hobserver.lng.seconds = 56;
@@ -154,6 +145,7 @@ void transform_test(void)
 	hobserver.lat.minutes = 55;
 	hobserver.lat.seconds = 17;
 
+	/* object position */
 	hobject.ra.hours = 23;
 	hobject.ra.minutes = 9;
 	hobject.ra.seconds = 16.641;
@@ -161,6 +153,7 @@ void transform_test(void)
 	hobject.dec.minutes = -43;
 	hobject.dec.seconds = -11.61;
 
+	/* date and time */
 	date.years = 1987;
 	date.months = 4;
 	date.days = 10;
@@ -169,18 +162,18 @@ void transform_test(void)
 	date.seconds = 0;
 
 	JD = get_julian_day (&date);
-	
 	hequ_to_equ (&hobject, &object);
 	hlnlat_to_lnlat (&hobserver, &observer);
 	
 	get_hrz_from_equ (&object, &observer, JD, &hrz);
-	hrz_to_hhrz (&hrz, &hhrz);
-	printf("Alt %d:%d:%f\nAz %d:%d:%f\n",hhrz.alt.degrees, hhrz.alt.minutes, hhrz.alt.seconds, hhrz.az.degrees, hhrz.az.minutes, hhrz.az.seconds);
+	test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 15.12426264);
+	test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 68.03429264);
 
 	get_equ_from_hrz (&hrz, &observer, JD, &equ);
-	equ_to_hequ (&equ, &hequ);
-	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
-
+	test_result ("(Transforms) Horiz to Equ RA ", equ.ra, -12.68072670);
+	test_result ("(Transforms) Horiz to Equ DEC", equ.dec, -6.71989167);
+	
+	/* Equ position of Pollux */
 	hpollux.ra.hours = 7;
 	hpollux.ra.minutes = 45;
 	hpollux.ra.seconds = 18.946;
@@ -192,10 +185,12 @@ void transform_test(void)
 	get_ecl_from_equ(&pollux, JD, &ecl);
 	
 	lnlat_to_hlnlat (&ecl, &hecl);
-	printf("Long %d:%d:%f\nLat %d:%d:%f\n",hecl.lng.degrees, hecl.lng.minutes, hecl.lng.seconds, hecl.lat.degrees, hecl.lat.minutes, hecl.lat.seconds);
+	test_result ("(Transforms) Equ to Ecl longitude ", ecl.lng, 113.21542105);
+	test_result ("(Transforms) Equ to Ecl latitude", ecl.lat, 6.68002735);
+
 	get_equ_from_ecl(&ecl, JD, &equ);
-	equ_to_hequ (&equ, &hequ);
-	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
+	test_result ("(Transforms) Ecl to Equ RA ", equ.ra, 116.32894167);
+	test_result ("(Transforms) Ecl to Equ DEC", equ.dec, 28.02618333);
 }    
 
 void sidereal_test ()
@@ -204,8 +199,7 @@ void sidereal_test ()
 	double sd;
 	double JD;
 
-	printf("\n\nSidereal time test......\n");
-
+	/* 10/04/1987 19:21:00 */
 	date.years = 1987;
 	date.months = 4;
 	date.days = 10;
@@ -214,24 +208,21 @@ void sidereal_test ()
 	date.seconds = 0;
 
 	JD = get_julian_day (&date);
-	printf("JD is %f\n",JD);
-
 	sd = get_mean_sidereal_time (JD);
 
-	printf("SD mean %f hours \n",sd);
-
+	test_result ("(Sidereal) mean hours on 10/04/1987 19:21:00 ", sd, 8.58252488);
 	sd = get_apparent_sidereal_time (JD);
-
-	printf("SD apparent %f hours \n",sd);
-
+	test_result ("(Sidereal) apparent hours on 10/04/1987 19:21:00 ", sd, 8.58252060);
 }
 
 void solar_coord_test (void)
 {
 	struct ln_helio_posn pos;
-	printf("\n\nSolar Coords Test....\n");
+
 	get_geom_solar_coords (2448908.5, &pos);
-	printf("long %f lat %f radius vec %f\n", pos.L, pos.B, pos.R);
+	test_result ("(Solar Coords) longitude (deg) on JD 2448908.5  ", pos.L, 200.00669634);
+	test_result ("(Solar Coords) latitude (deg) on JD 2448908.5  ", pos.B, 0.00056436);
+	test_result ("(Solar Coords) radius vector (AU) on JD 2448908.5  ", pos.R, 0.99760852);
 }
 
 void aberration_test (void)
