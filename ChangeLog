@@ -1,6 +1,11 @@
 ChangeLog
 
 20032003
+	-examples/asteroid.c
+	-examples/Makefile.am
+	
+	added asteroid example code based on MPCORB data for Pallas.
+
 	-src/elliptic motion.c
 	
 	removed an unintentional change.
