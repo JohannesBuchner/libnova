@@ -47,10 +47,4 @@ struct XYZ
 	double cos2;
 };
 
-/* uses Ron-Vondrak expression pg 141 - 145 and equ22.4 */
-static void get_aberration_equatorial_high (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn *position);
-
-/* Equ 22.1, 22.3 Pg 139-140 Chapter 22 */
-static void get_aberration_equatorial_low (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position);
-
 #endif
