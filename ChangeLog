@@ -1,3 +1,15 @@
+ChangeLog
+
+20030117
+	-src/parabolic_motion.c
+	Change true anomaly to degrees.
+	Fixed object elongation.
+	
+	-src/elliptic_motion.c
+	added get_ell_body_elong();
+	
+	Liam Girdwood
+
 20030117
 	-src/rise_set.c, src/libnova.h
 	Added get_object_next_rst function.
@@ -5,6 +17,7 @@
 	Petr Kubanek
 
 20030116
+
 	-src/parabolic_motion.c, src/elliptic_motion.c
 	Heliocentric and geocentric position functions
 	had wrong names
