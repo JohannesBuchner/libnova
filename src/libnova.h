@@ -815,11 +815,22 @@ void get_ecl_aber
 * All angles are expressed in degrees.
 */
 
+#define SOLAR_STANDART_HORIZONT		-0.8333
+#define CIVIL_HORIZONT			-6.0
+#define NAUTIC_HORIZONT			-12.0 
+#define ASTRONOMICAL_HORIZONT		-18.0
+
 /*! \fn double get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for the Sun.
 * \ingroup solar
 */
-int get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time * rst);
+
+/*! \fn double get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for the Sun.
+* \ingroup solar
+*/
+inline int get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 	
 
 /*! \fn void get_geom_solar_coords (double JD, struct ln_helio_posn * position);
@@ -1587,6 +1598,9 @@ double get_lunar_sdiam (double JD);
 * \brief Calculate the time of rise, set and transit for the Moon.
 * \ingroup lunar
 */
+
+#define LUNAR_STANDART_HORIZONT		0.125
+
 int get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
@@ -1944,6 +1958,11 @@ int get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_po
 * \ingroup rst
 */
 int get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
+
+#define STAR_STANDART_HORIZONT		-0.5667
+
+int get_body_rst_horizont (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), 
+		double horizont, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };

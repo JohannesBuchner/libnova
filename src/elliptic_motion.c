@@ -539,6 +539,8 @@ int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_
 	/* check if body is circumpolar */
 	if (H1 > 1.0)
 		return (1);
+	if (H1 < -1.0)
+		return (-1);
 	
 	H0 = acos (H0/H1);
 	H0 = rad_to_deg(H0);
@@ -551,15 +553,15 @@ int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_
 	/* put in correct range */
 	if (mt > 1.0 )
 		mt--;
-	else if (mt < -1.0)
+	else if (mt < 0.0)
 		mt++;
 	if (mr > 1.0 )
 		mr--;
-	else if (mr < -1.0)
+	else if (mr < 0.0)
 		mr++;
 	if (ms > 1.0 )
 		ms--;
-	else if (ms < -1.0)
+	else if (ms < 0.0)
 		ms++;
 	
 	/* find sidereal time at Greenwich, in degrees, for each m*/
