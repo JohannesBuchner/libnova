@@ -20,34 +20,3 @@ Copyright 2002 Liam Girdwood
 
 #include "libnova.h"
 #include <math.h>
-
-/*!
-* \fn double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
-* \param JD Julian day.
-* \param orbit Orbital parameters
-* \param g Absolute magnitude
-* \param k Comet constant
-* \return The visual magnitude. 
-*
-* Calculate the visual magnitude of a comet.
-*/
-double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
-{
-	double mag;
-	double d, r;
-	double E,M;
-	
-	/* get mean anomaly */
-	if (orbit->n == 0)
-		orbit->n = get_mean_motion (orbit->a);
-	M = get_mean_anomaly (orbit->n, JD - orbit->JD);
-	
-	/* get eccentric anomaly */
-	E = solve_kepler (orbit->e, M);
-	
-	/* get radius vector */
-	r = get_radius_vector (orbit->a, orbit->e, E);
-	d = get_body_solar_dist (JD, orbit);
-	
-	mag = g + 5.0 * log10 (d) + k * log10 (r);
-}

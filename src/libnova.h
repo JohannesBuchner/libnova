@@ -39,6 +39,8 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Planetary Positions (Mercury - Neptune using VSOP87)
 * - Planetary Magnitude, illuminated disk and phase angle.
 * - Lunar Position (using ELP82), phase angle.
+* - Elliptic Motion (Asteroid + Comet positional and orbit data)
+* - Asteroid + Comet magnitudes
 *
 * \section docs Documentation
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
@@ -1451,23 +1453,23 @@ void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn
 */
 double get_orbit_len (struct ln_orbit * orbit);
 
-/*! \fn double get_orbit_vel (double a, double r);
+/*! \fn double get_orbit_vel (double JD, struct ln_orbit * orbit);
 * \brief Calculate orbital velocity in km/s.
 * \ingroup elliptic
 */
-double get_orbit_vel (double a, double r);
+double get_orbit_vel (double JD, struct ln_orbit * orbit);
 
-/*! \fn double get_orbit_pvel (double a, double e);
+/*! \fn double get_orbit_pvel (struct ln_orbit * orbit);
 * \brief Calculate orbital velocity at perihelion in km/s.
 * \ingroup elliptic
 */
-double get_orbit_pvel (double a, double e);
+double get_orbit_pvel (struct ln_orbit * orbit);
 
-/*! \fn double get_orbit_avel (double a, double e);
+/*! \fn double get_orbit_avel (struct ln_orbit * orbit);
 * \ingroup elliptic
 * \brief Calculate the orbital velocity at aphelion in km/s. 
 */
-double get_orbit_avel (double a, double e);
+double get_orbit_avel (struct ln_orbit * orbit);
 
 /*! \fn double get_body_phase_angle (double JD, struct ln_orbit * orbit);
 * \ingroup elliptic
@@ -1475,21 +1477,21 @@ double get_orbit_avel (double a, double e);
 */
 double get_body_phase_angle (double JD, struct ln_orbit * orbit);
 	
-/*
+/*!
 * \fn double get_body_solar_dist (double JD, struct ln_orbit * orbit)
 * \brief Calculate the distance between a body and the Sun
 * \ingroup elliptic
 */
 double get_body_solar_dist (double JD, struct ln_orbit * orbit);
 
-/*
+/*!
 * \fn double get_body_earth_dist (double JD, struct ln_orbit * orbit)
 * \brief Calculate the distance between a body and the Earth
 * \ingroup elliptic
 */
 double get_body_earth_dist (double JD, struct ln_orbit * orbit);
 	
-/*
+/*!
 * \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
 * \brief Calculate a bodies equatorial coords
 * \ingroup elliptic
@@ -1504,7 +1506,7 @@ void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn
 * All angles are expressed in degrees.
 */
 
-/*
+/*!
 * \fn double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
 * \ingroup asteroid
 * \brief Calculate the visual magnitude of an asteroid.
@@ -1518,7 +1520,7 @@ double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
 * All angles are expressed in degrees.
 */
 
-/*
+/*!
 * \fn double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
 * \ingroup comet
 * \brief Calculate the visual magnitude of a comet.

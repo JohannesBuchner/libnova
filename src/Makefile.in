@@ -83,7 +83,7 @@ VERSION = @VERSION@
 
 lib_LTLIBRARIES = libnova.la
 
-libnova_la_SOURCES =  	julian_day.c 	dynamical_time.c 	earth_globe.c 	sidereal_time.c 	transform.c 	nutation.c 	libnova.c 	trig.c   	aberration.c   	apparent_position.c 	solar_coordinates.c 	precession.c  	proper_motion.c 	mercury.c 	venus.c  	earth.c  	mars.c   	jupiter.c 	saturn.c  	uranus.c  	neptune.c  	pluto.c 	vsop87.c 	lunar.c  	elliptic_motion.c 	asteroid.c 	comet.c
+libnova_la_SOURCES =  	julian_day.c 	dynamical_time.c 	earth_globe.c 	sidereal_time.c 	transform.c 	nutation.c 	libnova.c 	trig.c   	aberration.c   	apparent_position.c 	solar_coordinates.c 	precession.c  	proper_motion.c 	mercury.c 	venus.c  	earth.c  	mars.c   	jupiter.c 	saturn.c  	uranus.c  	neptune.c  	pluto.c 	vsop87.c 	lunar.c  	elliptic_motion.c 	asteroid.c 	comet.c 	parabolic_motion.c 	misc.c
 
 
 include_HEADERS = libnova.h  
@@ -109,7 +109,7 @@ sidereal_time.lo transform.lo nutation.lo libnova.lo trig.lo \
 aberration.lo apparent_position.lo solar_coordinates.lo precession.lo \
 proper_motion.lo mercury.lo venus.lo earth.lo mars.lo jupiter.lo \
 saturn.lo uranus.lo neptune.lo pluto.lo vsop87.lo lunar.lo \
-elliptic_motion.lo asteroid.lo comet.lo
+elliptic_motion.lo asteroid.lo comet.lo parabolic_motion.lo misc.lo
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -128,10 +128,11 @@ DEP_FILES =  .deps/aberration.P .deps/apparent_position.P \
 .deps/asteroid.P .deps/comet.P .deps/dynamical_time.P .deps/earth.P \
 .deps/earth_globe.P .deps/elliptic_motion.P .deps/julian_day.P \
 .deps/jupiter.P .deps/libnova.P .deps/lunar.P .deps/mars.P \
-.deps/mercury.P .deps/neptune.P .deps/nutation.P .deps/pluto.P \
-.deps/precession.P .deps/proper_motion.P .deps/saturn.P \
-.deps/sidereal_time.P .deps/solar_coordinates.P .deps/transform.P \
-.deps/trig.P .deps/uranus.P .deps/venus.P .deps/vsop87.P
+.deps/mercury.P .deps/misc.P .deps/neptune.P .deps/nutation.P \
+.deps/parabolic_motion.P .deps/pluto.P .deps/precession.P \
+.deps/proper_motion.P .deps/saturn.P .deps/sidereal_time.P \
+.deps/solar_coordinates.P .deps/transform.P .deps/trig.P .deps/uranus.P \
+.deps/venus.P .deps/vsop87.P
 SOURCES = $(libnova_la_SOURCES)
 OBJECTS = $(libnova_la_OBJECTS)
 

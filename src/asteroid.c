@@ -21,7 +21,7 @@ Copyright 2002 Liam Girdwood
 #include "libnova.h"
 #include <math.h>
 
-/*
+/*!
 * \fn double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
 * \param JD Julian day.
 * \param orbit Orbital parameters

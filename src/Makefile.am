@@ -29,7 +29,9 @@ libnova_la_SOURCES = \
 	lunar.c  \
 	elliptic_motion.c \
 	asteroid.c \
-	comet.c
+	comet.c \
+	parabolic_motion.c \
+	misc.c
 
 
 include_HEADERS = libnova.h  

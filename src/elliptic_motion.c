@@ -271,7 +271,7 @@ void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn
 }
 
 
-/*
+/*!
 * \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
 * \param JD Julian Day.
 * \param orbit Orbital parameters.
@@ -332,55 +332,55 @@ double get_orbit_len (struct ln_orbit * orbit)
 	return (len);
 }
 
-/*! \fn double get_orbit_vel (double a, double r);
-* \param a Semi Major diameter in AU.
-* \param r Distance from the sun in AU
+/*! \fn double get_orbit_vel (double JD, struct ln_orbit * orbit);
+* \param JD Julian day.
+* \param orbit Orbital parameters
 * \return Orbital velocity in km/s.
 *
-* Calculate orbital velocity in km/s. 
+* Calculate orbital velocity in km/s for the given julian day. 
 */
-double get_orbit_vel (double a, double r)
+double get_orbit_vel (double JD, struct ln_orbit * orbit)
 {
 	double V;
+	double r;
 	
-	V = 1.0 / r - 1.0 / (2.0 * a);
+	r = get_body_solar_dist (JD, orbit);
+	V = 1.0 / r - 1.0 / (2.0 * orbit->a);
 	V = 42.1219 * sqrt (V);
 	return (V);
 }
 
-/*! \fn double get_orbit_pvel (double a, double e);
-* \param a Semi Major diameter in AU.
-* \param e Orbital eccentricity
+/*! \fn double get_orbit_pvel (struct ln_orbit * orbit);
+* \param orbit Orbital parameters
 * \return Orbital velocity in km/s.
 *
 * Calculate orbital velocity at perihelion in km/s. 
 */
-double get_orbit_pvel (double a, double e)
+double get_orbit_pvel (struct ln_orbit * orbit)
 {
 	double V;
 	
-	V = 29.7847 / sqrt (a);
-	V *= sqrt ((1.0 + e) / (1.0 - e));
+	V = 29.7847 / sqrt (orbit->a);
+	V *= sqrt ((1.0 + orbit->e) / (1.0 - orbit->e));
 	return (V);
 }
 
-/*! \fn double get_orbit_avel (double a, double e);
-* \param a Semi Major diameter in AU.
-* \param e Orbital eccentricity
+/*! \fn double get_orbit_avel (struct ln_orbit * orbit);
+* \param orbit Orbital parameters
 * \return Orbital velocity in km/s.
 *
 * Calculate the orbital velocity at aphelion in km/s. 
 */
-double get_orbit_avel (double a, double e)
+double get_orbit_avel (struct ln_orbit * orbit)
 {
 	double V;
 	
-	V = 29.7847 / sqrt (a);
-	V *= sqrt ((1.0 - e) / (1.0 + e));
+	V = 29.7847 / sqrt (orbit->a);
+	V *= sqrt ((1.0 - orbit->e) / (1.0 + orbit->e));
 	return (V);
 }
 
-/*
+/*!
 * \fn double get_body_solar_dist (double JD, struct ln_orbit * orbit)
 * \param JD Julian Day.
 * \param orbit Orbital parameters
@@ -402,7 +402,7 @@ double get_body_solar_dist (double JD, struct ln_orbit * orbit)
 	return (dist);
 }
 
-/*
+/*!
 * \fn double get_asteroid_earth_dist (double JD, struct ln_orbit * orbit)
 * \param JD Julian day.
 * \param orbit Orbital parameters

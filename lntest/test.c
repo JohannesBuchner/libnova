@@ -489,7 +489,7 @@ int lunar_test ()
 
 int ecliptic_motion_test ()
 {
-	double r,v;
+	double r,v,l,V,dist;
 	double E, e_JD, o_JD;
 	struct ln_orbit orbit;
 	struct ln_rect_posn posn;
@@ -525,19 +525,42 @@ int ecliptic_motion_test ()
 	test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320);
 	
 	v = get_true_anomaly (0.1, E);
-	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 5.554589253872320);
+	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152);
 	
 	r = get_radius_vector (0.5, 0.1, E);
-	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 5.554589253872320);
+	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
 	
 	get_geo_rect_posn (&orbit, o_JD, &posn);
-	printf ("X %0.15f Y %0.15f Z %0.15f\n",posn.X, posn.Y, posn.Z);
-	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 5.554589253872320);
-	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 5.554589253872320);
-	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 5.554589253872320);
+	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
+	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
+	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
+	
+	get_helio_rect_posn (&orbit, o_JD, &posn);
+	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
+	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
+	test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.13486450);
 	
 	get_body_equ_coords (o_JD, &orbit, &equ_posn);
-	printf (" RA %0.15f Dec %0.15f\n",equ_posn.ra, equ_posn.dec);
+	test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653);
+	test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815);
+	
+	l = get_orbit_len (&orbit);
+	test_result ("(Orbit Length) for comet Enkle in AU   ", l, 10.75710334);
+	
+	V = get_orbit_pvel (&orbit);
+	test_result ("(Orbit Perihelion Vel) for comet Enkle in kms   ", V, 70.43130198);
+	
+	V = get_orbit_avel (&orbit);
+	test_result ("(Orbit Aphelion Vel) for comet Enkle in kms   ", V, 5.70160892);
+	
+	V = get_orbit_vel (o_JD, &orbit);
+	test_result ("(Orbit Vel JD) for comet Enkle in kms   ", V, 28.32770604);
+	
+	dist = get_body_solar_dist (o_JD, &orbit);
+	test_result ("(Body Solar Dist) for comet Enkle in AU   ", dist, 1.47359636);
+	
+	dist = get_body_earth_dist (o_JD, &orbit);
+	test_result ("(Body Earth Dist) for comet Enkle in AU   ", dist, 0.65203581);
 }
 
 int main ()
