@@ -1,5 +1,12 @@
 ChangeLog
 
+20041704
+	-examples/sun.c
+	
+	Fixed typo in example code
+	
+	Liam Girdwood
+
 20041804
 	-src/elliptic_motion.c
 	-src/parabolic_motion.c
