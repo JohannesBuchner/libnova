@@ -21,7 +21,10 @@ A simple example showing some solar calculations.
 */
 
 #include <stdio.h>
-#include "libnova.h"
+#include <libnova/solar.h>
+#include <libnova/julian_day.h>
+#include <libnova/rise_set.h>
+#include <libnova/transform.h>
 
 void print_date (char * title, struct ln_date* date)
 {
@@ -48,27 +51,27 @@ int main (int argc, char * argv[])
 	observer.lng = 3.18;
 	
 	/* get Julian day from local time */
-	JD = get_julian_from_sys();	
+	JD = ln_get_julian_from_sys();	
 	printf ("JD %f\n", JD);
 	
 	/* geometric coordinates */
-	get_geom_solar_coords (JD, &pos);
+	ln_get_geom_solar_coords (JD, &pos);
 	printf("Solar Coords longitude (deg) %f\n", pos.L);
 	printf("             latitude (deg) %f\n", pos.B);
 	printf("             radius vector (AU) %f\n", pos.R);
 	
 	/* ra, dec */
-	get_equ_solar_coords (JD, &equ);
+	ln_get_equ_solar_coords (JD, &equ);
 	printf("Solar Position RA %f\n", equ.ra);
 	printf("               DEC %f\n", equ.dec);
 	
 	/* rise, set and transit */
-	if (get_solar_rst (JD, &observer, &rst) == 1) 
+	if (ln_get_solar_rst (JD, &observer, &rst) == 1) 
 		printf ("Comet is circumpolar\n");
 	else {
-		get_local_date (rst.rise, &rise);
-		get_local_date (rst.transit, &transit);
-		get_local_date (rst.set, &set);
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
 		print_date ("Rise", &rise);
 		print_date ("Transit", &transit);
 		print_date ("Set", &set);

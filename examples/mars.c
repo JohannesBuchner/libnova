@@ -21,7 +21,11 @@ A simple example showing some planetary calculations.
 */
 
 #include <stdio.h>
-#include "libnova.h"
+#include <libnova/mars.h>
+#include <libnova/julian_day.h>
+#include <libnova/rise_set.h>
+#include <libnova/transform.h>
+#include <libnova/utility.h>
 
 void print_date (char * title, struct ln_date* date)
 {
@@ -50,41 +54,41 @@ int main (int argc, char * argv[])
 	observer.lng = 3.18;
 	
 	/* get Julian day from local time */
-	JD = get_julian_from_sys();	
+	JD = ln_get_julian_from_sys();	
 	printf ("JD %f\n", JD);
 	
 	/* longitude, latitude and radius vector */
-	get_mars_helio_coords(JD, &pos);	
+	ln_get_mars_helio_coords(JD, &pos);	
 	printf("Mars L %f B %f R %f\n", pos.L, pos.B, pos.R);
 	
 	/* RA, DEC */
-	get_mars_equ_coords (JD, &equ);
-	equ_to_hequ (&equ, &hequ);
+	ln_get_mars_equ_coords (JD, &equ);
+	ln_equ_to_hequ (&equ, &hequ);
 	printf("Mars RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	
 	/* Earth - Mars dist AU */
-	au = get_mars_earth_dist (JD);
+	au = ln_get_mars_earth_dist (JD);
 	printf ("mars -> Earth dist (AU) %f\n",au);
 	
 	/* Sun - Mars Dist AU */
-	au = get_mars_sun_dist (JD);
+	au = ln_get_mars_sun_dist (JD);
 	printf ("mars -> Sun dist (AU) %f\n",au);
 	
 	/* Mars disk, magnitude and phase */
-	au = get_mars_disk (JD);
+	au = ln_get_mars_disk (JD);
 	printf ("mars -> illuminated disk %f\n",au);
-	au = get_mars_magnitude (JD);
+	au = ln_get_mars_magnitude (JD);
 	printf ("mars -> magnitude %f\n",au);
-	au = get_mars_phase (JD);
+	au = ln_get_mars_phase (JD);
 	printf ("mars -> phase %f\n",au);
 	
 		/* rise, set and transit time */
-	if (get_mars_rst (JD, &observer, &rst) == 1) 
+	if (ln_get_mars_rst (JD, &observer, &rst) == 1) 
 		printf ("Moon is circumpolar\n");
 	else {
-		get_local_date (rst.rise, &rise);
-		get_local_date (rst.transit, &transit);
-		get_local_date (rst.set, &set);
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
 		print_date ("Rise", &rise);
 		print_date ("Transit", &transit);
 		print_date ("Set", &set);

@@ -23,7 +23,11 @@ Comet Enckle
 */
 
 #include <stdio.h>
-#include "libnova.h"
+#include <libnova/comet.h>
+#include <libnova/julian_day.h>
+#include <libnova/rise_set.h>
+#include <libnova/transform.h>
+#include <libnova/elliptic_motion.h>
 
 void print_date (char * title, struct ln_date* date)
 {
@@ -52,7 +56,7 @@ int main (int argc, char * argv[])
 	observer.lng = 3.18;
 	
 	/* get Julian day from local time */
-	JD = get_julian_from_sys();	
+	JD = ln_get_julian_from_sys();	
 	printf ("JD %f\n", JD);
 	
 	/* calc epoch JD */
@@ -62,7 +66,7 @@ int main (int argc, char * argv[])
 	epoch_date.hours = 12;
 	epoch_date.minutes = 30;
 	epoch_date.seconds = 0;
-	e_JD = get_julian_day (&epoch_date);
+	e_JD = ln_get_julian_day (&epoch_date);
 	
 	/* Enckle orbital elements */
 	orbit.JD = e_JD;
@@ -74,65 +78,65 @@ int main (int argc, char * argv[])
 	orbit.n = 0;
 	
 	/* solve kepler for orbit */
-	E = solve_kepler (0.1, 5.0);
+	E = ln_solve_kepler (0.1, 5.0);
 	printf("(Equation of kepler) E when e is 0.1 and M is 5.0  %f\n ", E);
 	
 	/* true anomaly */
-	v = get_ell_true_anomaly (0.1, E);
+	v = ln_get_ell_true_anomaly (0.1, E);
 	printf("(True Anomaly) v when e is 0.1 and E is 5.5545  %f\n ", v);
 	
 	/* radius vector */
-	r = get_ell_radius_vector (0.5, 0.1, E);
+	r = ln_get_ell_radius_vector (0.5, 0.1, E);
 	printf ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545  %f\n ", r);
 	
 	/* geocentric rect coords */
-	get_ell_geo_rect_posn (&orbit, JD, &posn);
+	ln_get_ell_geo_rect_posn (&orbit, JD, &posn);
 	printf ("(Geocentric Rect Coords X) for comet Enckle  %f\n", posn.X);
 	printf ("(Geocentric Rect Coords Y) for comet Enckle  %f\n", posn.Y);
 	printf ("(Geocentric Rect Coords Z) for comet Enckle  %f\n", posn.Z);
 	
 	/* rectangular coords */
-	get_ell_helio_rect_posn (&orbit, JD, &posn);
+	ln_get_ell_helio_rect_posn (&orbit, JD, &posn);
 	printf ("(Heliocentric Rect Coords X) for comet Enckle  %f\n ", posn.X);
 	printf ("(Heliocentric Rect Coords Y) for comet Enckle  %f\n ", posn.Y);
 	printf ("(Heliocentric Rect Coords Z) for comet Enckle  %f\n ", posn.Z);
 	
 	/* ra, dec */
-	get_ell_body_equ_coords (JD, &orbit, &equ);
+	ln_get_ell_body_equ_coords (JD, &orbit, &equ);
 	printf ("(RA) for comet Enckle  %f\n ", equ.ra);
 	printf ("(Dec) for comet Enckle  %f\n ", equ.dec);
 	
 	/* orbit length */
-	l = get_ell_orbit_len (&orbit);
+	l = ln_get_ell_orbit_len (&orbit);
 	printf ("(Orbit Length) for comet Enckle in AU  %f\n ", l);
 	
 	/* orbital velocity at perihelion */
-	V = get_ell_orbit_pvel (&orbit);
+	V = ln_get_ell_orbit_pvel (&orbit);
 	printf ("(Orbit Perihelion Vel) for comet Enckle in kms  %f\n ", V);
 	
 	/* orbital velocity at aphelion */
-	V = get_ell_orbit_avel (&orbit);
+	V = ln_get_ell_orbit_avel (&orbit);
 	printf ("(Orbit Aphelion Vel) for comet Enckle in kms  %f\n ", V);
 	
 	/* average orbital velocity */
-	V = get_ell_orbit_vel (JD, &orbit);
+	V = ln_get_ell_orbit_vel (JD, &orbit);
 	printf ("(Orbit Vel JD) for comet Enckle in kms  %f\n ", V);
 	
 	/* comet sun distance */
-	dist = get_ell_body_solar_dist (JD, &orbit);
+	dist = ln_get_ell_body_solar_dist (JD, &orbit);
 	printf ("(Body Solar Dist) for comet Enckle in AU  %f\n ", dist);
 	
 	/* comet earth distance */
-	dist = get_ell_body_earth_dist (JD, &orbit);
+	dist = ln_get_ell_body_earth_dist (JD, &orbit);
 	printf ("(Body Earth Dist) for comet Enckle in AU  %f\n ", dist);
 	
 	/* rise, set and transit */
-	if (get_ell_body_rst (JD, &observer, &orbit, &rst) == 1) 
+	if (ln_get_ell_body_rst (JD, &observer, &orbit, &rst) == 1) 
 		printf ("Comet is circumpolar\n");
 	else {
-		get_local_date (rst.rise, &rise);
-		get_local_date (rst.transit, &transit);
-		get_local_date (rst.set, &set);
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
 		print_date ("Rise", &rise);
 		print_date ("Transit", &transit);
 		print_date ("Set", &set);

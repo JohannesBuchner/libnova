@@ -21,7 +21,11 @@ A simple example showing the asteroid Pallas.
 */
 
 #include <stdio.h>
-#include "libnova.h"
+#include <libnova/asteroid.h>
+#include <libnova/julian_day.h>
+#include <libnova/rise_set.h>
+#include <libnova/transform.h>
+#include <libnova/elliptic_motion.h>
 
 /* just prints the date */
 void print_date (char * title, struct ln_date* date)
@@ -55,7 +59,7 @@ int main (int argc, char * argv[])
 	observer.lng = 3.18;
 	
 	/* get Julian day from local time */
-	JD = get_julian_from_sys();	
+	JD = ln_get_julian_from_sys();	
 	printf ("JD (sys) %f\n", JD);
 	
 	/* Pallas orbital parameters 
@@ -74,67 +78,67 @@ int main (int argc, char * argv[])
 	G = 0.11;
 	
 	/* calc last passage in Perihelion, in julian day  */
-	M_JD = get_julian_from_mpc(M_epoch);
-	orbit.JD = get_ell_last_perihelion (M_JD, 260.69458, orbit.n);
+	M_JD = ln_get_julian_from_mpc(M_epoch);
+	orbit.JD = ln_get_ell_last_perihelion (M_JD, 260.69458, orbit.n);
 	printf ("JD (Perihelion) %f\n", orbit.JD);
 
 	/* calc the earth centered position */
-	get_ell_geo_rect_posn (&orbit, JD, &posn);
+	ln_get_ell_geo_rect_posn (&orbit, JD, &posn);
 	printf ("(Geocentric Rect Coords X) for Pallas   %f\n", posn.X);
 	printf ("(Geocentric Rect Coords Y) for Pallas   %f\n", posn.Y);
 	printf ("(Geocentric Rect Coords Z) for Pallas   %f\n", posn.Z);
 	
 	/* calc the sun centered position */
-	get_ell_helio_rect_posn (&orbit, JD, &posn);
+	ln_get_ell_helio_rect_posn (&orbit, JD, &posn);
 	printf ("(Heliocentric Rect Coords X) for Pallas   %f\n", posn.X);
 	printf ("(Heliocentric Rect Coords Y) for Pallas   %f\n", posn.Y);
 	printf ("(Heliocentric Rect Coords Z) for Pallas   %f\n", posn.Z);
 	
 	/* get the RA and Dec */
-	get_ell_body_equ_coords (JD, &orbit, &equ_posn);
+	ln_get_ell_body_equ_coords (JD, &orbit, &equ_posn);
 	printf ("(RA) for Pallas   %f\n", equ_posn.ra);
 	printf ("(Dec) for Pallas   %f\n", equ_posn.dec);
 	
 	/* get Alt, Az */
-	get_hrz_from_equ (&equ_posn, &observer, JD, &hrz);
+	ln_get_hrz_from_equ (&equ_posn, &observer, JD, &hrz);
 	printf ("Az %f\n",hrz.az);
 	printf ("Alt %f\n", hrz.alt);
 	
 	/* orbit length */
-	l = get_ell_orbit_len (&orbit);
+	l = ln_get_ell_orbit_len (&orbit);
 	printf ("(Orbit Length) for Pallas in AU   %f\n", l);
 	
 	/* orbit velocities */
-	V = get_ell_orbit_pvel (&orbit);
+	V = ln_get_ell_orbit_pvel (&orbit);
 	printf ("(Orbit Perihelion Vel) for Pallas in kms   %f\n", V);
-	V = get_ell_orbit_avel (&orbit);
+	V = ln_get_ell_orbit_avel (&orbit);
 	printf ("(Orbit Aphelion Vel) for Pallas in kms   %f\n", V);
-	V = get_ell_orbit_vel (JD, &orbit);
+	V = ln_get_ell_orbit_vel (JD, &orbit);
 	printf ("(Orbit Vel JD) for Pallas in kms   %f\n", V);
 	
 	/* earth and solar distance */
-	dist = get_ell_body_solar_dist (JD, &orbit);
+	dist = ln_get_ell_body_solar_dist (JD, &orbit);
 	printf ("Solar Dist (AU)  : %f\n", dist);
-	dist = get_ell_body_earth_dist (JD, &orbit);
+	dist = ln_get_ell_body_earth_dist (JD, &orbit);
 	printf ("Earth Dist (AU)  : %f\n", dist);
 	
 	/* phase angle, elongation */
-	ph = get_ell_body_phase_angle(JD, &orbit);
+	ph = ln_get_ell_body_phase_angle(JD, &orbit);
 	printf ("Phase angle      : %f\n",ph);
-	elong = get_ell_body_elong(JD, &orbit);
+	elong = ln_get_ell_body_elong(JD, &orbit);
 	printf ("Elongation       : %f\n",elong);
 	
 	/* magnitude */
-	mag = get_asteroid_mag (JD, &orbit, H, G);
+	mag = ln_get_asteroid_mag (JD, &orbit, H, G);
 	printf ("Magnitude        : %f\n", mag);
 	
 	/* rise, set and transit time */
-	if (get_ell_body_rst (JD, &observer, &orbit, &rst) == 1) 
+	if (ln_get_ell_body_rst (JD, &observer, &orbit, &rst) == 1) 
 		printf ("Pallas is circumpolar\n");
 	else {
-		get_local_date (rst.rise, &rise);
-		get_local_date (rst.transit, &transit);
-		get_local_date (rst.set, &set);
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
 		print_date ("Rise", &rise);
 		print_date ("Transit", &transit);
 		print_date ("Set", &set);

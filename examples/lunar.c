@@ -21,7 +21,10 @@ A simple example showing some lunar calculations.
 */
 
 #include <stdio.h>
-#include "libnova.h"
+#include <libnova/lunar.h>
+#include <libnova/julian_day.h>
+#include <libnova/rise_set.h>
+#include <libnova/transform.h>
 
 void print_date (char * title, struct ln_date* date)
 {
@@ -49,36 +52,36 @@ int main (int argc, char* argv[])
 	observer.lng = 3.18;
 	
 	/* get the julian day from the local system time */
-	JD = get_julian_from_sys();
+	JD = ln_get_julian_from_sys();
 	printf ("JD %f\n",JD);
 	
 	/* get the lunar geopcentric position in km, earth is at 0,0,0 */
-	get_lunar_geo_posn (JD, &moon, 0);
+	ln_get_lunar_geo_posn (JD, &moon, 0);
 	printf ("lunar x %f  y %f  z %f\n",moon.X, moon.Y, moon.Z);
 	
 	/* Long Lat */
-	get_lunar_ecl_coords (JD, &ecl, 0);
+	ln_get_lunar_ecl_coords (JD, &ecl, 0);
 	printf ("lunar long %f  lat %f\n",ecl.lng, ecl.lat);
 	
 	/* RA, DEC */
-	get_lunar_equ_coords (JD, &equ, 0);
+	ln_get_lunar_equ_coords (JD, &equ, 0);
 	printf ("lunar RA %f  Dec %f\n",equ.ra, equ.dec);
 	
 	/* moon earth distance */
-	printf ("lunar distance km %f\n", get_lunar_earth_dist(JD));
+	printf ("lunar distance km %f\n", ln_get_lunar_earth_dist(JD));
 	
 	/* lunar disk, phase and bright limb */
-	printf ("lunar disk %f\n", get_lunar_disk(JD));
-	printf ("lunar phase %f\n", get_lunar_phase(JD));
-	printf ("lunar bright limb %f\n", get_lunar_bright_limb(JD));
+	printf ("lunar disk %f\n", ln_get_lunar_disk(JD));
+	printf ("lunar phase %f\n", ln_get_lunar_phase(JD));
+	printf ("lunar bright limb %f\n", ln_get_lunar_bright_limb(JD));
 	
 	/* rise, set and transit time */
-	if (get_lunar_rst (JD, &observer, &rst) == 1) 
+	if (ln_get_lunar_rst (JD, &observer, &rst) == 1) 
 		printf ("Moon is circumpolar\n");
 	else {
-		get_local_date (rst.rise, &rise);
-		get_local_date (rst.transit, &transit);
-		get_local_date (rst.set, &set);
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
 		print_date ("Rise", &rise);
 		print_date ("Transit", &transit);
 		print_date ("Set", &set);
