@@ -32,7 +32,7 @@ extern "C" {
 * TODO
 */
 
-/*! \fn ln_double get_mean_sidereal_time (double JD)
+/*! \fn ln_double ln_get_mean_sidereal_time (double JD)
 * \brief Calculate mean sidereal time from date. 
 * \ingroup sidereal
 */ 

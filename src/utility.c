@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.2 2004-03-10 21:28:48 l_girdwood Exp $
+/* $Id: utility.c,v 1.3 2004-03-10 22:04:57 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -56,7 +56,7 @@
 
 static const char ln_version[] = VERSION;
 
-/*! \fn char * get_ln_version (void)
+/*! \fn char * ln_get_version (void)
 * \return Null terminated version string.
 *
 * Return the libnova library version number string

@@ -39,7 +39,7 @@ extern "C" {
 */
 double ln_get_pluto_sdiam (double JD);
 
-/*! \fn double get_pluto_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn double ln_get_pluto_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for Pluto.
 * \ingroup pluto
 */
