@@ -60,4 +60,5 @@ macros/Makefile
 src/Makefile
 lntest/Makefile
 doc/Makefile
+examples/Makefile
 ])

@@ -388,6 +388,12 @@ double get_julian_from_timet (time_t * in_time);
 */
 void get_timet_from_julian (double JD, time_t * in_time);
 
+/*! \fn double get_julian_local_date(struct ln_date* date)
+* \brief Calculate Julian day from local date
+* \ingroup calendar
+*/
+double get_julian_local_date(struct ln_date* date);
+
 /*! \defgroup misc Misc Functions
 */
 
