@@ -131,7 +131,11 @@ double dms_to_deg (struct ln_dms *dms)
     degrees =  (double)dms->degrees;
     degrees += (double)dms->minutes / 60;
     degrees += (double)dms->seconds / 3600;
-      
+	
+	// negative ?
+	if (dms->sign ==0)
+		degrees *= -1.0;
+	
     return (degrees);
 }
 
@@ -143,6 +147,10 @@ double dms_to_rad (struct ln_dms *dms)
     radians =  (double)dms->degrees / 360.0 * 2.0 * M_PI;
     radians += (double)dms->minutes / 21600.0 * 2.0 * M_PI;
     radians += (double)dms->seconds / 1296000.0 * 2.0 * M_PI;
+	
+	// negative ?
+	if (dms->sign == 0)
+		radians *= -1.0;
       
     return (radians);
 }
@@ -168,6 +176,11 @@ void deg_to_dms (double degrees, struct ln_dms * dms)
     
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
+	
+	if (degrees > 0)
+		dms->sign = 0;
+	else
+		dms->sign = 1;
 }
 
 /* convert radians to dms */
@@ -190,6 +203,11 @@ void rad_to_dms (double radians, struct ln_dms * dms)
 
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
+	
+	if (radians > 0)
+		dms->sign = 0;
+	else
+		dms->sign = 1;
 }
 
 
