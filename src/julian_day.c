@@ -389,7 +389,6 @@ int get_date_from_mpc (struct ln_date* date, char* mpc_date)
 }
 
 /*! \fn double get_julian_from_mpc (char* mpc_date)
-* \param date Pointer to new calendar date.
 * \param mpc_date Pointer to string MPC date
 * \return Julian day.
 *
