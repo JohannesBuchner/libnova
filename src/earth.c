@@ -2800,8 +2800,7 @@ void get_earth_centre_dist (float height, double latitude, double *p_sin_o, doub
      
      b = a * (1 - f);
      
-     u = b / a * tan(deg_to_rad(latitude));
-     u = atan(u);
+     u = atan2(b, a * tan(deg_to_rad(latitude)));
      
      *p_sin_o = b / a * sin (u) + (height / 6378140 ) * sin (latitude);
      *p_cos_o = cos (u) + (height / 6378140) * cos (latitude);

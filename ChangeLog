@@ -1,6 +1,12 @@
 ChangeLog
 
 20030226
+	-src/mercury.c - pluto.c, transform.c, solar.c, lunar.c
+	replaced atan() with atan2() to remove quadrant errors.
+	
+	Asrita Chetan, Liam Girdwood
+
+20030226
 	-src/transform.c
 	ra not in correct quadrant for hrz<->equ coords transformation
 	

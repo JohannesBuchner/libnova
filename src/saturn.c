@@ -6529,18 +6529,13 @@ void get_saturn_equ_coords
 		diff = t - last;
 	}
 	while (diff > 0.0001 || diff < -0.0001);
-		
-	ra = b/a;
-	ra = atan (ra);
-	/* check for correct quadrant */
-	if (a<0)
-		ra += M_PI;
-
+	
+	ra = atan2 (b,a);
 	dec = c / delta;
 	dec = asin (dec);
 
 	/* back to hours, degrees */
-	position->ra = rad_to_deg (ra);
+	position->ra = range_degrees(rad_to_deg (ra));
 	position->dec = rad_to_deg (dec);
 }
 	

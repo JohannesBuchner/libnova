@@ -132,7 +132,7 @@ void get_hrz_from_equ
 	A = (A < 0) ? 2 * M_PI + A : A;
 
 	/* covert back to degrees */
-	position->az = rad_to_deg (A);
+	position->az = range_degrees(rad_to_deg (A));
 }
 
 /*! \fn void get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position)
@@ -165,8 +165,7 @@ void get_equ_from_hrz
 	latitude = deg_to_rad (observer->lat);
 
 	/* equ on pg89 */
-	H = sin (A) / ( cos(A) * sin (latitude) + tan(h) * cos (latitude));
-	H = atan (H);
+	H = atan2 (sin (A), ( cos(A) * sin (latitude) + tan(h) * cos (latitude)));
 	declination = sin(latitude) * sin(h) - cos(latitude) * cos(h) * cos(A);
 	declination = asin (declination);
 
@@ -243,17 +242,13 @@ void get_ecl_from_equ
 	nutation.ecliptic = deg_to_rad (nutation.ecliptic);
 
 	/* Equ 12.1, 12.2 */
-	longitude = (sin(ra) * cos(nutation.ecliptic) + tan(declination) * sin(nutation.ecliptic)) / cos(ra);
-	longitude = atan(longitude);
-	if(longitude < 0)
-		longitude += M_PI;
-	
+	longitude = atan2 ((sin(ra) * cos(nutation.ecliptic) + tan(declination) * sin(nutation.ecliptic)), cos(ra));
 	latitude = sin(declination) * cos(nutation.ecliptic) - cos(declination) * sin(nutation.ecliptic) * sin(ra);
 	latitude = asin(latitude);
 
 	/* store in position */
 	position->lat = rad_to_deg (latitude);
-	position->lng = rad_to_deg (longitude);
+	position->lng = range_degrees(rad_to_deg (longitude));
 }
 
 /*! \fn void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
@@ -269,6 +264,6 @@ void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
 	double t;
 	
 	t = sqrt (rect->X * rect->X + rect->Y * rect->Y);
-	posn->lng = rad_to_deg (atan2 (rect->X, rect->Y));
+	posn->lng = range_degrees(rad_to_deg (atan2 (rect->X, rect->Y)));
 	posn->lat = rad_to_deg (atan2 (t, rect->Z));
 }

@@ -39489,8 +39489,8 @@ void get_lunar_ecl_coords
 	get_lunar_geo_posn (JD, &moon, precision);
 	
 	/* convert to long and lat */
-	position->lng = atan2(moon.Y, moon.X);
-	position->lat = atan (moon.Z / (sqrt((moon.X * moon.X) + (moon.Y * moon.Y))));
+	position->lng = atan2 (moon.Y, moon.X);
+	position->lat = atan2 (moon.Z, (sqrt((moon.X * moon.X) + (moon.Y * moon.Y))));
 	position->lng = range_degrees (rad_to_deg (position->lng));
 	position->lat = rad_to_deg (position->lat);
 }
@@ -39543,7 +39543,7 @@ double get_lunar_phase (double JD)
 	R = get_earth_sun_dist (JD);
 	delta = get_lunar_earth_dist (JD);
 	R = R * AU; /* convert R to km */
-	phase = atan ((R * sin (lunar_elong)) / (delta - R * cos (lunar_elong)));
+	phase = atan2 ((R * sin (lunar_elong)), (delta - R * cos (lunar_elong)));
 	phase = rad_to_deg (phase);
 	
 	return (phase);

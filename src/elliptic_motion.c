@@ -107,7 +107,6 @@ double get_ell_true_anomaly (double e, double E)
 	double v;
 	
 	E = deg_to_rad (E);
-	
 	v = sqrt ((1.0 + e) / (1.0 - e)) * tan (E / 2.0);
 	v = 2.0 * atan (v);
 	v = range_degrees (rad_to_deg (v));
