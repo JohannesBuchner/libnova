@@ -161,6 +161,7 @@ int transform_test(void)
 	struct ln_equ_posn object, pollux, equ;
 	struct ln_hrz_posn hrz;
 	struct ln_lnlat_posn observer, ecl;
+	struct ln_gal_posn gal;
 	double JD;
 	struct ln_date date;
 	int failed = 0;
@@ -222,7 +223,20 @@ int transform_test(void)
 	ln_get_equ_from_ecl(&ecl, JD, &equ);
 	failed += test_result ("(Transforms) Ecl to Equ RA ", equ.ra, 116.32894167, 0.00000001);
 	failed += test_result ("(Transforms) Ecl to Equ DEC", equ.dec, 28.02618333, 0.00000001);
+
+	/* Gal pole */
+	gal.l = 0;
+	gal.b = 90;
 	
+	ln_get_equ_from_gal (&gal, &equ);
+	failed += test_result ("(Transforms) Gal to Equ RA", equ.ra, 192.25, 0.00000001);
+	failed += test_result ("(Transforms) Gal to Equ DEC", equ.dec, 27.4, 0.00000001);
+
+	ln_get_gal_from_equ (&equ, &gal);
+	failed += test_result ("(Transforms) Equ to Gal b", gal.b, 90, 0.00000001);
+
+	// TODO add another test
+
 	return failed;
 }    
 
