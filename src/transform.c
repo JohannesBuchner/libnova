@@ -124,7 +124,10 @@ void get_hrz_from_equ_sidereal_time
 
 	if (Zs < 1e-5)
 	{
-		position->az = 0;
+		if (observer->lat > 0)
+			position->az = 180;
+		else
+			position->az = 0;
 		return;
 	}
 
