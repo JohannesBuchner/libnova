@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
+Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 */
 
 /*! \mainpage libnova 
@@ -71,7 +71,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Website and logo.
 *
 * \section contact Contact
-* If you would like further information, then please contact me <A href="mailto:liam@nova-ioe.org">here</A>
+* If you would like further information, then please contact me <A href="mailto:liam@gnova.org">here</A>
 *
 *	Liam Girdwood
 *

@@ -69,7 +69,7 @@ main ()
     printf ("*** An old version of libnova ($libnova_major_version.$libnova_minor_version.$libnova_micro_version) was found.\n");
     printf ("*** You need a version of libnova newer than or equal to %d.%d.%d.  The latest version of\n",
 	       major, minor, micro);
-    printf ("*** libnova is always available from http://www.nova-ioe.org.\n");
+    printf ("*** libnova is always available from http://gnova.org.\n");
     printf ("***\n");
     return 1;
   }
