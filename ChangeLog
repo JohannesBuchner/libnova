@@ -1,4 +1,10 @@
-20020116
+20030117
+	-src/rise_set.c, src/libnova.h
+	Added get_object_next_rst function.
+
+	Petr Kubanek
+
+20030116
 	-src/parabolic_motion.c, src/elliptic_motion.c
 	Heliocentric and geocentric position functions
 	had wrong names
@@ -11,7 +17,6 @@
 	Put longitude in correct quadrant.
 	
 	Fix supplied by Danie Malan
-
 
 20030103
 	- src/transform.c in get_hrz_from_equ ()
