@@ -1,5 +1,12 @@
 ChangeLog
 
+20041904
+	-src/utility.c
+	
+	Simplify some basic conversions.
+	
+	Juan Carlos Remis 
+
 20041704
 	-examples/sun.c
 	

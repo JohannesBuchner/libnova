@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.3 2004-03-10 22:04:57 l_girdwood Exp $
+/* $Id: utility.c,v 1.4 2004-04-19 20:30:55 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -54,6 +54,15 @@
 #define VERSION "0.9.0"
 #endif
 
+/* Conversion factors between degrees and radians */
+#define D2R  (1.7453292519943295769e-2)  /* deg->radian */
+#define R2D  (5.7295779513082320877e1)   /* radian->deg */
+#define R2S  (2.0626480624709635516e5)   /* arc seconds per radian */
+#define S2R  (4.8481368110953599359e-6)  /* radians per arc second */
+
+#define DM_PI (2*M_PI)
+#define RADIAN (180.0 / M_PI)
+
 static const char ln_version[] = VERSION;
 
 /*! \fn char * ln_get_version (void)
@@ -71,13 +80,13 @@ const char * ln_get_version (void)
 /* convert radians to degrees */
 double ln_rad_to_deg (double radians)
 {   
-    return (radians / (M_PI * 2.0)) * 360.0;
+	return (radians * R2D);
 }    
 
 /* convert degrees to radians */
 double ln_deg_to_rad (double degrees)
 {   
-	return (degrees / 360.0) * 2.0 * M_PI;
+	return (degrees * D2R);
 }    
 
 /* convert hours:mins:secs to degrees */
@@ -489,101 +498,97 @@ static void skipwhite(char **s)
 *  to view the degrees separator char '0xba')                              
 *
 *  42.30.35,53                                                             
-*  90º0'0,01 W                                                             
-*  42º30'35.53 N                                                           
-*  42º30'35.53S                                                            
-*  42º30'N                                                                 
+*  90Âº0'0,01 W                                                             
+*  42Âº30'35.53 N                                                           
+*  42Âº30'35.53S                                                            
+*  42Âº30'N                                                                 
 *  - 42.30.35.53                                                           
 *   42:30:35.53 S                                                          
 *  + 42.30.35.53                                                           
-*  +42º30 35,53                                                            
+*  +42Âº30 35,53                                                            
 *   23h36'45,0                                                             
 *                                                                          
 *                                                                          
-*  42:30:35.53 S = -42º30'35.53"                                           
+*  42:30:35.53 S = -42Âº30'35.53"                                           
 *  + 42 30.35.53 S the same previous position, the plus (+) sign is        
 *  considered like an error, the last 'S' has precedence over the sign     
 *                                                                          
-*  90º0'0,01 N ERROR: +- 90º0'00.00" latitude limit                        
+*  90Âº0'0,01 N ERROR: +- 90Âº0'00.00" latitude limit                        
 *
 */
 double ln_get_dec_location(char *s)
 {
-
-	char *ptr, *dec, *hh;
+	char *ptr, *dec, *hh, *ame, *tok_ptr;
 	BOOL negative = FALSE;
 	char delim1[] = " :.,;ºDdHhMm'\n\t";
 	char delim2[] = " NSEWnsew\"\n\t";
 	int dghh = 0, minutes = 0;
 	double seconds = 0.0, pos;
-        short count;
-
+	short count;
 	enum _type{
-    	    HOURS, DEGREES, LAT, LONG
-	}type;
+		HOURS, DEGREES, LAT, LONG
+		}type;
 
 	if (s == NULL || !*s)
 		return(-0.0);
+	
 	count = strlen(s) + 1;
 	if ((ptr = (char *) alloca(count)) == NULL)
 		return (-0.0);
+	
 	memcpy(ptr, s, count);
 	trim(ptr);
 	skipwhite(&ptr);
-        
-        /* the last letter has precedence over the sign */
+	if (*ptr == '+' || *ptr == '-')
+		negative = (char) (*ptr++ == '-' ? TRUE : negative);
+	
+	/* the last letter has precedence over the sign */
 	if (strpbrk(ptr,"SsWw") != NULL) 
 		negative = TRUE;
-
-	if (*ptr == '+' || *ptr == '-')
-		negative = (char) (*ptr++ == '-' ? TRUE : negative);	
-	skipwhite(&ptr);
-	if ((hh = strpbrk(ptr,"Hh")) != NULL && hh < ptr + 3)
-            type = HOURS;
-        else 
-            if (strpbrk(ptr,"SsNn") != NULL)
-		type = LAT;
-	    else 
- 	        type = DEGREES; /* unspecified, the caller must control it */
-
-	if ((ptr = strtok(ptr,delim1)) != NULL)
-		dghh = atoi (ptr);
-	else
-		return (-0.0);
-
-	if ((ptr = strtok(NULL,delim1)) != NULL) {
-		minutes = atoi (ptr);
-		if (minutes > 59)
-		    return (-0.0);
-	}else
-		return (-0.0);
-
-	if ((ptr = strtok(NULL,delim2)) != NULL) {
-		if ((dec = strchr(ptr,',')) != NULL)
-			*dec = '.';
-		seconds = strtod (ptr, NULL);
-		if (seconds > 59)
-			return (-0.0);
-	}
 	
-	if ((ptr = strtok(NULL," \n\t")) != NULL) {
-		skipwhite(&ptr);
-		if (*ptr == 'S' || *ptr == 'W' || *ptr == 's' || *ptr == 'W')
-			    negative = TRUE;
-	}
-        pos = dghh + minutes /60.0 + seconds / 3600.0;
-
-	if (type == HOURS && pos > 24.0)
-		return (-0.0);
-	if (type == LAT && pos > 90.0)
-		return (-0.0);
-	else
-	    if (pos > 180.0)
-		return (-0.0);
-
-	if (negative)
-		pos = 0.0 - pos;
-
+	skipwhite(&ptr);
+	if ((hh = strpbrk(ptr,"Hh")) != NULL && hh < ptr + 3) {
+		type = HOURS;
+		if (negative) /* if RA no negative numbers */
+			negative = FALSE;
+		} else if ((ame = strpbrk(ptr,"SsNn")) != NULL) {
+			type = LAT;
+			if (ame == ptr) /* the North/South found before data */
+				ptr++;
+			} else 
+				type = DEGREES; /* unspecified, the caller must control it */
+		if ((ptr = strtok_r(ptr,delim1, &tok_ptr)) != NULL)
+			dghh = atoi (ptr);
+		else
+			return (-0.0);
+		if ((ptr = strtok_r(NULL,delim1, &tok_ptr)) != NULL) {
+			minutes = atoi (ptr);
+			if (minutes > 59)
+				return (-0.0);
+		} else
+			return (-0.0);
+		
+		if ((ptr = strtok_r(NULL,delim2,&tok_ptr)) != NULL) {
+			if ((dec = strchr(ptr,',')) != NULL)
+				*dec = '.';
+			seconds = strtod (ptr, NULL);
+			if (seconds >= 60)
+				return (-0.0);
+		}
+        
+		if ((ptr = strtok(NULL," \n\t")) != NULL) {
+			skipwhite(&ptr);
+			if (*ptr == 'S' || *ptr == 'W' || *ptr == 's' || *ptr == 'W')
+				negative = TRUE;
+		}
+		
+		pos = dghh + minutes /60.0 + seconds / 3600.0;
+		if (type == HOURS && pos > 24.0)
+			return (-0.0);
+		if (type == LAT && pos > 90.0)
+			return (-0.0);
+		if (negative == TRUE)
+			pos = 0.0 - pos;
 	return pos;
 }
 
@@ -592,7 +597,7 @@ double ln_get_dec_location(char *s)
 * \param location Location angle in degress
 * \return Angle string
 *
-* Obtains a human readable location in the form: ddºmm'ss.ss"             
+* Obtains a human readable location in the form: ddÂºmm'ss.ss"             
 */
 const char * ln_get_humanr_location(double location)
 {
@@ -605,7 +610,7 @@ const char * ln_get_humanr_location(double location)
     if (sec < 0.0)
         sec *= -1;
     sec = 60.0 * (modf(sec, &min));
-    sprintf(buf,"%+dº%d'%.2f\"",(int)deg, (int) min, sec);
+    sprintf(buf,"%+dÂº%d'%.2f\"",(int)deg, (int) min, sec);
     return buf;
 }
 
