@@ -494,6 +494,7 @@ int ecliptic_motion_test ()
 	struct ln_orbit orbit;
 	struct ln_rect_posn posn;
 	struct ln_date epoch_date, obs_date;
+	struct ln_equ_posn equ_posn;
 		
 	obs_date.years = 1990;
 	obs_date.months = 10;
@@ -524,18 +525,24 @@ int ecliptic_motion_test ()
 	test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320);
 	
 	v = get_true_anomaly (0.1, E);
-	printf ("true anomaly %0.15f\n",v);
+	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 5.554589253872320);
 	
 	r = get_radius_vector (0.5, 0.1, E);
-	printf ("radius vector %0.15f\n",r);
+	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 5.554589253872320);
 	
-	get_orbital_rect_posn (&orbit, o_JD, &posn);
+	get_geo_rect_posn (&orbit, o_JD, &posn);
 	printf ("X %0.15f Y %0.15f Z %0.15f\n",posn.X, posn.Y, posn.Z);
+	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 5.554589253872320);
+	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 5.554589253872320);
+	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 5.554589253872320);
+	
+	get_body_equ_coords (o_JD, &orbit, &equ_posn);
+	printf (" RA %0.15f Dec %0.15f\n",equ_posn.ra, equ_posn.dec);
 }
 
 int main ()
 {
-/*	julian_test();
+	julian_test();
 	dynamical_test();
 	sidereal_test();
 	nutation_test();
@@ -545,7 +552,7 @@ int main ()
 	precession_test();
 	apparent_position_test ();
 	vsop87_test();
-	lunar_test ();*/
+	lunar_test ();
 	ecliptic_motion_test();
 	return (0);
 }

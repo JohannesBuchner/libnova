@@ -2299,26 +2299,11 @@ double get_neptune_earth_dist (double JD)
 double get_neptune_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_neptune;
-	struct ln_rect_posn g_sol, g_neptune;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_neptune_helio_coords (JD, &h_neptune);
 	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_neptune, JD, &g_neptune);
-	
-	/* use pythag */
-	x = g_neptune.X - g_sol.X;
-	y = g_neptune.Y - g_sol.Y;
-	z = g_neptune.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_neptune.R);
 }
 	
 /*! \fn double get_neptune_magnitude (double JD);

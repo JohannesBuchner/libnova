@@ -41,11 +41,7 @@ void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
 
 	position->L += 180.0;
 	position->L = range_degrees (position->L);
-	/*position->B *= -1.0;*/
-	/*position->R = 0;*/
-	
-	/* convert to fk5 
-	vsop87_to_fk5 (position, JD);*/
+	position->B *= -1.0;
 }
 
 /*! \fn void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
@@ -71,8 +67,6 @@ void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 	/* aberration */
 	aberration = (20.4898 / (360 * 60 * 60)) / sol.R;
 	sol.L -= aberration;
-
-	sol.B *= -1.0; /* not sure about this */ 
 	
 	/* transform to equatorial */
 	LB.lat = sol.B;
@@ -120,12 +114,12 @@ void get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 	/* get earths's heliocentric position */
 	struct ln_helio_posn sol;
 	get_earth_helio_coords (JD, &sol);
-	sol.L +=180.0;
-	sol.B *=-1.0;
-	sol.R = 0;
 	
 	/* now get rectangular coords */
 	get_rect_from_helio (&sol, JD, position);
+	position->X *=-1.0;
+	position->Y *=-1.0;
+	position->Z *=-1.0;
 }
 
 

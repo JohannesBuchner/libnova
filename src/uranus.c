@@ -5548,26 +5548,11 @@ double get_uranus_earth_dist (double JD)
 double get_uranus_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_uranus;
-	struct ln_rect_posn g_sol, g_uranus;
-	double x, y, z, au;
-	
+		
 	/* get heliocentric position */
 	get_uranus_helio_coords (JD, &h_uranus);
 	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_uranus, JD, &g_uranus);
-	
-	/* use pythag */
-	x = g_uranus.X - g_sol.X;
-	y = g_uranus.Y - g_sol.Y;
-	z = g_uranus.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_uranus.R);
 }
 	
 /*! \fn double get_uranus_magnitude (double JD);

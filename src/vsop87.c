@@ -47,22 +47,17 @@ double calc_series (const struct vsop * data, int terms, double t)
 */
 void vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
 {
-	double LL, T, delta_L, delta_B, B, t;
+	double LL, T, delta_L, delta_B, B;
 	
-	/* get julian millenia from 2000 */
-	t = (JD - 2451545.0)/ 365250.0;
+	/* get julian centuries from 2000 */
+	T = (JD - 2451545.0)/ 36525.0;
 	
-	T = t * 10;
 	LL = position->L - 1.397 * T - 0.00031 * T * T;
 	LL = deg_to_rad (LL);
 	B = deg_to_rad(position->B);
 	
-	delta_L = (-0.09033 / 3600.0) + (0.03916 * (cos (LL) + sin (LL)) * tan (B) / 3600.0);
-	delta_B = (0.03916 * (cos(LL) - sin(LL))) / 3600.0;
-	
-	/* back to degrees */
-	delta_L = rad_to_deg(delta_L);
-	delta_B = rad_to_deg(delta_B);
+	delta_L = (-0.09033 / 3600.0) + (0.03916 / 3600.0) * (cos (LL) + sin (LL)) * tan (B);
+	delta_B = (0.03916 / 3600.0) * (cos(LL) - sin(LL));
 	
 	position->L += delta_L;
 	position->B += delta_B;

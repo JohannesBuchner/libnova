@@ -2010,26 +2010,11 @@ double get_venus_earth_dist (double JD)
 double get_venus_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_venus;
-	struct ln_rect_posn g_sol, g_venus;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_venus_helio_coords (JD, &h_venus);
-	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_venus, JD, &g_venus);
-	
-	/* use pythag */
-	x = g_venus.X - g_sol.X;
-	y = g_venus.Y - g_sol.Y;
-	z = g_venus.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+
+	return (h_venus.R);
 }
 	
 /*! \fn double get_venus_magnitude (double JD);

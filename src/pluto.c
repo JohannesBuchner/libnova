@@ -379,26 +379,11 @@ double get_pluto_earth_dist (double JD)
 double get_pluto_sun_dist (double JD)
 {
 	struct ln_helio_posn h_pluto;
-	struct ln_rect_posn g_sol, g_pluto;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_pluto_helio_coords (JD, &h_pluto);
 	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_pluto, JD, &g_pluto);
-	
-	/* use pythag */
-	x = g_pluto.X - g_sol.X;
-	y = g_pluto.Y - g_sol.Y;
-	z = g_pluto.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_pluto.R);
 	
 }
 	

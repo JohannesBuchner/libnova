@@ -49,5 +49,5 @@ double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
 	r = get_radius_vector (orbit->a, orbit->e, E);
 	d = get_body_solar_dist (JD, orbit);
 	
-	mag = g + 5.0 * log (d) + k * log (r);
+	mag = g + 5.0 * log10 (d) + k * log10 (r);
 }

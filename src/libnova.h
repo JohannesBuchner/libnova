@@ -1433,11 +1433,17 @@ double get_sminor_diam (double e, double a);
 */
 double get_mean_motion (double a);
 
-/*! \fn void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_equ_posn* posn);
+/*! \fn void get_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+* \brief Calculate the objects rectangular geocentric position. 
+* \ingroup elliptic 
+*/
+void get_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+	
+/*! \fn void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \brief Calculate the objects rectangular heliocentric position. 
 * \ingroup elliptic 
 */
-void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
 	
 /*! \fn double get_orbit_len (struct ln_orbit * orbit);
 * \brief Calculate the orbital length in AU.
@@ -1483,13 +1489,6 @@ double get_body_solar_dist (double JD, struct ln_orbit * orbit);
 */
 double get_body_earth_dist (double JD, struct ln_orbit * orbit);
 	
-/*
-* \fn void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn)
-* \brief Calculate a bodies ecliptical coords
-* \ingroup elliptical
-*/
-void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn);
-
 /*
 * \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
 * \brief Calculate a bodies equatorial coords

@@ -57,7 +57,7 @@ double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
 	t1 = exp (-3.33 * pow (tan (b / 2.0), 0.63));
 	t2 = exp (-.187 * pow (tan (b / 2.0), 1.22));
 	
-	mag = H + 5 * log (r * d) - 2.5 * log ((1.0 - G) * t1 + G * t2);
+	mag = H + 5 * log10 (r * d) - 2.5 * log10 ((1.0 - G) * t1 + G * t2);
 	
 	return (mag);
 }

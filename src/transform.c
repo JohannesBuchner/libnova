@@ -250,6 +250,6 @@ void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
 	double t;
 	
 	t = sqrt (rect->X * rect->X + rect->Y * rect->Y);
-	posn->lng = rad_to_deg (atan2(rect->Y, rect->X));
-	posn->lat = rad_to_deg (atan2 (rect->Z, t));
+	posn->lng = rad_to_deg (atan2 (rect->X, rect->Y));
+	posn->lat = rad_to_deg (atan2 (t, rect->Z));
 }

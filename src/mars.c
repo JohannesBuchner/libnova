@@ -6703,26 +6703,11 @@ double get_mars_earth_dist (double JD)
 double get_mars_sun_dist (double JD)
 {
 	struct ln_helio_posn h_mars;
-	struct ln_rect_posn g_sol, g_mars;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_mars_helio_coords (JD, &h_mars);
 	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_mars, JD, &g_mars);
-	
-	/* use pythag */
-	x = g_mars.X - g_sol.X;
-	y = g_mars.Y - g_sol.Y;
-	z = g_mars.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_mars.R);
 }
 	
 /*! \fn double get_mars_magnitude (double JD);

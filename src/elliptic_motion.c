@@ -168,15 +168,15 @@ double get_mean_motion (double a)
 	return (q / (a * sqrt(a)));
 }
 
-/*! \fn void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_equ_posn* posn);
+/*! \fn void get_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \param orbit Orbital parameters of object.
 * \param JD Julian day
 * \param posn Position pointer to store objects position
 *
-* Calculate the objects rectangular heliocentric position given it's orbital
+* Calculate the objects rectangular geocentric position given it's orbital
 * elements for the given julian day. LIAM add more 
 */
-void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn)
+void get_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn)
 {
 	double A,B,C;
 	double F,G,H;
@@ -230,21 +230,63 @@ void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_po
 	posn->Z = r * c * sin (C + deg_to_rad(orbit->w + v));
 }
 
+/*! \fn void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+* \param orbit Orbital parameters of object.
+* \param JD Julian day
+* \param posn Position pointer to store objects position
+*
+* Calculate the objects rectangular heliocentric position given it's orbital
+* elements for the given julian day. LIAM add more 
+*/
+void get_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn)
+{
+	double M,v,E,r,u;
+	double sin_omega, sin_i, cos_omega, cos_i, cos_u, sin_u;
+
+	sin_omega = sin (deg_to_rad (orbit->omega));
+	cos_omega = cos (deg_to_rad (orbit->omega));
+	sin_i = sin (deg_to_rad  (orbit->i));
+	cos_i = cos (deg_to_rad  (orbit->i));
+	
+	/* get mean anomaly */
+	if (orbit->n == 0)
+		orbit->n = get_mean_motion (orbit->a);
+	M = get_mean_anomaly (orbit->n, JD - orbit->JD);
+
+	/* get eccentric anomaly */
+	E = solve_kepler (orbit->e, M);
+	
+	/* get true anomaly */
+	v = get_true_anomaly (orbit->e, E);
+	u = orbit->w + v;
+	sin_u = sin (deg_to_rad (u));
+	cos_u = cos (deg_to_rad (u));
+	
+	/* get radius vector */
+	r = get_radius_vector (orbit->a, orbit->e, E);
+
+	posn->X = r * (cos_omega * cos_u - sin_omega * sin_u * cos_i);
+	posn->Y = r * (sin_omega * cos_u + cos_omega * sin_u * cos_i);
+	posn->Z = r * sin_i * sin_u;
+}
+
+
 /*
-* \fn void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn)
+* \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
 * \param JD Julian Day.
 * \param orbit Orbital parameters.
 * \param posn Pointer to hold asteroid position.
 *
-* Calculate a bodies ecliptical coordinates for the given julian day.
+* Calculate a bodies equatorial coordinates for the given julian day.
 */
-void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn)
+void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
 {
 	struct ln_rect_posn body_rect_posn, sol_rect_posn;
 	double dist, t;
+	double x,y,z;
 	
 	/* get solar and body rect coords */
-	get_orbital_rect_posn (orbit, JD, &body_rect_posn);
+	get_geo_rect_posn (orbit, JD, &body_rect_posn);
 	get_geo_solar_coords (JD, &sol_rect_posn);
 	
 	/* calc distance and light time */
@@ -252,26 +294,15 @@ void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_po
 	t = get_light_time (dist);
 	
 	/* repeat calculation with new time (i.e. JD - t) */
-	get_orbital_rect_posn (orbit, JD - t, &body_rect_posn);
+	get_geo_rect_posn (orbit, JD - t, &body_rect_posn);
 	
-	/* get ecliptic coords */
-	get_ecl_from_rect (&body_rect_posn, posn);
-}
+	/* calc equ coords equ 33.10 */
+	x = sol_rect_posn.X + body_rect_posn.X;
+	y = sol_rect_posn.Y + body_rect_posn.Y;
+	z = sol_rect_posn.Z + body_rect_posn.Z;
 
-/*
-* \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
-* \param JD Julian day.
-* \param orbit Orbital parameters
-* \param posn Pointer to store equatorial position
-*
-* Calculate a bodies equatorial coords
-*/
-void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
-{
-	struct ln_lnlat_posn ecl_posn;
-		
-	get_body_ecl_coords (JD, orbit, &ecl_posn);
-	get_equ_from_ecl (&ecl_posn, JD, posn);
+	posn->ra = rad_to_deg(atan2 (y,x));
+	posn->dec = rad_to_deg(atan2 (z,sqrt (x * x + y * y)));
 }
 
 
@@ -363,7 +394,7 @@ double get_body_solar_dist (double JD, struct ln_orbit * orbit)
 	double dist;
 	
 	/* get solar and body rect coords */
-	get_orbital_rect_posn (orbit, JD, &body_rect_posn);
+	get_helio_rect_posn (orbit, JD, &body_rect_posn);
 	get_geo_solar_coords (JD, &sol_rect_posn);
 	
 	/* calc distance and light time */
@@ -383,13 +414,13 @@ double get_body_solar_dist (double JD, struct ln_orbit * orbit)
 double get_body_earth_dist (double JD, struct ln_orbit * orbit)
 {
 	struct ln_rect_posn body_rect_posn, earth_rect_posn;
-	struct ln_helio_posn earth_posn;
 	double dist;
 			
 	/* get solar and body rect coords */
-	get_orbital_rect_posn (orbit, JD, &body_rect_posn);
-	get_earth_helio_coords (JD, &earth_posn);
-	get_rect_from_helio (&earth_posn, JD, &earth_rect_posn);
+	get_geo_rect_posn (orbit, JD, &body_rect_posn);
+	earth_rect_posn.X = 0;
+	earth_rect_posn.Y = 0;
+	earth_rect_posn.Z = 0;
 	
 	/* calc distance and light time */
 	dist = get_rect_distance (&body_rect_posn, &earth_rect_posn);

@@ -2749,12 +2749,12 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 	
 	/* change to degrees in correct quadrant */
 	position->L = rad_to_deg(position->L);
-	position->B = rad_to_deg(position->B);
+	position->B = rad_to_deg(position->B) * -1.0;
 	position->L = range_degrees(position->L);
 	
 	/* change to fk5 reference frame */
 	vsop87_to_fk5 (position, JD);
-	
+
 	/* save cache */
 	cJD = JD;
 	cL = position->L;
@@ -2772,26 +2772,10 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 double get_earth_sun_dist (double JD)
 {
 	struct ln_helio_posn h_earth;
-	struct ln_rect_posn g_sol, g_earth;
-	double x, y, z, au;
 	
 	/* get heliocentric position */
 	get_earth_helio_coords (JD, &h_earth);
 
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
-	
-	/* use pythag */
-	x = g_earth.X - g_sol.X;
-	y = g_earth.Y - g_sol.Y;
-	z = g_earth.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-
-	au = sqrt (x + y + z);
-
-	return (au);
+	return (h_earth.R);
 }
 	

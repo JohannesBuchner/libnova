@@ -6667,28 +6667,11 @@ double get_saturn_earth_dist (double JD)
 double get_saturn_sun_dist (double JD)
 {
 	struct ln_helio_posn h_saturn;
-	struct ln_rect_posn g_sol, g_saturn;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_saturn_helio_coords (JD, &h_saturn);
 	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_saturn, JD, &g_saturn);
-	
-	/* use pythag */
-	x = g_saturn.X - g_sol.X;
-	y = g_saturn.Y - g_sol.Y;
-	z = g_saturn.Z - g_sol.Z;
-	
-	x = x * x;
-	y = y * y;
-	z = z * z;
-
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_saturn.R);
 }
 	
 /*! \fn double get_saturn_magnitude (double JD);

@@ -3926,26 +3926,10 @@ double get_jupiter_earth_dist (double JD)
 double get_jupiter_sun_dist (double JD)
 {
 	struct ln_helio_posn h_jupiter;
-	struct ln_rect_posn g_sol, g_jupiter;
-	double x, y, z, au;
 	
 	/* get heliocentric position */
 	get_jupiter_helio_coords (JD, &h_jupiter);
-	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_jupiter, JD, &g_jupiter);
-	
-	/* use pythag */
-	x = g_jupiter.X - g_sol.X;
-	y = g_jupiter.Y - g_sol.Y;
-	z = g_jupiter.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+	return (h_jupiter.R);
 }
 	
 /*! \fn double get_jupiter_magnitude (double JD);

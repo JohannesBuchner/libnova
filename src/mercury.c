@@ -7438,26 +7438,11 @@ double get_mercury_earth_dist (double JD)
 double get_mercury_sun_dist (double JD)
 {
 	struct ln_helio_posn  h_mercury;
-	struct ln_rect_posn g_sol, g_mercury;
-	double x, y, z, au;
-	
+
 	/* get heliocentric position */
 	get_mercury_helio_coords (JD, &h_mercury);
-	
-	/* get geocentric position */
-	get_geo_solar_coords (JD, &g_sol);
-	get_rect_from_helio (&h_mercury, JD, &g_mercury);
-	
-	/* use pythag */
-	x = g_mercury.X - g_sol.X;
-	y = g_mercury.Y - g_sol.Y;
-	z = g_mercury.Z - g_sol.Z;
-	x = x * x;
-	y = y * y;
-	z = z * z;
-	au = sqrt (x + y + z);
-	
-	return (au);
+
+	return (h_mercury.R);
 }
 	
 /*! \fn double get_mercury_magnitude (double JD);
