@@ -15,6 +15,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 
+The functions in this file use the Lunar Solution ELP 2000-82B by
+Michelle Chapront-Touze and Jean Chapront.
+
 */
 
 #include "libnova.h"
@@ -83,16 +86,16 @@ Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 #define 	DELEP	(-0.12879 / RAD)
 
 /*     Precession matrix */
-#define		P1		0.10180391d-4
-#define		P2		0.47020439d-6
-#define		P3		-0.5417367d-9
-#define		P4		-0.2507948d-11
-#define		P5		0.463486d-14
-#define		Q1		-0.113469002d-3
-#define		Q2		0.12372674d-6
-#define		Q3		0.1265417d-8
-#define		Q4		-0.1371808d-11
-#define		Q5		-0.320334d-14
+#define		P1		0.10180391e-4
+#define		P2		0.47020439e-6
+#define		P3		-0.5417367e-9
+#define		P4		-0.2507948e-11
+#define		P5		0.463486e-14
+#define		Q1		-0.113469002e-3
+#define		Q2		0.12372674e-6
+#define		Q3		0.1265417e-8
+#define		Q4		-0.1371808e-11
+#define		Q5		-0.320334e-14
 
 /* constants with corrections for DE200 / LE200 */
 static const double W1[5] = 
@@ -141,8 +144,14 @@ static const double peri[5] =
 };
 
 /* Delaunay's arguments.*/
-static double del[4][5];
-	
+static const double del[4][5] = {
+	{ 5.198466741027443, 7771.377146811758394, -0.000028449351621, 0.000000031973462, -0.000000000154365 },
+	{ -0.043125180208125, 628.301955168488007, -0.000002680534843, 0.000000000712676, 0.000000000000727 },
+	{ 2.355555898265799, 8328.691426955554562, 0.000157027757616, 0.000000250411114, -0.000000001186339 },
+	{ 1.627905233371468, 8433.466158130539043, -0.000059392100004, -0.000000004949948, 0.000000000020217 }
+};
+
+
 static const double zeta[2] = 
 {
 	(218.0 + (18.0 / 60.0) + (59.95571 / 3600.0)) * DEG, 
@@ -38194,48 +38203,6 @@ const plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] =
 	{0, 4, -1, -1, 0, 90.000000, 0.000030, 0.028000}
 };
 
-
-
-static double D; 
-static double ll; 
-static double l; 
-static double F; 
-
-
-/* initialise lunar constants */
-void init_lunar_constants ()
-{
-	int i,k;
-	
-	/* Delaunay's arguments.*/
-	for (i=0;i<5;i++)
-	{
-		del[0][i] = W1[i] - earth[i];
-		del[3][i] = W1[i] - W3[i];
-		del[2][i] = W1[i] - W2[i];
-		del[1][i] = earth[i] - peri[i];
-	}
-
-	del[0][0] += M_PI;
-
-	
-#if 0
-	
-	D = 297.0 + (51.0 / 60.0) + (0.73512 / 3600.0);
-	D += 1602961601.4603 * t - 58681 * t2 + 0.006595 * t3 - 0.00003184 * t4;
-	
-	ll = 357.0 + (31.0 / 60.0) + (44.79306 / 3600.0);
-	ll += 129596581.0474 * t - 0.5529 * t2 + 0.000147 * t3;
-	
-	l = 134.0 + (57.0 / 60.0) + (48.28096 / 3600.0);
-	l += 1717915923.4728 * t + 32.3893 * t2 +0.051651 * t3 - 0.00024470 * t4;
-	
-	F = 93.0 + (16.0 / 60.0) + (19.55755 / 3600.0);
-	F += 1739527263.0983 * t - 12.2505 * t2 - 0.001021 * t3 + 0.00000417 * t4;
-	
-#endif
-}
-
 /* sum lunar elp1 series */
 double sum_series_elp1 (double* t)
 {
@@ -39343,7 +39310,23 @@ double sum_series_elp36 (double *t)
 	return (result);
 }
 
-
+/*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * pos, double precision);
+* \brief Calculate the rectangular geocentric lunar cordinates.
+* \param JD Julian day.
+* \param pos Pointer to a geocentric position structure to held result.
+* \param precision The truncation level of the series in radians for longitude 
+* and latitude and in km for distance. (Valid range 0 - 0.01) 
+* \ingroup lunar
+*
+* Calculate the rectangular geocentric lunar cordinates to the inertial mean
+* ecliptic and equinox of J2000. 
+* The geocentric coordinates returned are in units of km.
+* 
+* This function is based upon the Lunar Solution ELP2000-82B by 
+* Michelle Chapront-Touze and Jean Chapront of the Bureau des Longitudes, 
+* Paris.
+*/ 
+/* ELP 2000-82B theory */
 void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 {
 	double t[5];
@@ -39352,7 +39335,10 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 	double a,b,c;
 	double x,y,z;
 	double pw,qw, pwqw, pw2, qw2, ra;
-	double x1,y1,z1;
+	
+	/* is precision too low ? */
+	if (precision > 0.01)
+		precision = 0.01;
 	
 	/* calc julian centuries */
 	t[0] = 1.0;
@@ -39366,7 +39352,7 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 	pre[1] = precision * RAD;
 	pre[2] = precision * ATH;
 	
-	init_lunar_constants ();
+	/* sum elp series */
 	elp[0] = sum_series_elp1(t);
 	elp[1] = sum_series_elp2(t);
 	elp[2] = sum_series_elp3(t);
@@ -39414,25 +39400,31 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 		elp[17] + elp[20] + elp[23] + elp[26] +
 		elp[29] + elp[32] + elp[35];
 		
+	/* calculate geocentric coords */	
 	a = a / RAD + W1[0] + W1[1] * t[1] + W1[2] * t[2] + W1[3] * t[3] + W1[4] * t[4];
 	b = b / RAD;
 	c = c * A0 / ATH;
 	
-	x1 = c * cos(b);
-	x2 = x1 * sin(a);
-	x1 = x1 * cos(a);
-	x3 = c * sin(b);
+	x = c * cos(b);
+	y = x * sin(a);
+	x = x * cos(a);
+	z = c * sin(b);
 	
-	pw = (p1 + p2 * t[1] + p3 * t[2] + p4 * t[3] + p5 * t[4]) * t[1];
-	qw = (q1 + q2 * t[1] + q3 * t[2] + q4 * t[3] + q5 * t[4]) * t[1];
+	/* Laskars series */
+	pw = (P1 + P2 * t[1] + P3 * t[2] + P4 * t[3] + P5 * t[4]) * t[1];
+	qw = (Q1 + Q2 * t[1] + Q3 * t[2] + Q4 * t[3] + Q5 * t[4]) * t[1];
 	ra = 2.0 * sqrt(1 - pw * pw - qw * qw);
 	pwqw = 2.0 * pw * qw;
 	pw2 = 1 - 2.0 * pw * pw;
 	qw2 = 1 - 2.0 * qw * qw;
 	pw = pw * ra;
 	qw = qw * ra;
-	a = pw2 * x1 + pwqw * x2 +pw * x3;
-	b = pwqw * x1 + qw2 * x2 - qw * x3;
-	c = -pw * x1 + qw * x2 + (pw2 + qw2 -1) * x3;
-	printf ("a %0.15f b %0.15f c %0.15f\n",a,b,c);
+	a = pw2 * x + pwqw * y + pw * z;
+	b = pwqw * x + qw2 * y - qw * z;
+	c = -pw * x + qw * y + (pw2 + qw2 -1) * z;
+
+	moon->X = a;
+	moon->Y = b;
+	moon->Z = c;
+
 }

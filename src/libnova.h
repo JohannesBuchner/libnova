@@ -1187,7 +1187,14 @@ double get_pluto_disk (double JD);
 /* Chapter 41 */
 double get_pluto_phase (double JD);
 
-/* temp */
+/*! \defgroup lunar Lunar
+*/
+
+/*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
+* \brief Calculate the rectangular geocentric lunar cordinates.
+* \ingroup lunar
+*/ 
+/* ELP 2000-82B theory */
 void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
 
 #ifdef __cplusplus
