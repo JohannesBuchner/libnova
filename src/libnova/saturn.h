@@ -80,7 +80,7 @@ double ln_get_saturn_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_saturn_sun_dist (double JD);
+double ln_get_saturn_solar_dist (double JD);
 	
 /*! \fn double ln_get_saturn_magnitude (double JD);
 * \brief Calculate the visible magnitude of Saturn

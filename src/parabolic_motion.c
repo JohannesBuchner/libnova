@@ -270,7 +270,7 @@ double ln_get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit)
 	r = ln_get_par_radius_vector (orbit->q, t);
 	
 	/* get solar and Earth-Sun distances */
-	R = ln_get_earth_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
 	d = ln_get_par_body_solar_dist (JD, orbit);
 
 	phase = (r * r + d * d - R * R) / ( 2.0 * r * d );
@@ -297,7 +297,7 @@ double ln_get_par_body_elong (double JD, struct ln_par_orbit * orbit)
 	r = ln_get_par_radius_vector (orbit->q, t);
 	
 	/* get solar and Earth-Sun distances */
-	R = ln_get_earth_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
 	d = ln_get_par_body_solar_dist (JD, orbit);
 
 	elong = (R * R + d * d - r * r) / ( 2.0 * R * d );

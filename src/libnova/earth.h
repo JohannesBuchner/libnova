@@ -52,7 +52,7 @@ void ln_get_earth_helio_coords (double JD, struct ln_helio_posn * position);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_earth_sun_dist (double JD);
+double ln_get_earth_solar_dist (double JD);
 	
 /*! \fn void ln_get_earth_rect_helio (double JD, struct ln_rect_posn * position)
 * \ingroup earth

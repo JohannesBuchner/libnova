@@ -73,7 +73,7 @@ double ln_get_pluto_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter 37 */
-double ln_get_pluto_sun_dist (double JD);
+double ln_get_pluto_solar_dist (double JD);
 	
 /*! \fn double ln_get_pluto_magnitude (double JD);
 * \brief Calculate the visible magnitude of Pluto

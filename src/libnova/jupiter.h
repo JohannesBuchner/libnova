@@ -81,7 +81,7 @@ double ln_get_jupiter_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_jupiter_sun_dist (double JD);
+double ln_get_jupiter_solar_dist (double JD);
 	
 /*! \fn double ln_get_jupiter_magnitude (double JD);
 * \brief Calculate the visible magnitude of Jupiter

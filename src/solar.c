@@ -160,6 +160,6 @@ double ln_get_solar_sdiam (double JD)
 	double So = 959.63; /* at 1 AU */
 	double dist;
 	
-	dist = ln_get_earth_sun_dist (JD);
+	dist = ln_get_earth_solar_dist (JD);
 	return So / dist;
 }

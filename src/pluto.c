@@ -385,7 +385,7 @@ double ln_get_pluto_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Pluto for the
 * given julian day.
 */ 
-double ln_get_pluto_sun_dist (double JD)
+double ln_get_pluto_solar_dist (double JD)
 {
 	struct ln_helio_posn h_pluto;
 
@@ -406,7 +406,7 @@ double ln_get_pluto_magnitude (double JD)
 	double delta, r;
 	
 	/* get distances */
-	r = ln_get_pluto_sun_dist (JD);
+	r = ln_get_pluto_solar_dist (JD);
 	delta = ln_get_pluto_earth_dist (JD);
 
 	return -1.0 + 5 * log10 (r * delta);
@@ -425,8 +425,8 @@ double ln_get_pluto_disk (double JD)
 	double r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_pluto_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_pluto_solar_dist (JD);
 	delta = ln_get_pluto_earth_dist (JD);
 	
 	/* calc fraction angle */
@@ -446,8 +446,8 @@ double ln_get_pluto_phase (double JD)
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_pluto_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_pluto_solar_dist (JD);
 	delta = ln_get_pluto_earth_dist (JD);
 
 	/* calc phase */

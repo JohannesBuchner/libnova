@@ -74,7 +74,7 @@ double ln_get_neptune_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_neptune_sun_dist (double JD);
+double ln_get_neptune_solar_dist (double JD);
 	
 /*! \fn double ln_get_neptune_magnitude (double JD);
 * \brief Calculate the visible magnitude of Neptune.

@@ -1,5 +1,13 @@
 ChangeLog
 
+20040712
+	-numerous
+	
+	Refactored sun -> solar in API
+	
+	lg
+
+
 *********** release of 0.10.1
 
 20040906

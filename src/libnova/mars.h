@@ -74,7 +74,7 @@ double ln_get_mars_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_mars_sun_dist (double JD);
+double ln_get_mars_solar_dist (double JD);
 	
 /*! \fn double ln_get_mars_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mars

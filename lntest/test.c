@@ -389,7 +389,7 @@ int vsop87_test(void)
 	printf("Mercury RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_mercury_earth_dist (JD);
 	printf ("mercury -> Earth dist (AU) %f\n",au);
-	au = ln_get_mercury_sun_dist (JD);
+	au = ln_get_mercury_solar_dist (JD);
 	printf ("mercury -> Sun dist (AU) %f\n",au);
 	au = ln_get_mercury_disk (JD);
 	printf ("mercury -> illuminated disk %f\n",au);
@@ -407,7 +407,7 @@ int vsop87_test(void)
 	printf("Venus RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_venus_earth_dist (JD);
 	printf ("venus -> Earth dist (AU) %f\n",au);
-	au = ln_get_venus_sun_dist (JD);
+	au = ln_get_venus_solar_dist (JD);
 	printf ("venus -> Sun dist (AU) %f\n",au);
 	au = ln_get_venus_disk (JD);
 	printf ("venus -> illuminated disk %f\n",au);
@@ -420,7 +420,7 @@ int vsop87_test(void)
 	
 	ln_get_earth_helio_coords(JD, &pos);
 	printf("Earth L %f B %f R %f\n", pos.L, pos.B, pos.R);
-	au = ln_get_earth_sun_dist (JD);
+	au = ln_get_earth_solar_dist (JD);
 	printf ("earth -> Sun dist (AU) %f\n",au);
 
 	ln_get_mars_helio_coords(JD, &pos);	
@@ -430,7 +430,7 @@ int vsop87_test(void)
 	printf("Mars RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_mars_earth_dist (JD);
 	printf ("mars -> Earth dist (AU) %f\n",au);
-	au = ln_get_mars_sun_dist (JD);
+	au = ln_get_mars_solar_dist (JD);
 	printf ("mars -> Sun dist (AU) %f\n",au);
 	au = ln_get_mars_disk (JD);
 	printf ("mars -> illuminated disk %f\n",au);
@@ -448,7 +448,7 @@ int vsop87_test(void)
 	printf("Jupiter RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_jupiter_earth_dist (JD);
 	printf ("jupiter -> Earth dist (AU) %f\n",au);
-	au = ln_get_jupiter_sun_dist (JD);
+	au = ln_get_jupiter_solar_dist (JD);
 	printf ("jupiter -> Sun dist (AU) %f\n",au);
 	au = ln_get_jupiter_disk (JD);
 	printf ("jupiter -> illuminated disk %f\n",au);
@@ -468,7 +468,7 @@ int vsop87_test(void)
 	printf("Saturn RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_saturn_earth_dist (JD);
 	printf ("saturn -> Earth dist (AU) %f\n",au);
-	au = ln_get_saturn_sun_dist (JD);
+	au = ln_get_saturn_solar_dist (JD);
 	printf ("saturn -> Sun dist (AU) %f\n",au);
 	au = ln_get_saturn_disk (JD);
 	printf ("saturn -> illuminated disk %f\n",au);
@@ -488,7 +488,7 @@ int vsop87_test(void)
 	printf("Uranus RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_uranus_earth_dist (JD);
 	printf ("uranus -> Earth dist (AU) %f\n",au);
-	au = ln_get_uranus_sun_dist (JD);
+	au = ln_get_uranus_solar_dist (JD);
 	printf ("uranus -> Sun dist (AU) %f\n",au);
 	au = ln_get_uranus_disk (JD);
 	printf ("uranus -> illuminated disk %f\n",au);
@@ -506,7 +506,7 @@ int vsop87_test(void)
 	printf("Neptune RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_neptune_earth_dist (JD);
 	printf ("neptune -> Earth dist (AU) %f\n",au);
-	au = ln_get_neptune_sun_dist (JD);
+	au = ln_get_neptune_solar_dist (JD);
 	printf ("neptune -> Sun dist (AU) %f\n",au);
 	au = ln_get_neptune_disk (JD);
 	printf ("neptune -> illuminated disk %f\n",au);
@@ -524,7 +524,7 @@ int vsop87_test(void)
 	printf("Pluto RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	au = ln_get_pluto_earth_dist (JD);
 	printf ("pluto -> Earth dist (AU) %f\n",au);
-	au = ln_get_pluto_sun_dist (JD);
+	au = ln_get_pluto_solar_dist (JD);
 	printf ("pluto -> Sun dist (AU) %f\n",au);
 	au = ln_get_pluto_disk (JD);
 	printf ("pluto -> illuminated disk %f\n",au);

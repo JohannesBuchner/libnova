@@ -71,7 +71,7 @@ int main (int argc, char * argv[])
 	printf ("mars -> Earth dist (AU) %f\n",au);
 	
 	/* Sun - Mars Dist AU */
-	au = ln_get_mars_sun_dist (JD);
+	au = ln_get_mars_solar_dist (JD);
 	printf ("mars -> Sun dist (AU) %f\n",au);
 	
 	/* Mars disk, magnitude and phase */

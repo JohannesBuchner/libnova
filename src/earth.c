@@ -2771,7 +2771,7 @@ void ln_get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 * Calculates the distance in AU between the Sun and Earth for 
 * the given julian day.
 */ 
-double ln_get_earth_sun_dist (double JD)
+double ln_get_earth_solar_dist (double JD)
 {
 	struct ln_helio_posn h_earth;
 	

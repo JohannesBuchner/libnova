@@ -5536,7 +5536,7 @@ double ln_get_uranus_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Uranus for
 * the given julian day.
 */ 
-double ln_get_uranus_sun_dist (double JD)
+double ln_get_uranus_solar_dist (double JD)
 {
 	struct ln_helio_posn  h_uranus;
 		
@@ -5558,7 +5558,7 @@ double ln_get_uranus_magnitude (double JD)
 	double delta, r;
 	
 	/* get distances */
-	r = ln_get_uranus_sun_dist (JD);
+	r = ln_get_uranus_solar_dist (JD);
 	delta = ln_get_uranus_earth_dist (JD);
 
 	return -7.19 + 5 * log10 (r * delta);
@@ -5578,8 +5578,8 @@ double ln_get_uranus_disk (double JD)
 	double r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_uranus_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_uranus_solar_dist (JD);
 	delta = ln_get_uranus_earth_dist (JD);
 	
 	/* calc fraction angle */
@@ -5600,8 +5600,8 @@ double ln_get_uranus_phase (double JD)
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_uranus_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_uranus_solar_dist (JD);
 	delta = ln_get_uranus_earth_dist (JD);
 
 	/* calc phase */

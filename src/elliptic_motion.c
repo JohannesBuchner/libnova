@@ -477,7 +477,7 @@ double ln_get_ell_body_elong (double JD, struct ln_ell_orbit * orbit)
 	r = ln_get_ell_radius_vector (orbit->a, orbit->e, E);
 	
 	/* get solar and Earth-Sun distances */
-	R = ln_get_earth_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
 	d = ln_get_ell_body_solar_dist (JD, orbit);
 
 	elong = (R * R + d * d - r * r) / ( 2.0 * R * d );

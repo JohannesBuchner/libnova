@@ -75,7 +75,7 @@ double ln_get_mercury_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_mercury_sun_dist (double JD);
+double ln_get_mercury_solar_dist (double JD);
 	
 /*! \fn double ln_get_mercury_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mercury

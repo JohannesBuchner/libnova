@@ -39381,7 +39381,7 @@ double ln_get_lunar_phase (double JD)
 	lunar_elong = acos (cos (ln_deg_to_rad(moon.lat)) * cos (ln_deg_to_rad(sun.lng - moon.lng)));
 	
 	/* now calc phase Equ 48.2 */
-	R = ln_get_earth_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
 	delta = ln_get_lunar_earth_dist (JD);
 	R = R * AU; /* convert R to km */
 	phase = atan2 ((R * sin (lunar_elong)), (delta - R * cos (lunar_elong)));

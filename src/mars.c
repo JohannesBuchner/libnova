@@ -6691,7 +6691,7 @@ double ln_get_mars_earth_dist (double JD)
 * Calculates the distance in AU between the Sun and Mars for the given 
 * julian day.
 */ 
-double ln_get_mars_sun_dist (double JD)
+double ln_get_mars_solar_dist (double JD)
 {
 	struct ln_helio_posn h_mars;
 
@@ -6713,7 +6713,7 @@ double ln_get_mars_magnitude (double JD)
 	double delta, r, i;
 	
 	/* get distances */
-	r = ln_get_mars_sun_dist (JD);
+	r = ln_get_mars_solar_dist (JD);
 	delta = ln_get_mars_earth_dist (JD);
 	
 	/* get phase */
@@ -6735,8 +6735,8 @@ double ln_get_mars_disk (double JD)
 	double r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_mars_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_mars_solar_dist (JD);
 	delta = ln_get_mars_earth_dist (JD);
 	
 	/* calc fraction angle */
@@ -6757,8 +6757,8 @@ double ln_get_mars_phase (double JD)
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = ln_get_earth_sun_dist (JD);
-	r = ln_get_mars_sun_dist (JD);
+	R = ln_get_earth_solar_dist (JD);
+	r = ln_get_mars_solar_dist (JD);
 	delta = ln_get_mars_earth_dist (JD);
 
 	/* calc phase */
