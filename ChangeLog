@@ -1,5 +1,12 @@
 ChangeLog
 
+20041704
+	-src/rise_set.c
+	
+	Change RST to use IAU longitudes.
+	
+	Liam Girdwood
+
 20041004
 	-src/rise_set.c
 
