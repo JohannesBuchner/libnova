@@ -1,5 +1,16 @@
 ChangeLog
 
+20040205
+	-src/utility.c
+	
+	Added overflow detection in *_to_hms(), *_to_dms()
+
+20040105
+	-src/transform.c
+	-examples/transforms.c
+	
+	Fixed quadrant range bug and added transform example
+
 20041904
 	-src/utility.c
 	
