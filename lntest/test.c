@@ -26,6 +26,8 @@ Copyright 2000 Liam Girdwood  */
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SYS_TIME
+
 double compare_results (double calc, double expect, double tolerance)
 {
 	if (calc - expect > tolerance || calc - expect < (tolerance * -1.0))
@@ -372,6 +374,8 @@ int vsop87_test(void)
 	printf ("mercury -> magnitude %f\n",au);
 	au = get_mercury_phase (JD);
 	printf ("mercury -> phase %f\n",au);
+	au = get_mercury_sdiam (JD);
+	printf ("mercury -> sdiam %f\n",au);
 	
 	get_venus_helio_coords(JD, &pos);
 	printf("Venus L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -388,6 +392,8 @@ int vsop87_test(void)
 	printf ("venus -> magnitude %f\n",au);
 	au = get_venus_phase (JD);
 	printf ("venus -> phase %f\n",au);
+	au = get_venus_sdiam (JD);
+	printf ("venus -> sdiam %f\n",au);
 	
 	get_earth_helio_coords(JD, &pos);
 	printf("Earth L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -409,6 +415,8 @@ int vsop87_test(void)
 	printf ("mars -> magnitude %f\n",au);
 	au = get_mars_phase (JD);
 	printf ("mars -> phase %f\n",au);
+	au = get_mars_sdiam (JD);
+	printf ("mars -> sdiam %f\n",au);
 	
 	get_jupiter_helio_coords(JD, &pos);
 	printf("Jupiter L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -425,6 +433,10 @@ int vsop87_test(void)
 	printf ("jupiter -> magnitude %f\n",au);
 	au = get_jupiter_phase (JD);
 	printf ("jupiter -> phase %f\n",au);
+	au = get_jupiter_pol_sdiam (JD);
+	printf ("jupiter -> polar sdiam %f\n",au);
+	au = get_jupiter_equ_sdiam (JD);
+	printf ("jupiter -> equ sdiam %f\n",au);
 	
 	get_saturn_helio_coords(JD, &pos);
 	printf("Saturn L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -441,6 +453,10 @@ int vsop87_test(void)
 	printf ("saturn -> magnitude %f\n",au);
 	au = get_saturn_phase (JD);
 	printf ("saturn -> phase %f\n",au);
+	au = get_saturn_pol_sdiam (JD);
+	printf ("saturn -> polar sdiam %f\n",au);
+	au = get_saturn_equ_sdiam (JD);
+	printf ("saturn -> equ sdiam %f\n",au);
 	
 	get_uranus_helio_coords(JD, &pos);	
 	printf("Uranus L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -457,6 +473,8 @@ int vsop87_test(void)
 	printf ("uranus -> magnitude %f\n",au);
 	au = get_uranus_phase (JD);
 	printf ("uranus -> phase %f\n",au);
+	au = get_uranus_sdiam (JD);
+	printf ("uranus -> sdiam %f\n",au);
 	
 	get_neptune_helio_coords(JD, &pos);
 	printf("Neptune L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -473,6 +491,8 @@ int vsop87_test(void)
 	printf ("neptune -> magnitude %f\n",au);
 	au = get_neptune_phase (JD);
 	printf ("neptune -> phase %f\n",au);
+	au = get_neptune_sdiam (JD);
+	printf ("neptune -> sdiam %f\n",au);
 	
 	get_pluto_helio_coords(JD, &pos);
 	printf("Pluto L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -489,6 +509,8 @@ int vsop87_test(void)
 	printf ("pluto -> magnitude %f\n",au);
 	au = get_pluto_phase (JD);
 	printf ("pluto -> phase %f\n",au);
+	au = get_pluto_sdiam (JD);
+	printf ("pluto -> sdiam %f\n",au);
 	
 	return (failed);
 }
