@@ -183,11 +183,7 @@ struct lnh_hrz_posn
 
 struct lnh_lnlat_posn
 {
-    struct ln_dms lng; /*!< longitude. Object longitude.<p>
-		NOTE: IAU changed from positive west to negative west longitude
-	    in 1982, however we will currently use the older convention of:- 
-			 Negative East of Greenwich, 
-			 Positive West of Greenwich */
+    struct ln_dms lng; /*!< longitude. Object longitude.*/
     struct ln_dms lat; /*!< latitude. Object latitude */
 };
 
@@ -232,11 +228,7 @@ struct ln_hrz_posn
 
 struct ln_lnlat_posn
 {
-    double lng; /*!< longitude. Object longitude. <p>
-	NOTE: IAU changed from positive west to negative west longitude
-	    in 1982, however we will currently use the older convention of:- 
-			 Negative East of Greenwich, 
-			 Positive West of Greenwich */
+    double lng; /*!< longitude. Object longitude. */
     double lat; /*!< latitude. Object latitude */
 };
 

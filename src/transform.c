@@ -97,7 +97,7 @@ void get_hrz_from_equ_sidereal_time
 
 	/* calculate hour angle of object at observers position */
 	ra = deg_to_rad (object->ra);
-	H = sidereal - deg_to_rad (observer->lng) - ra;
+	H = sidereal + deg_to_rad (observer->lng) - ra;
 
 	/* hence formula 12.5 and 12.6 give */
 	/* convert to radians - hour angle, observers latitude, object declination */
@@ -119,8 +119,7 @@ void get_hrz_from_equ_sidereal_time
 
 	/* sane check for zenith distance; don't try to divide by 0 */
 
-	if (Zs < 1e-5)
-	{
+	if (Zs < 1e-5) {
 		if (observer->lat > 0)
 			position->az = 180;
 		else
@@ -133,8 +132,7 @@ void get_hrz_from_equ_sidereal_time
 	Ac = (sin (latitude) * cos (declination) * cos (H) - cos (latitude) * sin (declination)) / Zs;
 
 	// don't blom at atan2
-	if (fabs(As) < 1e-5)
-	{
+	if (fabs(As) < 1e-5) {
 		position->az = 0;
 		return;
 	}
@@ -165,7 +163,6 @@ void get_equ_from_hrz
 {
 	double H, longitude, declination, latitude, A, h, sidereal;
 
-
 	/* change observer/object position into radians */
 
 	/* object alt/az */
@@ -185,7 +182,7 @@ void get_equ_from_hrz
 	sidereal = get_apparent_sidereal_time(JD);
 	sidereal *= 2.0 * M_PI / 24.0;
 
-	position->ra = rad_to_deg (sidereal - H - longitude);
+	position->ra = rad_to_deg (sidereal - H + longitude);
 	position->dec = rad_to_deg (declination);
 }
 

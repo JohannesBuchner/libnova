@@ -1,5 +1,16 @@
 ChangeLog
 
+20042001
+	-src/transform.c
+	-src/libnova.h
+	-lntest/test.c
+	
+	Changed from longitude measurement from Meeus positively westwards to the
+	IAU's positively eastwards.
+
+	Liam Girdwood, Guillermo Ballester Valor
+
+
 20033008
 
 	-src/julian_day.c
