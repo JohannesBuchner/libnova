@@ -1,5 +1,13 @@
 ChangeLog
 
+20032003
+	-src/libnova.h
+	-src/elliptic_motion.c
+	
+	added get_ell_last_perihelion()
+	
+	Liam Girdwood
+	
 20031808
 	-src/libnova.h
 	-src/julian_day.c

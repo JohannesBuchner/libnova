@@ -210,11 +210,13 @@ void get_ell_helio_rect_posn (struct ln_ell_orbit* orbit, double JD, struct ln_r
 	b = sqrt (G * G + Q * Q);
 	c = sqrt (H * H + R * R);
 
-	/* get mean anomaly */
-	if (orbit->n == 0)
-		orbit->n = get_ell_mean_motion (orbit->a);
-	M = get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
+	/* get daily motion */
+	if (orbit->n == 0) 
+			orbit->n = get_ell_mean_motion (orbit->a);
 
+	/* get mean anomaly */
+	M = get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
+	
 	/* get eccentric anomaly */
 	E = solve_kepler (orbit->e, M);
 	
@@ -243,16 +245,17 @@ void get_ell_geo_rect_posn (struct ln_ell_orbit* orbit, double JD, struct ln_rec
 	struct ln_rect_posn p_posn, e_posn;
 	struct ln_helio_posn earth;
 	
-	/* parabolic helio rect coords */
+	/* elliptic helio rect coords */
 	get_ell_helio_rect_posn (orbit, JD, &p_posn);
 	
 	/* earth rect coords */
 	get_earth_helio_coords (JD, &earth);
-	get_rect_from_helio (&earth, &e_posn);
 	
-	posn->X = e_posn.X - p_posn.X;
-	posn->Y = e_posn.Y - p_posn.Y;
-	posn->Z = e_posn.Z - p_posn.Z;
+	get_rect_from_helio (&earth, &e_posn);
+
+	posn->X = p_posn.X - e_posn.X;
+	posn->Y = p_posn.Y - e_posn.Y;
+	posn->Z = p_posn.Z - e_posn.Z;
 }
 
 
@@ -446,7 +449,7 @@ double get_ell_body_phase_angle (double JD, struct ln_ell_orbit * orbit)
 	d = get_ell_body_solar_dist (JD, orbit);
 	
 	phase = (r * r + d * d - R * R) / ( 2.0 * r * d );
-	phase = acos (deg_to_rad (phase));
+	phase = range_degrees(acos (deg_to_rad (phase)));
 	
 	return (phase);
 }
@@ -607,4 +610,16 @@ int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_
 	
 	/* not circumpolar */
 	return (0);
+}
+
+/*!\fn double get_ell_last_perihelion (double epoch_JD, double M, double n);
+* \param epoch_JD Julian day of epoch
+* \param M Mean anomaly
+* \param n daily motion in degrees
+* 
+* Calculate the julian day of the last perihelion.
+*/
+double get_ell_last_perihelion (double epoch_JD, double M, double n)
+{
+	return epoch_JD - (M / n);
 }
