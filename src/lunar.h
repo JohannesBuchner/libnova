@@ -74,4 +74,19 @@ typedef struct earth_pert moon_pert;
 typedef struct earth_pert rel_pert;
 typedef struct earth_pert plan_sol_pert;
  
+
+/* sum ELP series */
+double sum_series_elp1 ();
+double sum_series_elp2 ();
+double sum_series_elp3 ();
+double sum_series_elp4 (double t);
+double sum_series_elp5 (double t);
+double sum_series_elp6 (double t);
+double sum_series_elp7 (double t);
+double sum_series_elp8 (double t);
+double sum_series_elp9 (double t);
+
+/* initialise lunar constants */
+void init_lunar_constants (double t);
+
 #endif

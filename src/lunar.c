@@ -38197,3 +38197,103 @@ double sum_series_elp4 (double t)
 	}
 	return (result);
 }
+
+/* sum lunar elp5 series */
+double sum_series_elp5 (double t)
+{
+	double result = 0;
+	int i;
+	double p = 5029.0966; /* J2000 precession constant */
+	double a = W1 + p * t;
+	
+	for (i=0; i< ELP5_SIZE; i++)
+	{
+		result += earth_pert_elp5[i].A * sin (earth_pert_elp5[i].i1 * a + 
+											earth_pert_elp5[i].i2 * D + 
+											earth_pert_elp5[i].i3 * ll + 
+											earth_pert_elp5[i].i4 * l + 
+											earth_pert_elp5[i].i4 * F + 
+											earth_pert_elp5[i].O);
+	}
+	return (result);
+}
+
+/* sum lunar elp6 series */
+double sum_series_elp6 (double t)
+{
+	double result = 0;
+	int i;
+	double p = 5029.0966; /* J2000 precession constant */
+	double a = W1 + p * t;
+	
+	for (i=0; i< ELP6_SIZE; i++)
+	{
+		result += earth_pert_elp6[i].A * sin (earth_pert_elp6[i].i1 * a + 
+											earth_pert_elp6[i].i2 * D + 
+											earth_pert_elp6[i].i3 * ll + 
+											earth_pert_elp6[i].i4 * l + 
+											earth_pert_elp6[i].i4 * F + 
+											earth_pert_elp6[i].O);
+	}
+	return (result);
+}
+
+/* sum lunar elp7 series */
+double sum_series_elp7 (double t)
+{
+	double result = 0;
+	int i;
+	double p = 5029.0966; /* J2000 precession constant */
+	double a = W1 + p * t;
+	
+	for (i=0; i< ELP7_SIZE; i++)
+	{
+		result += earth_pert_elp7[i].A * sin (earth_pert_elp7[i].i1 * a + 
+											earth_pert_elp7[i].i2 * D + 
+											earth_pert_elp7[i].i3 * ll + 
+											earth_pert_elp7[i].i4 * l + 
+											earth_pert_elp7[i].i4 * F + 
+											earth_pert_elp7[i].O);
+	}
+	return (result);
+}
+
+/* sum lunar elp8 series */
+double sum_series_elp8 (double t)
+{
+	double result = 0;
+	int i;
+	double p = 5029.0966; /* J2000 precession constant */
+	double a = W1 + p * t;
+	
+	for (i=0; i< ELP8_SIZE; i++)
+	{
+		result += earth_pert_elp8[i].A * sin (earth_pert_elp8[i].i1 * a + 
+											earth_pert_elp8[i].i2 * D + 
+											earth_pert_elp8[i].i3 * ll + 
+											earth_pert_elp8[i].i4 * l + 
+											earth_pert_elp8[i].i4 * F + 
+											earth_pert_elp8[i].O);
+	}
+	return (result);
+}
+
+/* sum lunar elp9 series */
+double sum_series_elp9 (double t)
+{
+	double result = 0;
+	int i;
+	double p = 5029.0966; /* J2000 precession constant */
+	double a = W1 + p * t;
+	
+	for (i=0; i< ELP9_SIZE; i++)
+	{
+		result += earth_pert_elp9[i].A * sin (earth_pert_elp9[i].i1 * a + 
+											earth_pert_elp9[i].i2 * D + 
+											earth_pert_elp9[i].i3 * ll + 
+											earth_pert_elp9[i].i4 * l + 
+											earth_pert_elp9[i].i4 * F + 
+											earth_pert_elp9[i].O);
+	}
+	return (result);
+}
