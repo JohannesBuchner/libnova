@@ -1,5 +1,13 @@
 ChangeLog
 
+20050503
+	- src/libnova/ln_types.h, src/utility.h
+
+	Removed bitfields
+
+	lg
+
+
 20040712
 	- src/transform.c, src/libnova/ln_types.h, src/libnova/transform.h
 

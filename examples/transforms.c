@@ -45,7 +45,6 @@ int main (int argc, char * argv[])
 	hobserver.lng.degrees = 354;
 	hobserver.lng.minutes = 23;
 	hobserver.lng.seconds = 30;
-	hobserver.lat.neg = 0;
 	hobserver.lat.degrees = 42;
 	hobserver.lat.minutes = 35;
 	hobserver.lat.seconds = 40;
@@ -54,8 +53,7 @@ int main (int argc, char * argv[])
 	hobject.ra.hours = 5;
 	hobject.ra.minutes = 36;
 	hobject.ra.seconds = 27;
-	hobject.dec.neg = 1;
-	hobject.dec.degrees = 1;
+	hobject.dec.degrees = -1;
 	hobject.dec.minutes = 12;
 	hobject.dec.seconds = 0;
 
@@ -82,8 +80,8 @@ int main (int argc, char * argv[])
 	printf("(Alnilam) Horiz to Equ RA %f\n", equ.ra);
 	printf("(Alnilam) Horiz to Equ DEC %f\n", equ.dec);
 	ln_equ_to_hequ(&equ, &hequ);
-	printf("RA %d:%d:%f  DEC %s%d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes,
-		hequ.ra.seconds, hequ.dec.neg ? "-" : "", hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
+	printf("RA %d:%d:%f  DEC %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes,
+		hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 
 	return 0;
 }

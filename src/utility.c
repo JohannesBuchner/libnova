@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.5 2004-05-10 18:55:50 l_girdwood Exp $
+/* $Id: utility.c,v 1.6 2005-03-05 18:00:57 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -205,7 +205,7 @@ double ln_dms_to_deg (struct ln_dms *dms)
     degrees += fabs((double)dms->seconds / 3600);
 	
 	// negative ?
-	if (dms->neg)
+	if (dms->degrees < 0)
 		degrees *= -1.0;
 
     return degrees;
@@ -221,7 +221,7 @@ double ln_dms_to_rad (struct ln_dms *dms)
     radians += fabs((double)dms->seconds / 1296000.0 * 2.0 * M_PI);
 	
 	// negative ?
-	if (dms->neg)
+	if (dms->degrees < 0)
 		radians *= -1.0;
 	
     return radians;
@@ -233,11 +233,6 @@ double ln_dms_to_rad (struct ln_dms *dms)
 void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 {
     double dtemp;
-	
-	if (degrees >= 0)
-		dms->neg = 0;
-	else
-		dms->neg = 1;
     
 	/* floor degrees */
 	degrees = fabs(degrees);
@@ -277,11 +272,6 @@ void ln_rad_to_dms (double radians, struct ln_dms * dms)
 {
     double dtemp;
     double degrees;
-    
-	if (radians > 0)
-		dms->neg = 0;
-	else
-		dms->neg = 1;
 	
     degrees = radians * 360.0 / (2.0 * M_PI);
     

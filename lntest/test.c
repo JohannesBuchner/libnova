@@ -170,7 +170,6 @@ int transform_test(void)
 	hobserver.lng.degrees = 282;
 	hobserver.lng.minutes = 56;
 	hobserver.lng.seconds = 4;
-	hobserver.lat.neg = 0;
 	hobserver.lat.degrees = 38;
 	hobserver.lat.minutes = 55;
 	hobserver.lat.seconds = 17;
@@ -179,8 +178,7 @@ int transform_test(void)
 	hobject.ra.hours = 23;
 	hobject.ra.minutes = 9;
 	hobject.ra.seconds = 16.641;
-	hobject.dec.neg = 1;
-	hobject.dec.degrees = 6;
+	hobject.dec.degrees = -6;
 	hobject.dec.minutes = 43;
 	hobject.dec.seconds = 11.61;
 
@@ -208,7 +206,6 @@ int transform_test(void)
 	hpollux.ra.hours = 7;
 	hpollux.ra.minutes = 45;
 	hpollux.ra.seconds = 18.946;
-	hpollux.dec.neg = 0;
 	hpollux.dec.degrees = 28;
 	hpollux.dec.minutes = 1;
 	hpollux.dec.seconds = 34.26;
@@ -288,7 +285,6 @@ int aberration_test (void)
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 12.9747;
-	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 39.896;
@@ -345,7 +341,6 @@ int apparent_position_test(void)
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 12.9747;
 	
-	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 39.896;

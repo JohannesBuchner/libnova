@@ -58,10 +58,9 @@ struct ln_date
 
 struct ln_dms
 {
-	unsigned short neg:1;		/*!< Non zero if negative */
-    unsigned short degrees:9;	/*!< Degrees. Valid 0 - 360 */
-    unsigned short minutes:6;	/*!< Minutes. Valid 0 - 59 */
-    double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
+    short degrees;			/*!< Degrees. Valid 0 - 360 */
+    unsigned short minutes;	/*!< Minutes. Valid 0 - 59 */
+    double seconds;			/*!< Seconds. Valid 0 - 59.9999... */
 };
 
 /*! \struct ln_hms
@@ -72,9 +71,9 @@ struct ln_dms
 
 struct ln_hms
 {
-    unsigned short hours:8;		/*!< Hours. Valid 0 - 23 */
-    unsigned short minutes:8;	/*!< Minutes. Valid 0 - 59 */
-    double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
+    unsigned short hours;		/*!< Hours. Valid 0 - 23 */
+    unsigned short minutes;		/*!< Minutes. Valid 0 - 59 */
+    double seconds;				/*!< Seconds. Valid 0 - 59.9999... */
 };
 
 /*! \struct lnh_equ_posn
