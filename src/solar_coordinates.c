@@ -115,7 +115,7 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 * Accuracy 0.01 arc second error - uses VSOP87 solution.
 * Position returned is in units of AU.
 */
-void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
+void get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 {		
 	/* get earths's heliocentric position */
 	struct ln_helio_posn sol;
@@ -125,7 +125,7 @@ void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
 	sol.R = 0;
 	
 	/* now get rectangular coords */
-	get_geo_from_helio (&sol, JD, position);
+	get_rect_from_helio (&sol, JD, position);
 }
 
 

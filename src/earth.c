@@ -2772,7 +2772,7 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 double get_earth_sun_dist (double JD)
 {
 	struct ln_helio_posn h_earth;
-	struct ln_geo_posn g_sol, g_earth;
+	struct ln_rect_posn g_sol, g_earth;
 	double x, y, z, au;
 	
 	/* get heliocentric position */
@@ -2780,7 +2780,7 @@ double get_earth_sun_dist (double JD)
 
 	/* get geocentric position */
 	get_geo_solar_coords (JD, &g_sol);
-	get_geo_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_earth, JD, &g_earth);
 	
 	/* use pythag */
 	x = g_earth.X - g_sol.X;

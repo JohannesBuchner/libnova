@@ -6539,19 +6539,19 @@ void get_mars_equ_coords
 	struct ln_equ_posn * position)
 {
 	struct ln_helio_posn h_sol, h_mars;
-	struct ln_geo_posn g_sol, g_mars;
+	struct ln_rect_posn g_sol, g_mars;
 	double a,b,c;
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_geo_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol, JD,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_mars_helio_coords (JD - t, &h_mars);
-		get_geo_from_helio (&h_mars, JD - t, &g_mars);
+		get_rect_from_helio (&h_mars, JD - t, &g_mars);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mars.X;
@@ -6668,7 +6668,7 @@ void get_mars_helio_coords (double JD, struct ln_helio_posn * position)
 double get_mars_earth_dist (double JD)
 {
 	struct ln_helio_posn h_mars, h_earth;
-	struct ln_geo_posn g_mars, g_earth;
+	struct ln_rect_posn g_mars, g_earth;
 	double x, y, z, au;
 	
 	/* get heliocentric positions */
@@ -6676,8 +6676,8 @@ double get_mars_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_geo_from_helio (&h_mars, JD, &g_mars);
-	get_geo_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_mars, JD, &g_mars);
+	get_rect_from_helio (&h_earth, JD, &g_earth);
 	
 	/* use pythag */
 	x = g_mars.X - g_earth.X;
@@ -6703,7 +6703,7 @@ double get_mars_earth_dist (double JD)
 double get_mars_sun_dist (double JD)
 {
 	struct ln_helio_posn h_mars;
-	struct ln_geo_posn g_sol, g_mars;
+	struct ln_rect_posn g_sol, g_mars;
 	double x, y, z, au;
 	
 	/* get heliocentric position */
@@ -6711,7 +6711,7 @@ double get_mars_sun_dist (double JD)
 	
 	/* get geocentric position */
 	get_geo_solar_coords (JD, &g_sol);
-	get_geo_from_helio (&h_mars, JD, &g_mars);
+	get_rect_from_helio (&h_mars, JD, &g_mars);
 	
 	/* use pythag */
 	x = g_mars.X - g_sol.X;

@@ -39336,7 +39336,7 @@ double sum_series_elp36 (double *t)
 * Paris.
 */ 
 /* ELP 2000-82B theory */
-void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
+void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision)
 {
 	double t[5];
 	double elp[36];
@@ -39483,7 +39483,7 @@ void get_lunar_ecl_coords
 	(double JD,
 	struct ln_lnlat_posn * position, double precision)
 {
-	struct ln_geo_posn moon;
+	struct ln_rect_posn moon;
 	
 	/* get lunar geocentric position */
 	get_lunar_geo_posn (JD, &moon, precision);
@@ -39506,7 +39506,7 @@ void get_lunar_ecl_coords
 double get_lunar_earth_dist (double JD)
 {
 	double dist = 0;
-	struct ln_geo_posn moon;
+	struct ln_rect_posn moon;
 		
 	get_lunar_geo_posn (JD, &moon, 0.00001);
 	dist = sqrt ((moon.X * moon.X) + (moon.Y * moon.Y) + (moon.Z * moon.Z));

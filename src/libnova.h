@@ -159,9 +159,9 @@ struct lnh_hrz_posn
 
 
 /*! \struct lnh_lnlat_posn
-** \brief Latitude and Longitude.
+** \brief Ecliptical (or celestial) Latitude and Longitude.
 * 
-* Human readable Longitude and Latitude.
+* Human readable Ecliptical (or celestial) Longitude and Latitude.
 */
 
 struct lnh_lnlat_posn
@@ -201,9 +201,9 @@ struct ln_hrz_posn
 
 
 /*! \struct ln_lnlat_posn
-** \brief Longitude and Latitude.
+** \brief Ecliptical (or celestial) Longitude and Latitude.
 *
-* The Latitude and Longitude of and object.
+* The Ecliptical (or celestial) Latitude and Longitude of and object.
 *
 * Angles are expressed in degrees.
 */
@@ -231,16 +231,16 @@ struct ln_helio_posn
 	double R;	/*!< Heliocentric radius vector */
 };
 
-/*! \struct ln_geo_posn
-* \brief Geocentric position
+/*! \struct ln_rect_posn
+* \brief Rectangular coordinates
 *
 * A geocentric position is an objects position relative to the centre
-* of the Earth.
+* of the Earth.LIAM
 *
 * Position is in units of AU for planets and in units of km
 * for the Moon.
 */
-struct ln_geo_posn
+struct ln_rect_posn
 {
 	double X;	/*!< Geocentric X coordinate */
 	double Y;	/*!< Geocentric Y coordinate */
@@ -258,10 +258,11 @@ struct ln_orbit
 {
 	double a;	/*!< Semi major axis, in AU */
 	double e;	/*!< Eccentricity */
-	double i;	/*!< Inclination */
-	double w;	/*!< Argument of perihelion */
-	double omega;	/*!< Longitude of ascending node */
+	double i;	/*!< Inclination in degrees */
+	double w;	/*!< Argument of perihelion in degrees */
+	double omega;	/*!< Longitude of ascending node in degrees*/
 	double n;	/*!< Mean motion, in degrees/day */
+	double JD;	/*!< Epoch of orbital elements, in julian day */
 };
 
 
@@ -403,6 +404,17 @@ double get_mean_sidereal_time (double JD);
  
 double get_apparent_sidereal_time (double JD);
 
+/*! \defgroup misc Misc. Functions
+*
+* Misc functions.
+*/
+
+/*
+* \fn double get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b)
+* \ingroup misc
+*/
+double get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b);
+
 /*! \defgroup conversion General Conversion Functions
 *
 * Conversion from one libnova type to another.
@@ -412,13 +424,13 @@ double get_apparent_sidereal_time (double JD);
 * \brief radians to degrees
 * \ingroup conversion
 */
-double rad_to_deg (double radians);
+inline double rad_to_deg (double radians);
 
 /*! \fn double deg_to_rad (double radians)
 * \brief degrees to radians
 * \ingroup conversion
 */
-double deg_to_rad (double degrees);
+inline double deg_to_rad (double degrees);
 
 /*! \fn double hms_to_deg (struct ln_hms * hms)
 * \brief hours to degrees 
@@ -529,6 +541,13 @@ double range_degrees (double angle);
 double range_radians (double angle);
 double range_radians2 (double angle);
 
+/*
+* \fn double get_light_time (double dist)
+* \brief Convert units of AU into light days.
+* \ingroup conversion
+*/
+double get_light_time (double dist);
+
 /*! \defgroup transform Transformation of Coordinates
 *
 * Transformations from one coordinate system to another.
@@ -575,17 +594,23 @@ void get_equ_from_hrz
 	double JD,
 	struct ln_equ_posn * position); 
 
-/*! \fn void get_geo_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
 * \brief Calculate geocentric coordinates from heliocentric coordinates  
 * \ingroup transform
 */
 /* Pg ?? */
-void get_geo_from_helio 
+void get_rect_from_helio 
 	(struct ln_helio_posn *object,  
 	double JD,
-	struct ln_geo_posn * position); 
+	struct ln_rect_posn * position); 
 
-
+/*! \fn void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
+* \ingroup transform
+* Transform an objects rectangular coordinates into ecliptical coordinates.
+*/
+/* Equ 33.2
+*/
+void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn);
 
 /*! \defgroup VSOP87 VSOP87 Theory
 *
@@ -762,7 +787,7 @@ void get_ecl_solar_coords
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
-void get_geo_solar_coords (double JD, struct ln_geo_posn * position);
+void get_geo_solar_coords (double JD, struct ln_rect_posn * position);
 	
 
 /*! \defgroup mercury Mercury
@@ -1317,7 +1342,7 @@ double get_pluto_phase (double JD);
 * \ingroup lunar
 */ 
 /* ELP 2000-82B theory */
-void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
+void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
 
 /*! \fn void get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
 * \brief Calculate lunar equatorial coordinates.
@@ -1358,7 +1383,150 @@ double get_lunar_earth_dist (double JD);
 * \ingroup lunar
 */ 
 double get_lunar_bright_limb (double JD);
+
+/*! \defgroup elliptic  Elliptic Motion
+*
+* Functions relating to elliptic motion of bodies.
+*
+* All angles are expressed in degrees.
+*/
 	
+/*! \fn double solve_kepler (double E, double M);
+* \brief Calculate the eccentric anomaly.
+* \ingroup elliptic 
+*/
+double solve_kepler (double e, double M);
+
+/*! \fn double get_mean_anomaly (double n, double delta_JD);
+* \brief Calculate the mean anomaly.
+* \ingroup elliptic 
+*/
+double get_mean_anomaly (double n, double delta_JD);
+
+/*! \fn double get_true_anomaly (double n, double delta_JD);
+* \brief Calculate the true anomaly.
+* \ingroup elliptic 
+*/
+double get_true_anomaly (double e, double E);
+
+/*! \fn double get_radius_vector (double a, double e, double E);
+* \brief Calculate the radius vector.
+* \ingroup elliptic 
+*/
+double get_radius_vector (double a, double e, double E);
+
+/*! \fn double get_smajor_diam (double e, double q);
+* \brief Calculate the semi major diameter.
+* \ingroup elliptic 
+*/
+double get_smajor_diam (double e, double q);
+
+/*! \fn double get_sminor_diam (double e, double a);
+* \brief Calculate the semi minor diameter.
+* \ingroup elliptic 
+*/
+double get_sminor_diam (double e, double a);
+
+/*! \fn double get_mean_motion (double a);
+* \brief Calculate the mean daily motion (degrees/day).
+* \ingroup elliptic 
+*/
+double get_mean_motion (double a);
+
+/*! \fn void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_equ_posn* posn);
+* \brief Calculate the objects rectangular heliocentric position. 
+* \ingroup elliptic 
+*/
+void get_orbital_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+	
+/*! \fn double get_orbit_len (struct ln_orbit * orbit);
+* \brief Calculate the orbital length in AU.
+* \ingroup elliptic 
+*/
+double get_orbit_len (struct ln_orbit * orbit);
+
+/*! \fn double get_orbit_vel (double a, double r);
+* \brief Calculate orbital velocity in km/s.
+* \ingroup elliptic
+*/
+double get_orbit_vel (double a, double r);
+
+/*! \fn double get_orbit_pvel (double a, double e);
+* \brief Calculate orbital velocity at perihelion in km/s.
+* \ingroup elliptic
+*/
+double get_orbit_pvel (double a, double e);
+
+/*! \fn double get_orbit_avel (double a, double e);
+* \ingroup elliptic
+* \brief Calculate the orbital velocity at aphelion in km/s. 
+*/
+double get_orbit_avel (double a, double e);
+
+/*! \fn double get_body_phase_angle (double JD, struct ln_orbit * orbit);
+* \ingroup elliptic
+* \brief Calculate the pase angle of the body. The angle Sun - body - Earth. 
+*/
+double get_body_phase_angle (double JD, struct ln_orbit * orbit);
+	
+/*
+* \fn double get_body_solar_dist (double JD, struct ln_orbit * orbit)
+* \brief Calculate the distance between a body and the Sun
+* \ingroup elliptic
+*/
+double get_body_solar_dist (double JD, struct ln_orbit * orbit);
+
+/*
+* \fn double get_body_earth_dist (double JD, struct ln_orbit * orbit)
+* \brief Calculate the distance between a body and the Earth
+* \ingroup elliptic
+*/
+double get_body_earth_dist (double JD, struct ln_orbit * orbit);
+	
+/*
+* \fn void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn)
+* \brief Calculate a bodies ecliptical coords
+* \ingroup elliptical
+*/
+void get_body_ecl_coords (double JD, struct ln_orbit * orbit, struct ln_lnlat_posn * posn);
+
+/*
+* \fn void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn)
+* \brief Calculate a bodies equatorial coords
+* \ingroup elliptic
+*/
+void get_body_equ_coords (double JD, struct ln_orbit * orbit, struct ln_equ_posn * posn);
+
+
+/*! \defgroup asteroid Asteroids
+*
+* Functions relating to Asteroids.
+*
+* All angles are expressed in degrees.
+*/
+
+/*
+* \fn double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
+* \ingroup asteroid
+* \brief Calculate the visual magnitude of an asteroid.
+*/
+double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G);
+	
+/*! \defgroup comet Comets
+*
+* Functions relating to Comets.
+*
+* All angles are expressed in degrees.
+*/
+
+/*
+* \fn double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
+* \ingroup comet
+* \brief Calculate the visual magnitude of a comet.
+*/
+double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k);
+
+
 #ifdef __cplusplus
 };
 #endif

@@ -38,20 +38,20 @@ const char * get_ln_version (void)
 
 
 /* convert radians to degrees */
-double rad_to_deg (double radians)
+inline double rad_to_deg (double radians)
 {
     double degrees;
     
-    degrees = (radians / (M_PI * 2.0)) * 360;
+    degrees = (radians / (M_PI * 2.0)) * 360.0;
     return (degrees);
 }    
 
 /* convert degrees to radians */
-double deg_to_rad (double degrees)
+inline double deg_to_rad (double degrees)
 {
     double radians;
     
-    radians = (degrees / 360) * 2.0 * M_PI;
+    radians = (degrees / 360.0) * 2.0 * M_PI;
     return (radians);
 }    
 
@@ -366,5 +366,38 @@ void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 	deg_to_dms (pos->lng, &hpos->lng);
 	deg_to_dms (pos->lat, &hpos->lat);
 }
- 
 
+/*
+* \fn double get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b)
+* \param a First recatngular coordinate
+* \param b Second rectangular coordinate
+* \return Distance between a and b.
+*
+* Calculate the distance between rectangular points a and b.
+*/
+double get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b)
+{
+	double x,y,z;
+	
+	x = a->X - b->X;
+	y = a->Y - b->Y;
+	z = a->Z - b->Z;
+	
+	x *=x;
+	y *=y;
+	z *=z;
+	
+	return (sqrt (x + y + z));
+}
+
+/*
+* \fn double get_light_time (double dist)
+* \param dist Distance in AU
+* \return Distance in light days.
+*
+* Convert units of AU into light days.
+*/
+double get_light_time (double dist)
+{
+	return (dist * 0.005775183);
+}

@@ -469,7 +469,7 @@ int lunar_test ()
 {
 	double JD = 2448724.5;
 	
-	struct ln_geo_posn moon;
+	struct ln_rect_posn moon;
 	struct ln_equ_posn equ;
 	struct ln_lnlat_posn ecl;
 	/*	JD = get_julian_from_sys();*/
@@ -487,9 +487,55 @@ int lunar_test ()
 	return 0;
 }
 
+int ecliptic_motion_test ()
+{
+	double r,v;
+	double E, e_JD, o_JD;
+	struct ln_orbit orbit;
+	struct ln_rect_posn posn;
+	struct ln_date epoch_date, obs_date;
+		
+	obs_date.years = 1990;
+	obs_date.months = 10;
+	obs_date.days = 6;
+	obs_date.hours = 0;
+	obs_date.minutes = 0;
+	obs_date.seconds = 0;
+		
+	epoch_date.years = 1990;
+	epoch_date.months = 10;
+	epoch_date.days = 28;
+	epoch_date.hours = 12;
+	epoch_date.minutes = 30;
+	epoch_date.seconds = 0;
+	
+	e_JD = get_julian_day (&epoch_date);
+	o_JD = get_julian_day (&obs_date);
+	
+	orbit.JD = e_JD;
+	orbit.a = 2.2091404;
+	orbit.e = 0.8502196;
+	orbit.i = 11.94525;
+	orbit.omega = 334.75006;
+	orbit.w = 186.23352;
+	orbit.n = 0;
+	
+	E = solve_kepler (0.1, 5.0);
+	test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320);
+	
+	v = get_true_anomaly (0.1, E);
+	printf ("true anomaly %0.15f\n",v);
+	
+	r = get_radius_vector (0.5, 0.1, E);
+	printf ("radius vector %0.15f\n",r);
+	
+	get_orbital_rect_posn (&orbit, o_JD, &posn);
+	printf ("X %0.15f Y %0.15f Z %0.15f\n",posn.X, posn.Y, posn.Z);
+}
+
 int main ()
 {
-	julian_test();
+/*	julian_test();
 	dynamical_test();
 	sidereal_test();
 	nutation_test();
@@ -499,6 +545,7 @@ int main ()
 	precession_test();
 	apparent_position_test ();
 	vsop87_test();
-	lunar_test ();
+	lunar_test ();*/
+	ecliptic_motion_test();
 	return (0);
 }

@@ -20,34 +20,27 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h"
 #include <math.h>
 
-/*! \fn void get_geo_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
 * \param object Object heliocentric coordinates
 * \param JD Julian Day
 * \param position Pointer to store new position
 *
-* Transform an objects heliocentric coordinates into geocentric coordinates.
-* This function includes the effects of nutation.
+* Transform an objects heliocentric ecliptical coordinates
+* into heliocentric rectangular coordinates.
 */
 /* Equ 37.1 Pg 264
 */
-void get_geo_from_helio 
+void get_rect_from_helio 
 	(struct ln_helio_posn *object,  
 	double JD,
-	struct ln_geo_posn * position)
+	struct ln_rect_posn * position)
 {
-	double obliquity;
-	double longitude;
-	double ecliptic;
 	double sin_e, cos_e;
 	double cos_B, sin_B, sin_L, cos_L;
 	
-	/* get mean obliquity at of ecliptic epoch J2000 */
-	get_nutation (JD, &longitude, &obliquity, &ecliptic);
-
-	/* calculate cos, sin obliquity of ecliptic */
-	ecliptic = deg_to_rad (ecliptic);
-	sin_e = sin (ecliptic);
-	cos_e = cos (ecliptic);
+	/* ecliptic J2000 */
+	sin_e = 0.397777156;
+	cos_e = 0.917482062;
 
 	/* calc common values */
 	cos_B = cos(deg_to_rad(object->B));
@@ -244,3 +237,19 @@ void get_ecl_from_equ
 	position->lng = rad_to_deg (longitude);
 }
 
+/*! \fn void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
+* \param rect Rectangular coordinates.
+* \param posn Pointer to store new position.
+*
+* Transform an objects rectangular coordinates into ecliptical coordinates.
+*/
+/* Equ 33.2
+*/
+void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
+{
+	double t;
+	
+	t = sqrt (rect->X * rect->X + rect->Y * rect->Y);
+	posn->lng = rad_to_deg (atan2(rect->Y, rect->X));
+	posn->lat = rad_to_deg (atan2 (rect->Z, t));
+}
