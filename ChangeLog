@@ -1,6 +1,13 @@
 ChangeLog
 
 20031308
+	-src/julian_day.c
+	
+	Fixed divide by hours bug in get_julian_local_date()
+	to divide bu seconds
+	
+	Pablo Martikian, Liam Girdwood
+
 	-src/mercury.c
 	-src/venus.c
 	-src/earth.c

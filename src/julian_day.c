@@ -306,7 +306,7 @@ double get_julian_local_date(struct ln_date* date)
 	/* add day light savings time and hour angle */
 	curtime = time (NULL);
 	loctime = localtime(&curtime);
-	JD += ((double)loctime->tm_gmtoff) / 24.0;
+	JD += ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
 	return JD;
 }
 
