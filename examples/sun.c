@@ -67,7 +67,7 @@ int main (int argc, char * argv[])
 	
 	/* rise, set and transit */
 	if (ln_get_solar_rst (JD, &observer, &rst) == 1) 
-		printf ("Comet is circumpolar\n");
+		printf ("Sun is circumpolar\n");
 	else {
 		ln_get_local_date (rst.rise, &rise);
 		ln_get_local_date (rst.transit, &transit);
