@@ -4034,7 +4034,7 @@ int get_jupiter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_t
 	for 0h of UT on day JD*/
 	jd = (int)JD;
 	if (JD - jd > 0.5)
-		JD_UT = jd + 1.5 + (T / (24 * 60 * 60));
+		JD_UT = jd + 0.5 + (T / (24 * 60 * 60));
 	else
 		JD_UT = jd - 0.5 + (T / (24 * 60 * 60));
 	O = get_apparent_sidereal_time (JD_UT);

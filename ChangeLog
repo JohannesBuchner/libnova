@@ -1,5 +1,11 @@
 ChangeLog
 
+20030118
+	-src/mercury .. pluto.c, lunar.c, parabolic_motion.c, elliptic_motion.c
+	Fixed error in calculation of JD_UT for rise,transit, set times.
+
+	Petr Kubanek, Liam Girdwood
+
 20030117
 	-src/parabolic_motion.c
 	Change true anomaly to degrees.

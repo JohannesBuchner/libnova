@@ -465,12 +465,21 @@ double get_ell_body_elong (double JD, struct ln_ell_orbit * orbit)
 	double r,R,d;
 	double t;
 	double elong;
+	double E,M;
 	
 	/* time since perihelion */
 	t = JD - orbit->JD;
 	
+	/* get mean anomaly */
+	if (orbit->n == 0)
+		orbit->n = get_ell_mean_motion (orbit->a);
+	M = get_ell_mean_anomaly (orbit->n, t);
+	
+	/* get eccentric anomaly */
+	E = solve_kepler (orbit->e, M);
+	
 	/* get radius vector */
-	r = get_ell_radius_vector (orbit->q, t);
+	r = get_ell_radius_vector (orbit->a, orbit->e, E);
 	
 	/* get solar and Earth-Sun distances */
 	R = get_earth_sun_dist (JD);
@@ -513,7 +522,7 @@ int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_
 	for 0h of UT on day JD*/
 	jd = (int)JD;
 	if (JD - jd > 0.5)
-		JD_UT = jd + 1.5 + (T / (24 * 60 * 60));
+		JD_UT = jd + 0.5 + (T / (24 * 60 * 60));
 	else
 		JD_UT = jd - 0.5 + (T / (24 * 60 * 60));
 	O = get_apparent_sidereal_time (JD_UT);
