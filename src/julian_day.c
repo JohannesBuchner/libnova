@@ -195,20 +195,20 @@ void get_ln_date_from_sys (struct ln_date * date)
 }
 
 
-/*! \fn double get_julian_from_timet (time_t * time)
+/*! \fn double get_julian_from_timet (time_t * in_time)
 * \param time The time_t.
 * \return Julian day.
 *
 * Calculate julian day from time_t.
 */
-double get_julian_from_timet (time_t * time)
+double get_julian_from_timet (time_t * in_time)
 {
 	struct tm * loctime;
 	struct ln_date date;
 	double JD;
 	
 	/* convert to local time representation */
-	loctime = localtime(time);
+	loctime = localtime(in_time);
     
 	/* fill in date struct */
 	date.seconds = loctime->tm_sec;
@@ -223,13 +223,13 @@ double get_julian_from_timet (time_t * time)
 	return (JD);
 }
 
-/*! \fn void get_timet_from_julian (double JD, time_t * time)
+/*! \fn void get_timet_from_julian (double JD, time_t * in_time)
 * \param JD Julian day
 * \param time Pointer to store time_t
 *
 * Calculate time_t from julian day
 */
-void get_timet_from_julian (double JD, time_t * time)
+void get_timet_from_julian (double JD, time_t * in_time)
 {
 	struct tm loctime;
 	struct ln_date date;
@@ -239,7 +239,7 @@ void get_timet_from_julian (double JD, time_t * time)
 	/* fill in date struct */
 	if (date.years < 1900)
 	{
-		*time = 0;
+		*in_time = 0;
 		return;
 	}
 	loctime.tm_sec = date.seconds;
@@ -250,4 +250,5 @@ void get_timet_from_julian (double JD, time_t * time)
 	loctime.tm_year = date.years - 1900;
 	loctime.tm_isdst = 0;
 	
-	*time = mktime (&loctime);}
+	*in_time = mktime (&loctime);
+}
