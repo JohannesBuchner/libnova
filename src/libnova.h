@@ -380,13 +380,13 @@ void get_ln_date_from_sys (struct ln_date * date);
 * \brief Calculate julian day from time_t
 * \ingroup calendar
 */
-double get_julian_from_timet (time_t * time);
+double get_julian_from_timet (time_t * in_time);
 
 /*! \fn void get_timet_from_julian (double JD, time_t * time)
 * \brief Calculate time_t from julian day
 * \ingroup calendar
 */
-void get_timet_from_julian (double JD, time_t * time);
+void get_timet_from_julian (double JD, time_t * in_time);
 
 /*! \defgroup misc Misc Functions
 */
