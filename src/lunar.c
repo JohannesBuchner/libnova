@@ -39491,7 +39491,7 @@ void get_lunar_ecl_coords
 	/* convert to long and lat */
 	position->lng = atan2(moon.Y, moon.X);
 	position->lat = atan (moon.Z / (sqrt((moon.X * moon.X) + (moon.Y * moon.Y))));
-	position->lng = rad_to_deg (position->lng);
+	position->lng = range_degrees (rad_to_deg (position->lng));
 	position->lat = rad_to_deg (position->lat);
 }
 
