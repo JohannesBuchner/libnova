@@ -358,7 +358,7 @@ int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_p
 	H0 = ln_rad_to_deg(H0);
 
 	/* equ 15.2 */
-	mt = (sol2.ra + observer->lng - O) / 360.0;
+	mt = (sol2.ra - observer->lng - O) / 360.0;
 	mr = mt - H0 / 360.0;
 	ms = mt + H0 / 360.0;
 	
@@ -394,9 +394,9 @@ int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_p
 	poss.dec = ln_interpolate3 (ns, sol1.dec, sol2.dec, sol3.dec);
 	
 	/* find local hour angle */
-	Hat = mst - observer->lng - post.ra;
-	Har = msr - observer->lng - posr.ra;
-	Has = mss - observer->lng - poss.ra;
+	Hat = mst + observer->lng - post.ra;
+	Har = msr + observer->lng - posr.ra;
+	Has = mss + observer->lng - poss.ra;
 
 	/* find altitude for rise and set */
 	altr =  sin (ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(posr.dec)) +
