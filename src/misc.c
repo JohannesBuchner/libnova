@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.3 2002-10-13 15:07:22 l_girdwood Exp $
+/* $Id: misc.c,v 1.4 2003-08-12 20:17:37 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -42,6 +42,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include "libnova.h"
 
 /* local types and macros */

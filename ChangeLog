@@ -1,5 +1,21 @@
 ChangeLog
 
+20031208
+	-src/aberration.*
+	-src/misc.c
+	Removed build warnings
+	
+	Pablo Martikian, Liam Girdwood
+
+	-src/libnova.h
+	Add extra M_PI_* #defines for windows
+	
+	Pablo Martikian
+	
+	-configure.in
+	Added -Wall build option
+	
+	Liam Girdwood
 
 20033007
 	-src/julian_day.c
