@@ -39517,13 +39517,10 @@ double get_lunar_earth_dist (double JD)
 
 /*! \fn double get_lunar_phase (double JD);
 * \param JD Julian Day
-* \return Phase angle. (Value between 0 and 1)
+* \return Phase angle. (Value between 0 and 180)
 * \ingroup lunar
 *
-* Calculates the selenocentric elongation of the Earth from the Sun.
-* This is the ratio of the illuminated area to the disk to the total area
-* and is the ratio of of the illuminated length of the diameter
-* perpendicular to the line of cusps to the complete diameter.
+* Calculates the angle Sun - Moon - Earth.
 */ 
 double get_lunar_phase (double JD)
 {

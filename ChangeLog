@@ -1,8 +1,14 @@
 ChangeLog
 
+20022703
+	-src/lunar.c
+	Fixed some documentation errors in lunar phase and disk.
+	
+	Kimura Fuyuku, Liam Girdwood
+
 20032703
 	-src/julian_day.c
-	Fixed bug stopping get_julian_day() cahnging parameter.
+	Fixed bug stopping get_julian_day() changing parameter.
 	
 	Kimura Fuyuku, Liam Girdwood
 
