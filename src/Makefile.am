@@ -10,10 +10,9 @@ libnova_la_SOURCES = \
 	transform.c \
 	nutation.c \
 	libnova.c \
-	trig.c   \
 	aberration.c   \
 	apparent_position.c \
-	solar_coordinates.c \
+	solar.c \
 	precession.c  \
 	proper_motion.c \
 	mercury.c \
@@ -31,7 +30,9 @@ libnova_la_SOURCES = \
 	asteroid.c \
 	comet.c \
 	parabolic_motion.c \
-	misc.c
+	misc.c \
+	refraction.c \
+	rise_set.c
 
 
 include_HEADERS = libnova.h  
@@ -43,10 +44,8 @@ noinst_HEADERS = \
 	sidereal_time.h \
 	transform.h \
 	nutation.h \
-	trig.h \
 	aberration.h \
 	apparent_position.h \
-	solar_coordinates.h \
 	precession.h  \
 	proper_motion.h \
 	vsop87.h \

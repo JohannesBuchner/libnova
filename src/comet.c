@@ -22,16 +22,16 @@ Copyright 2002 Liam Girdwood
 #include <math.h>
 
 /*!
-* \fn double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
+* \fn double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
 * \param JD Julian day.
 * \param orbit Orbital parameters
 * \param g Absolute magnitude
 * \param k Comet constant
 * \return The visual magnitude. 
 *
-* Calculate the visual magnitude of a comet.
+* Calculate the visual magnitude of a comet in an elliptical orbit.
 */
-double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
+double get_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
 {
 	double mag;
 	double d, r;
@@ -39,15 +39,40 @@ double get_comet_mag (double JD, struct ln_orbit * orbit, double g, double k)
 	
 	/* get mean anomaly */
 	if (orbit->n == 0)
-		orbit->n = get_mean_motion (orbit->a);
-	M = get_mean_anomaly (orbit->n, JD - orbit->JD);
+		orbit->n = get_ell_mean_motion (orbit->a);
+	M = get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
 	
 	/* get eccentric anomaly */
 	E = solve_kepler (orbit->e, M);
 	
 	/* get radius vector */
-	r = get_radius_vector (orbit->a, orbit->e, E);
-	d = get_body_solar_dist (JD, orbit);
+	r = get_ell_radius_vector (orbit->a, orbit->e, E);
+	d = get_ell_body_solar_dist (JD, orbit);
+	
+	mag = g + 5.0 * log10 (d) + k * log10 (r);
+}
+
+/*!
+* \fn double get_par_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
+* \param JD Julian day.
+* \param orbit Orbital parameters
+* \param g Absolute magnitude
+* \param k Comet constant
+* \return The visual magnitude. 
+*
+* Calculate the visual magnitude of a comet in a parabolic orbit.
+*/
+double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
+{
+	double mag;
+	double d,r,t;
+	
+	/* time since perihelion */
+	t = JD - orbit->JD;
+	
+	/* get radius vector */
+	r = get_par_radius_vector (orbit->q, t);
+	d = get_par_body_solar_dist (JD, orbit);
 	
 	mag = g + 5.0 * log10 (d) + k * log10 (r);
 }

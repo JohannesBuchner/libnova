@@ -22,7 +22,7 @@ Copyright 2002 Liam Girdwood
 #include <math.h>
 
 /*!
-* \fn double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
+* \fn double get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G)
 * \param JD Julian day.
 * \param orbit Orbital parameters
 * \param H Mean absolute visual magnitude
@@ -31,7 +31,7 @@ Copyright 2002 Liam Girdwood
 *
 * Calculate the visual magnitude of an asteroid.
 */
-double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
+double get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G)
 {
 	double mag;
 	double t1,t2;
@@ -39,20 +39,20 @@ double get_asteroid_mag (double JD, struct ln_orbit * orbit, double H, double G)
 	double E,M;
 	
 	/* get phase angle */
-	b = get_body_phase_angle (JD, orbit);
+	b = get_ell_body_phase_angle (JD, orbit);
 	b = deg_to_rad (b);
 	
 	/* get mean anomaly */
 	if (orbit->n == 0)
-		orbit->n = get_mean_motion (orbit->a);
-	M = get_mean_anomaly (orbit->n, JD - orbit->JD);
+		orbit->n = get_ell_mean_motion (orbit->a);
+	M = get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
 	
 	/* get eccentric anomaly */
 	E = solve_kepler (orbit->e, M);
 	
 	/* get radius vector */
-	r = get_radius_vector (orbit->a, orbit->e, E);
-	d = get_body_solar_dist (JD, orbit);
+	r = get_ell_radius_vector (orbit->a, orbit->e, E);
+	d = get_ell_body_solar_dist (JD, orbit);
 	
 	t1 = exp (-3.33 * pow (tan (b / 2.0), 0.63));
 	t2 = exp (-.187 * pow (tan (b / 2.0), 1.22));
