@@ -1,20 +1,36 @@
-02 Sep 2002 - libnova_0.4
+20020116
+	-src/parabolic_motion.c, src/elliptic_motion.c
+	Heliocentric and geocentric position functions
+	had wrong names
 	
-	Liam Girdwood
-		New API
-		New Documantation
-		Planetary positions
-		Lunar position
+	Fix by Herbert Straub, Liam Girdwood
 
-23 Oct 2001 - libnova-0.1.1
 
-	Liam Girdwood
-		Fixed bug in make doc
-		Added library config tool
+20030107
+	-src/lunar.c in get_lunar_ecl_coords ()
+	Put longitude in correct quadrant.
+	
+	Fix supplied by Danie Malan
 
-21 Oct 2001 - libnova-0.1.0
 
-	Liam Girdwood
-		Developer release
-		Added doxygen API docs
+20030103
+	- src/transform.c in get_hrz_from_equ ()
+
+	Algorithm changed to one, which use atan2 instead of atan function
+	and thus returns 0..2PI for Azimuth instead of -pi/2..pi/2
+
+	- src/julian_day.c in get_julian_day ()
+	
+	Correct check for 4th October 1582 (Julian/Gregorian calendar)
+
+	Petr Kubanek <petr@lascaux.asu.cas.cz>
+
+20022911 - src/julian_day.c in get_timet_from_julian ()
+	
+	Spurious errors were caused by loctime.tm_isdst not
+	being initialised to 0.  
+	
+	Fix supplied by Petr Kubanek <petr@lascaux.asu.cas.cz>
+
+
 

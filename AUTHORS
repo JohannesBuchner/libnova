@@ -3,26 +3,13 @@ libNova Team
 
 Liam Girdwood 			<liam@nova-ioe.org>
 Juan Carlos Remis       <jcremis@cajaespana.es>
+Petr Kubanek			<petr@lascaux.asu.cas.cz>
 
 
 BugFixes
 ========
 
-20020103
-	- src/transform.c in get_hrz_from_equ ()
+Bug fixes and reports have been supplied by
 
-	Algorithm changed to one, which use atan2 instead of atan function
-	and thus returns 0..2PI for Azimuth instead of -pi/2..pi/2
+Petr Kubanek, Danie Malan, Herbert Straub
 
-	- src/julian_day.c in get_julian_day ()
-	
-	Correct check for 4th October 1582 (Julian/Gregorian calendar)
-
-	Petr Kubanek <petr@lascaux.asu.cas.cz>
-
-20022911 - src/julian_day.c in get_timet_from_julian ()
-	
-	Spurious errors were caused by loctime.tm_isdst not
-	being initialised to 0.  
-	
-	Fix supplied by Petr Kubanek
