@@ -181,7 +181,7 @@ void ln_get_hyp_helio_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct l
 }
 
 
-/*! \fn void ln_get_hyp_geo_rect_posn (struct ln_hyp_orb* orbit, double JD, struct ln_rect_posn* posn);
+/*! \fn void ln_get_hyp_geo_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \param orbit Orbital parameters of object.
 * \param JD Julian day
 * \param posn Position pointer to store objects position

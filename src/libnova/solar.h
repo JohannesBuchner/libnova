@@ -58,7 +58,7 @@ int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_
 */
 void ln_get_geom_solar_coords (double JD, struct ln_helio_posn * position);
 
-/*! \fn void get_ln_equ_solar_coords (double JD, struct ln_equ_posn * position);
+/*! \fn void ln_get_equ_solar_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate apparent equatorial coordinates.
 * \ingroup solar
 */ 

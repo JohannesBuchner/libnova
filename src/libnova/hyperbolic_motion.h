@@ -39,7 +39,7 @@ extern "C" {
 */
 double ln_solve_hyp_barker (double Q1, double G, double t);
 
-/*! \fn double ln_get_hyp_true_anomaly (double q, doble e, double t);
+/*! \fn double ln_get_hyp_true_anomaly (double q, double e, double t);
 * \ingroup hyperbolic
 * \brief Calculate the true anomaly. 
 */
