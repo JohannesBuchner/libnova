@@ -20,7 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \section intro Introduction
 * libnova is a general purpose, double precision, astronomical calculation library.
 *
-* The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects.
+* The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects or celestial mechanics.
 * libnova is the calculation engine used by the <A href="http://nova.sf.net">Nova</A> project and most importantly, is free software.
 *
 * \section features Features
@@ -51,7 +51,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.5.0 and was released on the 13th Oct 2002.
+* The latest released version of libnova is 0.6.0 and was released on the xxth Jan 2003.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
