@@ -129,7 +129,7 @@ int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln
 /*! \fn int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizont, struct ln_rst_time *rst); 
 * \param JD Julian day 
 * \param observer Observers position 
-* \param get_equ_body_coords Pointer to get_equ_body_coords() 
+* \param get_equ_body_coords Pointer to get_equ_body_coords() function
 * \param horizont Sun horizont use *_HORIZONT constants from libnova.h 
 * \param rst Pointer to store Rise, Set and Transit time in JD 
 * \return 0 for success, else 1 for circumpolar.
@@ -138,8 +138,13 @@ int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln
 * upper culmination) time of the body for the given Julian day and given
 * horizont.
 *
-* Note: this functions returns 1 if the body is circumpolar, that is it remains
+* Note 1: this functions returns 1 if the body is circumpolar, that is it remains
 * the whole day either above or below the horizon.
+*
+* Note 2: This function will not work for body, which ra changes more
+* then 180 deg in one day (get_equ_body_coords changes so much).  But
+* you should't use that function for any body which moves to fast..use
+* some special function for such things.
 */
 int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double,struct ln_equ_posn *),double horizont, struct ln_rst_time *rst)
 {
@@ -213,6 +218,19 @@ int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*
   nt = mt + T / 86400.0;
   nr = mr + T / 86400.0;
   ns = ms + T / 86400.0;
+
+  /* correct ra values for interpolation  - put them to the same side of circle */
+  if ((sol1.ra - sol2.ra) > 180.0)
+    sol2.ra += 360;
+
+  if ((sol2.ra - sol3.ra) > 180.0)
+    sol3.ra += 360;
+
+  if ((sol3.ra - sol2.ra) > 180.0)
+    sol3.ra -= 360;
+
+  if ((sol2.ra - sol1.ra) > 180.0)
+    sol3.ra -= 360;
 
   /* interpolate ra and dec for each m, except for transit dec (dec2) */
   posr.ra = ln_interpolate3 (nr, sol1.ra, sol2.ra, sol3.ra);
