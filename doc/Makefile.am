@@ -1,4 +1,4 @@
-all: doxyfile
+doc: doxyfile
 	-doxygen
 
 clean:
