@@ -673,14 +673,13 @@ void get_equ_from_hrz
 	double JD,
 	struct ln_equ_posn * position); 
 
-/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_rect_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn * position); 
 * \brief Calculate geocentric coordinates from heliocentric coordinates  
 * \ingroup transform
 */
 /* Pg ?? */
 void get_rect_from_helio 
 	(struct ln_helio_posn *object,  
-	double JD,
 	struct ln_rect_posn * position); 
 
 /*! \fn void get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * posn)
