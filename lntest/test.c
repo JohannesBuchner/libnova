@@ -111,19 +111,18 @@ void dynamical_test ()
 
 void nutation_test (void)
 {
-	double JDE, JD, nutation_longitude, nutation_obliquity, nutation_ecliptic;
-	struct ln_dms hmst;
+	double JDE, JD;
+	struct ln_nutation nutation;
 		
 	JD = 2446895.5;
 	JDE = get_jde (JD);
 
-	get_nutation (JD, &nutation_longitude, &nutation_obliquity, &nutation_ecliptic);
-	test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation_longitude, -0.00100558);
+	get_nutation (JD, &nutation);
+	test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation.longitude, -0.00100558);
 	
-	deg_to_dms (nutation_longitude, &hmst);
-	test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation_obliquity, 0.00273287);
+	test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation.obliquity, 0.00273287);
 	
-	test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation_ecliptic, 23.44367926);
+	test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation.ecliptic, 23.44367926);
 }
 
 void transform_test(void)
@@ -487,11 +486,11 @@ int lunar_test ()
 	return 0;
 }
 
-int ecliptic_motion_test ()
+int elliptic_motion_test ()
 {
 	double r,v,l,V,dist;
 	double E, e_JD, o_JD;
-	struct ln_orbit orbit;
+	struct ln_ell_orbit orbit;
 	struct ln_rect_posn posn;
 	struct ln_date epoch_date, obs_date;
 	struct ln_equ_posn equ_posn;
@@ -524,43 +523,115 @@ int ecliptic_motion_test ()
 	E = solve_kepler (0.1, 5.0);
 	test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320);
 	
-	v = get_true_anomaly (0.1, E);
+	v = get_ell_true_anomaly (0.1, E);
 	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152);
 	
-	r = get_radius_vector (0.5, 0.1, E);
+	r = get_ell_radius_vector (0.5, 0.1, E);
 	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
 	
-	get_geo_rect_posn (&orbit, o_JD, &posn);
+	get_ell_geo_rect_posn (&orbit, o_JD, &posn);
 	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
 	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
 	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
 	
-	get_helio_rect_posn (&orbit, o_JD, &posn);
+	get_ell_helio_rect_posn (&orbit, o_JD, &posn);
 	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
 	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
 	test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.13486450);
 	
-	get_body_equ_coords (o_JD, &orbit, &equ_posn);
+	get_ell_body_equ_coords (o_JD, &orbit, &equ_posn);
 	test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653);
 	test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815);
 	
-	l = get_orbit_len (&orbit);
+	l = get_ell_orbit_len (&orbit);
 	test_result ("(Orbit Length) for comet Enkle in AU   ", l, 10.75710334);
 	
-	V = get_orbit_pvel (&orbit);
+	V = get_ell_orbit_pvel (&orbit);
 	test_result ("(Orbit Perihelion Vel) for comet Enkle in kms   ", V, 70.43130198);
 	
-	V = get_orbit_avel (&orbit);
+	V = get_ell_orbit_avel (&orbit);
 	test_result ("(Orbit Aphelion Vel) for comet Enkle in kms   ", V, 5.70160892);
 	
-	V = get_orbit_vel (o_JD, &orbit);
+	V = get_ell_orbit_vel (o_JD, &orbit);
 	test_result ("(Orbit Vel JD) for comet Enkle in kms   ", V, 28.32770604);
 	
-	dist = get_body_solar_dist (o_JD, &orbit);
+	dist = get_ell_body_solar_dist (o_JD, &orbit);
 	test_result ("(Body Solar Dist) for comet Enkle in AU   ", dist, 1.47359636);
 	
-	dist = get_body_earth_dist (o_JD, &orbit);
+	dist = get_ell_body_earth_dist (o_JD, &orbit);
 	test_result ("(Body Earth Dist) for comet Enkle in AU   ", dist, 0.65203581);
+}
+
+/* need a proper parabolic orbit to properly test */
+int parabolic_motion_test ()
+{
+	double r,v,dist;
+	double e_JD, o_JD;
+	struct ln_par_orbit orbit;
+	struct ln_rect_posn posn;
+	struct ln_date epoch_date, obs_date;
+	struct ln_equ_posn equ_posn;
+		
+	obs_date.years = 1998;
+	obs_date.months = 8;
+	obs_date.days = 5;
+	obs_date.hours = 12;
+	obs_date.minutes = 0;
+	obs_date.seconds = 0;
+		
+	epoch_date.years = 1998;
+	epoch_date.months = 4;
+	epoch_date.days = 14;
+	epoch_date.hours = 10;
+	epoch_date.minutes = 30;
+	epoch_date.seconds = 0;
+	
+	e_JD = get_julian_day (&epoch_date);
+	o_JD = get_julian_day (&obs_date);
+	
+	orbit.JD = e_JD;
+	orbit.q = 1.487469;
+	orbit.i = 11.94525;
+	orbit.omega = 334.75006;
+	orbit.w = 186.23352;
+	
+	v = get_par_true_anomaly (orbit.q, o_JD - e_JD);
+	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152);
+	
+	r = get_par_radius_vector (orbit.q, o_JD - e_JD);
+	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
+	
+	get_par_geo_rect_posn (&orbit, o_JD, &posn);
+	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
+	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
+	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
+	
+	get_par_helio_rect_posn (&orbit, o_JD, &posn);
+	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
+	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
+	test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.13486450);
+	
+	get_par_body_equ_coords (o_JD, &orbit, &equ_posn);
+	test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653);
+	test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815);
+	
+	dist = get_par_body_solar_dist (o_JD, &orbit);
+	test_result ("(Body Solar Dist) for comet Enkle in AU   ", dist, 1.47359636);
+	
+	dist = get_par_body_earth_dist (o_JD, &orbit);
+	test_result ("(Body Earth Dist) for comet Enkle in AU   ", dist, 0.65203581);
+}
+
+int rst_test ()
+{
+	struct ln_lnlat_posn observer;
+	struct ln_rst_time time;
+	double JD = get_julian_from_sys ();
+	
+	observer.lng = 3;
+	observer.lat = 51;
+	
+	get_solar_rst (JD, &observer, &time);
 }
 
 int main ()
@@ -576,6 +647,8 @@ int main ()
 	apparent_position_test ();
 	vsop87_test();
 	lunar_test ();
-	ecliptic_motion_test();
+	elliptic_motion_test();
+	parabolic_motion_test ();
+	rst_test ();
 	return (0);
 }

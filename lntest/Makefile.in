@@ -81,7 +81,7 @@ RANLIB = @RANLIB@
 STRIP = @STRIP@
 VERSION = @VERSION@
 
-noinst_PROGRAMS =  	lntest ln_cache_test
+noinst_PROGRAMS =  	lntest 
 
 
 bin_PROGRAMS =  	libnovaconfig
@@ -93,16 +93,10 @@ lntest_SOURCES =  	test.c
 libnovaconfig_SOURCES =  	libnova_config.c 
 
 
-ln_cache_test_SOURCES =  	cache_test.c 
-
-
 INCLUDES =  	 -Wall -I../src
 
 
 lntest_LDADD =  	../src/libnova.la
-
-
-ln_cache_test_LDADD =  	../src/libnova.la
 
 
 libnovaconfig_LDADD =  	../src/libnova.la
@@ -111,7 +105,7 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 bin_PROGRAMS =  libnovaconfig$(EXEEXT)
-noinst_PROGRAMS =  lntest$(EXEEXT) ln_cache_test$(EXEEXT)
+noinst_PROGRAMS =  lntest$(EXEEXT)
 PROGRAMS =  $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
 
@@ -125,9 +119,6 @@ libnovaconfig_LDFLAGS =
 lntest_OBJECTS =  test.$(OBJEXT)
 lntest_DEPENDENCIES =  ../src/libnova.la
 lntest_LDFLAGS = 
-ln_cache_test_OBJECTS =  cache_test.$(OBJEXT)
-ln_cache_test_DEPENDENCIES =  ../src/libnova.la
-ln_cache_test_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -140,9 +131,9 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/cache_test.P .deps/libnova_config.P .deps/test.P
-SOURCES = $(libnovaconfig_SOURCES) $(lntest_SOURCES) $(ln_cache_test_SOURCES)
-OBJECTS = $(libnovaconfig_OBJECTS) $(lntest_OBJECTS) $(ln_cache_test_OBJECTS)
+DEP_FILES =  .deps/libnova_config.P .deps/test.P
+SOURCES = $(libnovaconfig_SOURCES) $(lntest_SOURCES)
+OBJECTS = $(libnovaconfig_OBJECTS) $(lntest_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -234,10 +225,6 @@ libnovaconfig$(EXEEXT): $(libnovaconfig_OBJECTS) $(libnovaconfig_DEPENDENCIES)
 lntest$(EXEEXT): $(lntest_OBJECTS) $(lntest_DEPENDENCIES)
 	@rm -f lntest$(EXEEXT)
 	$(LINK) $(lntest_LDFLAGS) $(lntest_OBJECTS) $(lntest_LDADD) $(LIBS)
-
-ln_cache_test$(EXEEXT): $(ln_cache_test_OBJECTS) $(ln_cache_test_DEPENDENCIES)
-	@rm -f ln_cache_test$(EXEEXT)
-	$(LINK) $(ln_cache_test_LDFLAGS) $(ln_cache_test_OBJECTS) $(ln_cache_test_LDADD) $(LIBS)
 
 tags: TAGS
 
