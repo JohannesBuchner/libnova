@@ -162,7 +162,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 	loctime = localtime(&tv.tv_sec);
     	
 	/* fill in date struct */
-	date->seconds = loctime->tm_sec + tv.tv_usec;
+	date->seconds = loctime->tm_sec + ((double)tv.tv_usec / 1000000);
 	date->minutes = loctime->tm_min;
 	date->hours = loctime->tm_hour;
 	date->days = loctime->tm_mday;

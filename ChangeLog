@@ -1,4 +1,13 @@
 ChangeLog
+20040906
+	- src/julian_day.c
+	
+	Fixed micro second overflow bug in ln_get_date_from_sys
+
+	Liam Girdwood
+
+
+************* release of 0.10.0
 
 20042905
 	- Added logo
