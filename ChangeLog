@@ -1,6 +1,13 @@
 ChangeLog
 
 20033008
+
+	-src/julian_day.c
+	
+	Added Win32 timezone functionality
+	
+	Liam Girdwood, Pablo Martikian
+
 	-src/libnova.h
 	-src/rise_set.c
 	-src/elliptic_motion.c

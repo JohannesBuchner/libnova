@@ -263,9 +263,16 @@ double get_julian_from_sys()
 	JD = get_julian_day (&date);
 	
 	/* add day light savings time and hour angle */
+#ifdef __WIN32__
+	tzset();
+	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
+	if (_daylight)
+		JD += 1.0 / (24.0 * 60.0 * 60.0);
+#else	
 	curtime = time (NULL);
 	loctime = localtime(&curtime);
 	JD -= ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
+#endif
 	return (JD);
 }
 
@@ -284,9 +291,16 @@ double get_julian_local_date(struct ln_date* date)
 	JD = get_julian_day (date);
 	
 	/* add day light savings time and hour angle */
+#ifdef __WIN32__
+	tzset();
+	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
+	if (_daylight)
+		JD += 1.0 / (24.0 * 60.0 * 60.0);
+#else	
 	curtime = time (NULL);
 	loctime = localtime(&curtime);
 	JD -= ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
+#endif
 	return JD;
 }
 
@@ -300,13 +314,20 @@ void get_local_date (double JD, struct ln_date * date)
 {
 	time_t curtime;
 	struct tm * loctime;
-		
+
+#ifdef __WIN32__
+	tzset();
+	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
+	if (_daylight)
+		JD += 1.0 / (24.0 * 60.0 * 60.0);
+#else		
 	/* add day light savings time and hour angle */
 	curtime = time (NULL);
 	loctime = localtime(&curtime);
 	
 	/* add timezone to JD */
 	JD += ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
+#endif
 	
 	get_date (JD, date);
 }
