@@ -38,7 +38,7 @@ Copyright 2000 Liam Girdwood
 */
 void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 {
-	double mean_ra, mean_dec, T;
+	long double mean_ra, mean_dec, T;
 	
 	T = (JD - 2451545.0) / 365.25;
 	

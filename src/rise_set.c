@@ -41,9 +41,9 @@ Copyright 2002-2003 Liam Girdwood
 int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_posn *object, struct ln_rst_time *rst)
 {
   int jd;
-  double T, O, JD_UT, H0, H1;
-  double mt, mr, ms;
-  double h = -0.5667;		/* standard altitude of stars */
+  long double T, O, JD_UT, H0, H1;
+  long double mt, mr, ms;
+  long double h = -0.5667;		/* standard altitude of stars */
 
   /* dynamical time diff */
   T = ln_get_dynamical_time_diff (JD);

@@ -36,7 +36,7 @@ Copyright 2002 Liam Girdwood
 */
 double ln_get_refraction_adj (double altitude, double atm_pres, double temp)
 {
-	double R;
+	long double R;
 
 	altitude = ln_deg_to_rad (altitude);
 	

@@ -73,11 +73,7 @@ void ln_get_rect_from_helio
 * Transfrom equatorial coordinates to galactic coordinates.
 */
 
-void ln_get_hrz_from_equ 
-	(struct ln_equ_posn * object, 
-	struct ln_lnlat_posn * observer, 
-	double JD, 
-	struct ln_hrz_posn * position)
+void ln_get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
 {
 	double sidereal;
 
@@ -87,13 +83,9 @@ void ln_get_hrz_from_equ
 }
 
 
-void ln_get_hrz_from_equ_sidereal_time
-	(struct ln_equ_posn * object, 
-	struct ln_lnlat_posn * observer, 
-	double sidereal, 
-	struct ln_hrz_posn * position)
+void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double sidereal, struct ln_hrz_posn * position)
 {
-	double H, ra, latitude, declination, A, Ac, As, h, Z, Zs;
+	long double H, ra, latitude, declination, A, Ac, As, h, Z, Zs;
 
 	/* change sidereal_time from hours to radians*/
 	sidereal *= 2.0 * M_PI / 24.0;
@@ -157,14 +149,9 @@ void ln_get_hrz_from_equ_sidereal_time
 * Transform an objects horizontal coordinates into equatorial coordinates
 * for the given julian day and observers position.
 */
-void ln_get_equ_from_hrz 
-	(struct ln_hrz_posn * object, 
-	struct ln_lnlat_posn * observer, 
-	double JD,
-	struct ln_equ_posn * position)
-	
+void ln_get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position)
 {
-	double H, longitude, declination, latitude, A, h, sidereal;
+	long double H, longitude, declination, latitude, A, h, sidereal;
 
 	/* change observer/object position into radians */
 
@@ -199,11 +186,7 @@ void ln_get_equ_from_hrz
 */
 /* Equ 12.3, 12.4 pg 89 
 */
-void ln_get_equ_from_ecl 
-	(struct ln_lnlat_posn * object,
-	 double JD,
-	 struct ln_equ_posn * position)
-	 
+void ln_get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position)
 {
 	double ra, declination, longitude, latitude;
 	struct ln_nutation nutation;
@@ -238,11 +221,7 @@ void ln_get_equ_from_ecl
 */
 /* Equ 12.1, 12.2 Pg 88 
 */
-void ln_get_ecl_from_equ 
-	(struct ln_equ_posn * object, 
-	double JD,
-	struct ln_lnlat_posn * position)
-	
+void ln_get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
 {
 	double ra, declination, latitude, longitude;
 	struct ln_nutation nutation;

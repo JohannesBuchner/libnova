@@ -10,7 +10,6 @@ libnova_la_SOURCES = \
 	sidereal_time.c \
 	transform.c \
 	nutation.c \
-	libnova.c \
 	aberration.c   \
 	apparent_position.c \
 	solar.c \

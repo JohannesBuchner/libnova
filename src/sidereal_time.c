@@ -33,8 +33,8 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 
 double ln_get_mean_sidereal_time (double JD)
 {
-    double sidereal;
-    double T;
+    long double sidereal;
+    long double T;
     
     T = (JD - 2451545.0) / 36525.0;
         

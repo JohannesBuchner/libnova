@@ -175,7 +175,7 @@ const static struct nutation_coefficients coefficients[TERMS] = {
     {-3.0,	0.0,	0.0,	0.0}};
 
 /* cache values */
-static double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0; 
+static long double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0; 
 
 	
 /*! \fn void ln_get_nutation (double JD, struct ln_nutation * nutation)
@@ -190,8 +190,8 @@ static double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0
 void ln_get_nutation (double JD, struct ln_nutation * nutation)
 {
 	
-	double D,M,MM,F,O,T,T2,T3,JDE;
-	double coeff_sine, coeff_cos;
+	long double D,M,MM,F,O,T,T2,T3,JDE;
+	long double coeff_sine, coeff_cos;
 	int i;
 
 	/* should we bother recalculating nutation */

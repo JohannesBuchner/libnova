@@ -58,9 +58,9 @@ struct ln_date
 
 struct ln_dms
 {
-	int sign;		/*!< Sign. 0 for positive, anything else is negative */
-    int degrees;	/*!< Degrees. Valid > 0 */
-    int minutes;	/*!< Minutes. Valid 0 - 59 */
+	unsigned short neg:1;		/*!< Non zero if negative */
+    unsigned short degrees:9;	/*!< Degrees. Valid 0 - 360 */
+    unsigned short minutes:6;	/*!< Minutes. Valid 0 - 59 */
     double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
 };
 
@@ -72,8 +72,8 @@ struct ln_dms
 
 struct ln_hms
 {
-    int hours;		/*!< Hours. Valid 0 - 23 */
-    int minutes;	/*!< Minutes. Valid 0 - 59 */
+    unsigned short hours:8;		/*!< Hours. Valid 0 - 23 */
+    unsigned short minutes:8;	/*!< Minutes. Valid 0 - 59 */
     double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
 };
 

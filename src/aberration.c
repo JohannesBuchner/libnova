@@ -219,8 +219,8 @@ const static struct XYZ z_coefficients[TERMS] = {
 */
 void ln_get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
-	double mean_ra, mean_dec, delta_ra, delta_dec;
-	double L2, L3, L4, L5, L6, L7, L8, LL, D, MM , F, T, X, Y, Z, A;
+	long double mean_ra, mean_dec, delta_ra, delta_dec;
+	long double L2, L3, L4, L5, L6, L7, L8, LL, D, MM , F, T, X, Y, Z, A;
 	long double c;
 	int i;
 
@@ -228,7 +228,7 @@ void ln_get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	c = 17314463350.0;
 
 	/* calc T */
-	T = (JD - 2451545) / 36525;
+	T = (JD - 2451545.0) / 36525.0;
 
 	/* calc planetary perturbutions */
 	L2 = 3.1761467 + 1021.3285546 * T;
@@ -261,10 +261,11 @@ void ln_get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	/* Equ 22.4 */
 	mean_ra = ln_deg_to_rad (mean_position->ra);
 	mean_dec = ln_deg_to_rad (mean_position->dec);
-
+	
 	delta_ra = (Y * cos(mean_ra) - X * sin(mean_ra)) / (c * cos(mean_dec));
-	delta_dec = -((X * cos(mean_ra) + Y * sin(mean_ra)) * sin(mean_dec) - Z * cos(mean_dec)) / c;
-
+	delta_dec = (X * cos(mean_ra) + Y * sin(mean_ra)) * sin(mean_dec) - Z * cos(mean_dec);
+	delta_dec /= -c;
+	
 	position->ra = ln_rad_to_deg(mean_ra + delta_ra);
 	position->dec = ln_rad_to_deg(mean_dec + delta_dec);
 }

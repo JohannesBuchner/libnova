@@ -39,7 +39,7 @@ Copyright 2000 Liam Girdwood
 */
 void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
-	double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T;
+	long double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T;
 	
 	/* change original ra and dec to radians */
 	mean_ra = ln_deg_to_rad(mean_position->ra);
