@@ -8,7 +8,7 @@ Juan Carlos Remis       <jcremis@cajaespana.es>
 BugFixes
 ========
 
-20020301
+20020103
 	- src/transform.c in get_hrz_from_equ ()
 
 	Algorithm changed to one, which use atan2 instead of atan function
