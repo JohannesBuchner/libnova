@@ -83,12 +83,12 @@ VERSION = @VERSION@
 
 lib_LTLIBRARIES = libnova.la
 
-libnova_la_SOURCES =  	julian_day.c 	dynamical_time.c 	earth_globe.c 	sidereal_time.c 	transform.c 	nutation.c 	libnova.c 	aberration.c   	apparent_position.c 	solar.c 	precession.c  	proper_motion.c 	mercury.c 	venus.c  	earth.c  	mars.c   	jupiter.c 	saturn.c  	uranus.c  	neptune.c  	pluto.c 	vsop87.c 	lunar.c  	elliptic_motion.c 	asteroid.c 	comet.c 	parabolic_motion.c 	misc.c 	refraction.c 	rise_set.c
+libnova_la_SOURCES =  	julian_day.c 	dynamical_time.c 	sidereal_time.c 	transform.c 	nutation.c 	libnova.c 	aberration.c   	apparent_position.c 	solar.c 	precession.c  	proper_motion.c 	mercury.c 	venus.c  	earth.c  	mars.c   	jupiter.c 	saturn.c  	uranus.c  	neptune.c  	pluto.c 	vsop87.c 	lunar.c  	elliptic_motion.c 	asteroid.c 	comet.c 	parabolic_motion.c 	misc.c 	refraction.c 	rise_set.c
 
 
 include_HEADERS = libnova.h  
 
-noinst_HEADERS =  	julian_day.h 	dynamical_time.h 	earth_globe.h 	sidereal_time.h 	transform.h 	nutation.h 	aberration.h 	apparent_position.h 	precession.h  	proper_motion.h 	vsop87.h 	pluto.h 	lunar.h 
+noinst_HEADERS =  	julian_day.h 	dynamical_time.h 	sidereal_time.h 	transform.h 	nutation.h 	aberration.h 	apparent_position.h 	precession.h  	proper_motion.h 	vsop87.h 	pluto.h 	lunar.h 
 
 
 libnova_la_LDFLAGS =  	-version-info $(LT_VERSION) 	-release $(LT_RELEASE) 
@@ -104,12 +104,12 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libnova_la_LIBADD = 
-libnova_la_OBJECTS =  julian_day.lo dynamical_time.lo earth_globe.lo \
-sidereal_time.lo transform.lo nutation.lo libnova.lo aberration.lo \
-apparent_position.lo solar.lo precession.lo proper_motion.lo mercury.lo \
-venus.lo earth.lo mars.lo jupiter.lo saturn.lo uranus.lo neptune.lo \
-pluto.lo vsop87.lo lunar.lo elliptic_motion.lo asteroid.lo comet.lo \
-parabolic_motion.lo misc.lo refraction.lo rise_set.lo
+libnova_la_OBJECTS =  julian_day.lo dynamical_time.lo sidereal_time.lo \
+transform.lo nutation.lo libnova.lo aberration.lo apparent_position.lo \
+solar.lo precession.lo proper_motion.lo mercury.lo venus.lo earth.lo \
+mars.lo jupiter.lo saturn.lo uranus.lo neptune.lo pluto.lo vsop87.lo \
+lunar.lo elliptic_motion.lo asteroid.lo comet.lo parabolic_motion.lo \
+misc.lo refraction.lo rise_set.lo
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -126,13 +126,12 @@ TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/aberration.P .deps/apparent_position.P \
 .deps/asteroid.P .deps/comet.P .deps/dynamical_time.P .deps/earth.P \
-.deps/earth_globe.P .deps/elliptic_motion.P .deps/julian_day.P \
-.deps/jupiter.P .deps/libnova.P .deps/lunar.P .deps/mars.P \
-.deps/mercury.P .deps/misc.P .deps/neptune.P .deps/nutation.P \
-.deps/parabolic_motion.P .deps/pluto.P .deps/precession.P \
-.deps/proper_motion.P .deps/refraction.P .deps/rise_set.P \
-.deps/saturn.P .deps/sidereal_time.P .deps/solar.P .deps/transform.P \
-.deps/uranus.P .deps/venus.P .deps/vsop87.P
+.deps/elliptic_motion.P .deps/julian_day.P .deps/jupiter.P \
+.deps/libnova.P .deps/lunar.P .deps/mars.P .deps/mercury.P .deps/misc.P \
+.deps/neptune.P .deps/nutation.P .deps/parabolic_motion.P .deps/pluto.P \
+.deps/precession.P .deps/proper_motion.P .deps/refraction.P \
+.deps/rise_set.P .deps/saturn.P .deps/sidereal_time.P .deps/solar.P \
+.deps/transform.P .deps/uranus.P .deps/venus.P .deps/vsop87.P
 SOURCES = $(libnova_la_SOURCES)
 OBJECTS = $(libnova_la_OBJECTS)
 

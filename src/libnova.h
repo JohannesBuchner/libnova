@@ -45,12 +45,13 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Orbit velocities and lengths
 * - Atmospheric refraction
 * - Rise, Set and Transit times.
+* - Semidiameters of the Sun, Moon, Planets and asteroids. 
 *
 * \section docs Documentation
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.4.0 and was released on the 2nd Sept 2002.
+* The latest released version of libnova is 0.5.0 and was released on the 13th Oct 2002.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
@@ -290,6 +291,37 @@ struct ln_par_orbit
 	double w;	/*!< Argument of perihelion in degrees */
 	double omega;	/*!< Longitude of ascending node in degrees*/
 	double JD;	/*!< Time of passage in Perihelion, in julian day */
+};
+
+
+/*!
+* \struct ln_rst_time
+* \brief Rise, Set and Transit times. 
+*
+* Contains the Rise, Set and transit times for a body.
+*  
+* Angles are expressed in degrees.
+*/
+struct ln_rst_time
+{
+	double rise;		/*!< Rise time in JD */
+	double set;			/*!< Set time in JD */
+	double transit;		/*!< Transit time in JD */
+};
+
+/*!
+* \struct ln_nutation
+* \brief Nutation in longitude, ecliptic and obliquity. 
+*
+* Contains Nutation in longitude, obliquity and ecliptic obliquity. 
+*
+* Angles are expressed in degrees.
+*/
+struct ln_nutation
+{
+	double longitude;	/*!< Nutation in longitude */
+	double obliquity;	/*!< Nutation in obliquity */
+	double ecliptic;	/*!< Obliquity of the ecliptic */
 };
 
 
@@ -648,11 +680,11 @@ void get_earth_centre_dist (float height, double latitude, double * p_sin_o, dou
 * All angles are expressed in degrees.
 */
 
-/*! \fn void get_nutation (double JD, double * longitude, double * obliquity, double * ecliptic);
+/*! \fn void get_nutation (double JD, struct ln_nutation * nutation);
 * \ingroup nutation
 * \brief Calculate nutation. 
 */
-void get_nutation (double JD, double * longitude, double * obliquity, double * ecliptic);
+void get_nutation (double JD, struct ln_nutation * nutation);
 
 /*! \defgroup apparent Apparent position of a Star
 *
@@ -758,24 +790,13 @@ void get_ecl_aber
 *
 * All angles are expressed in degrees.
 */
-	
-/*! \fn double get_solar_rise (double JD);
-* \brief Calculate the time the Sun rises above the horizon.
-* \ingroup solar
-*/
-double get_solar_rise (double JD, struct ln_lnlat_posn observer);
-	
-/*! \fn double get_solar_set (double JD);
-* \brief Calculate the time the Sun sets below the horizon.
-* \ingroup solar
-*/
-double get_solar_set (double JD, struct ln_lnlat_posn observer);
 
-/*! \fn double get_solar_transit (double JD);
-* \brief Calculate the time the Solar transit.
+/*! \fn double get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for the Sun.
 * \ingroup solar
 */
-double get_solar_transit (double JD, struct ln_lnlat_posn observer);
+int get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+	
 
 /*! \fn void get_geom_solar_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate solar geometric coordinates. 
@@ -807,6 +828,12 @@ void get_ecl_solar_coords
 */
 void get_geo_solar_coords (double JD, struct ln_rect_posn * position);
 	
+/*! \fn double get_solar_sdiam (double JD)
+* \brief Calcaluate the semidiameter of the Sun in arc seconds.
+* \ingroup solar
+*/
+double get_solar_sdiam (double JD);
+
 
 /*! \defgroup mercury Mercury
 *
@@ -814,6 +841,18 @@ void get_geo_solar_coords (double JD, struct ln_rect_posn * position);
 *
 * All angles are expressed in degrees.
 */
+
+/*! \fn double get_mercury_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Mercury in arc seconds.
+* \ingroup mercury
+*/
+double get_mercury_sdiam (double JD);
+
+/*! \fn double get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Mercury.
+* \ingroup mercury
+*/
+int get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Mercury's heliocentric coordinates
@@ -880,6 +919,18 @@ double get_mercury_phase (double JD);
 *
 * All angles are expressed in degrees.
 */
+
+/*! \fn double get_venus_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Venus in arc seconds.
+* \ingroup venus
+*/
+double get_venus_sdiam (double JD);
+
+/*! \fn double get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Venus.
+* \ingroup venus
+*/
+int get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_venus_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calvulate Venus heliocentric coordinates 
@@ -968,6 +1019,18 @@ double get_earth_sun_dist (double JD);
 * All angles are expressed in degrees.
 */
 
+/*! \fn double get_mars_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Mars in arc seconds.
+* \ingroup mars
+*/
+double get_mars_sdiam (double JD);
+	
+/*! \fn double get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Mars.
+* \ingroup mars
+*/
+int get_mars_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+	
 /*! \fn void get_mars_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Mars heliocentric coordinates
 * \ingroup mars
@@ -1033,6 +1096,24 @@ double get_mars_phase (double JD);
 * All angles are expressed in degrees.
 */
 
+/*! \fn double get_jupiter_equ_sdiam (double JD)
+* \brief Calcaluate the eqatorial semidiameter of Jupiter in arc seconds.
+* \ingroup jupiter
+*/
+double get_jupiter_equ_sdiam (double JD);
+
+/*! \fn double get_jupiter_pol_sdiam (double JD)
+* \brief Calcaluate the polar semidiameter of Jupiter in arc seconds.
+* \ingroup jupiter
+*/
+double get_jupiter_pol_sdiam (double JD);
+
+/*! \fn double get_jupiter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Jupiter.
+* \ingroup jupiter
+*/
+int get_jupter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+
 /*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Jupiter's heliocentric coordinates
 * \ingroup jupiter
@@ -1096,6 +1177,24 @@ double get_jupiter_phase (double JD);
 *
 * All angles are expressed in degrees.
 */
+
+/*! \fn double get_saturn_equ_sdiam (double JD)
+* \brief Calcaluate the equatorial semidiameter of Saturn in arc seconds.
+* \ingroup saturn
+*/
+double get_saturn_equ_sdiam (double JD);
+
+/*! \fn double get_saturn_pol_sdiam (double JD)
+* \brief Calcaluate the polar semidiameter of Saturn in arc seconds.
+* \ingroup saturn
+*/
+double get_saturn_pol_sdiam (double JD);
+
+/*! \fn double get_saturn_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Saturn.
+* \ingroup saturn
+*/
+int get_saturn_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_saturn_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Saturn's heliocentric coordinates.
@@ -1162,6 +1261,18 @@ double get_saturn_phase (double JD);
 * All angles are expressed in degrees.
 */
 
+/*! \fn double get_uranus_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Uranus in arc seconds.
+* \ingroup uranus
+*/
+double get_uranus_sdiam (double JD);
+
+/*! \fn double get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Uranus.
+* \ingroup uranus
+*/
+int get_uranus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+
 /*! \fn void get_uranus_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Uranus heliocentric coordinates
 * \ingroup uranus
@@ -1225,6 +1336,18 @@ double get_uranus_phase (double JD);
 *
 * All angles are expressed in degrees.
 */
+
+/*! \fn double get_neptune_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Neptune in arc seconds.
+* \ingroup neptune
+*/
+double get_neptune_sdiam (double JD);
+
+/*! \fn double get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Neptune.
+* \ingroup neptune
+*/
+int get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Neptune's heliocentric coordinates.
@@ -1291,6 +1414,18 @@ double get_neptune_phase (double JD);
 * All angles are expressed in degrees.
 */
 
+/*! \fn double get_pluto_sdiam (double JD)
+* \brief Calcaluate the semidiameter of Pluto in arc seconds.
+* \ingroup pluto
+*/
+double get_pluto_sdiam (double JD);
+
+/*! \fn double get_pluto_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for Pluto.
+* \ingroup pluto
+*/
+int get_pluto_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+
 /*! \fn void get_pluto_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Pluto's heliocentric coordinates.
 * \ingroup pluto
@@ -1354,6 +1489,18 @@ double get_pluto_phase (double JD);
 *
 * All angles are expressed in degrees.
 */
+
+/*! \fn double get_lunar_sdiam (double JD)
+* \brief Calcaluate the semidiameter of the Moon in arc seconds.
+* \ingroup lunar
+*/
+double get_lunar_sdiam (double JD);
+
+/*! \fn double get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for the Moon.
+* \ingroup lunar
+*/
+int get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
 * \brief Calculate the rectangular geocentric lunar cordinates.
@@ -1514,6 +1661,12 @@ double get_ell_body_earth_dist (double JD, struct ln_ell_orbit * orbit);
 */
 void get_ell_body_equ_coords (double JD, struct ln_ell_orbit * orbit, struct ln_equ_posn * posn);
 
+/*! \fn double get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_orbit * orbit, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with an elliptic orbit.
+* \ingroup elliptic
+*/
+int get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_orbit * orbit, struct ln_rst_time * rst);
+	
 
 /*! \defgroup parabolic  Parabolic Motion
 *
@@ -1536,7 +1689,7 @@ double get_par_true_anomaly (double q, double t);
 
 /*! \fn double get_par_radius_vector (double q, double t);
 * \ingroup parabolic
-* \brief Calculate the radius vector. LIAM add more 
+* \brief Calculate the radius vector. 
 */
 double get_par_radius_vector (double q, double t);
 
@@ -1580,6 +1733,12 @@ double get_par_body_solar_dist (double JD, struct ln_par_orbit * orbit);
 */
 double get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit);
 
+/*! \fn double get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with a parabolic orbit.
+* \ingroup parabolic
+*/
+int get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst);
+
 /*! \defgroup asteroid Asteroids
 *
 * Functions relating to Asteroids.
@@ -1594,6 +1753,18 @@ double get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit);
 */
 double get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G);
 	
+/*! \fn double get_asteroid_sdiam_km (double H, double A)
+* \brief Calcaluate the semidiameter of an asteroid in km.
+* \ingroup asteroid
+*/
+double get_asteroid_sdiam_km (double H, double A);
+	
+/*! \fn double get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A);
+* \brief Calcaluate the semidiameter of an asteroid in arc seconds.
+* \ingroup asteroid
+*/
+double get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A);
+
 /*! \defgroup comet Comets
 *
 * Functions relating to Comets.
@@ -1606,7 +1777,7 @@ double get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, doubl
 * \ingroup comet
 * \brief Calculate the visual magnitude of a comet in an elliptic orbit.
 */
-double get_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k);
+double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k);
 	
 /*!
 * \fn double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
@@ -1631,6 +1802,30 @@ double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, doub
 double get_refraction_adj (double altitude, double atm_pres, double temp);
 
 
+/*! \fn double interpolate3 (double n, double y1, double y2, double y3)
+* \ingroup misc
+* \brief Calculate an intermediate value of the 3 arguments.
+*/
+double interpolate3 (double n, double y1, double y2, double y3);
+
+/*! \fn double interpolate5 (double n, double y1, double y2, double y3, double y4, double y5)
+* \ingroup misc
+* \brief Calculate an intermediate value of the 5 arguments.
+*/
+double interpolate5 (double n, double y1, double y2, double y3, double y4, double y5);
+
+/*! \defgroup rst Rise, Set, Transit
+*
+* Functions relating to an objects rise, set and transit
+*
+* All angles are expressed in degrees.
+*/
+
+/*! \fn double get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for an object not orbiting the Sun.
+* \ingroup rst
+*/
+int get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
 
 #ifdef __cplusplus

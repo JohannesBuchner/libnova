@@ -5,7 +5,6 @@ lib_LTLIBRARIES = libnova.la
 libnova_la_SOURCES = \
 	julian_day.c \
 	dynamical_time.c \
-	earth_globe.c \
 	sidereal_time.c \
 	transform.c \
 	nutation.c \
@@ -40,7 +39,6 @@ include_HEADERS = libnova.h
 noinst_HEADERS = \
 	julian_day.h \
 	dynamical_time.h \
-	earth_globe.h \
 	sidereal_time.h \
 	transform.h \
 	nutation.h \

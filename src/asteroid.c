@@ -61,3 +61,46 @@ double get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, doubl
 	
 	return (mag);
 }
+
+/*! \fn double get_asteroid_sdiam_km (double H, double A)
+* \param H Absolute magnitude of asteroid
+* \param A Albedo of asteroid
+* \return Semidiameter in km
+*
+* Calcaluate the semidiameter of an asteroid in km.
+*
+* Note: Many asteroids have an irregular shape and therefore this function returns
+* an approximate value of the diameter.
+*/
+double get_asteroid_sdiam_km (double H, double A)
+{
+	double d;
+	
+	d = 3.13 - 0.2 * H - (0.5 * log10 (A));
+	return (d);
+}
+
+/*! \fn double get_asteroid_sdiam_arc (double H, double A)
+* \param JD Julian day
+* \param orbit Orbital parameters
+* \param H Absolute magnitude of asteroid
+* \param A Albedo of asteroid
+* \return Semidiameter in seconds of arc
+*
+* Calcaluate the semidiameter of an asteroid in arc seconds.
+*
+* Note: Many asteroids have an irregular shape and therefore this function returns
+* an approximate value of the diameter.
+*/
+double get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A)
+{
+	double d, dist;
+	
+	/* calc distance to Earth in AU */
+	dist = get_ell_body_earth_dist (JD, orbit);
+	
+	d = 3.13 - 0.2 * H - (0.5 * log10 (A));
+	d = 0.0013788 * d / dist;
+	
+	return (d);
+}

@@ -2779,3 +2779,32 @@ double get_earth_sun_dist (double JD)
 	return (h_earth.R);
 }
 	
+/*! \fn void get_earth_centre_dist (float height, double latitude, double *p_sin_o, double *p_cos_o);
+* \param height Height above sea level in metres.
+* \param latitude latitude in degrees.
+* \param p_sin_o Pointer to hold p_sin_o
+* \param p_cos_o Pointer to hold p_cos_o
+* 
+* Calculate the quantaties "p sin o" and "p cos o" needed in calculations for
+* diurnal parallaxes, eclipses and occultations given the observers height
+* in metres above sea level and there latitude in degrees.
+*/
+
+void get_earth_centre_dist (float height, double latitude, double *p_sin_o, double *p_cos_o)
+{
+     double a,b,f,u;
+     
+     a = 6378.14;
+     
+     f = 1 / 298.257;
+     
+     b = a * (1 - f);
+     
+     u = b / a * tan(deg_to_rad(latitude));
+     u = atan(u);
+     
+     *p_sin_o = b / a * sin (u) + (height / 6378140 ) * sin (latitude);
+     *p_cos_o = cos (u) + (height / 6378140) * cos (latitude);
+}
+     
+     

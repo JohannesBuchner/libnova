@@ -51,7 +51,7 @@ double get_mean_sidereal_time (double JD)
 
 /*! \fn double get_apparent_sidereal_time (double JD)
 * \param JD Julian Day
-* /return Apparent sidereal time.
+* /return Apparent sidereal time (hours).
 *
 * Calculate the apparent sidereal time at the meridian of Greenwich of a given date. 
 */
@@ -60,16 +60,17 @@ double get_mean_sidereal_time (double JD)
 
 double get_apparent_sidereal_time (double JD)
 {
-   double obliquity, correction, hours, sidereal, nutation_longitude, nutation_obliquity;
-      
+   double correction, hours, sidereal;
+   struct ln_nutation nutation;  
+   
    /* get the mean sidereal time */
    sidereal = get_mean_sidereal_time (JD);
         
    /* add corrections for nutation in longitude and for the true obliquity of 
    the ecliptic */   
-   get_nutation (JD, &nutation_longitude, &nutation_obliquity, &obliquity); 
+   get_nutation (JD, &nutation); 
     
-   correction = (nutation_longitude / 15.0 * cos (deg_to_rad(obliquity)));
+   correction = (nutation.longitude / 15.0 * cos (deg_to_rad(nutation.obliquity)));
   
    /* value is in degrees so change it to hours and add to mean sidereal time */
    hours = (24.0 / 360.0) * correction;

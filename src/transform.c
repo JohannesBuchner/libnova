@@ -167,13 +167,12 @@ void get_equ_from_ecl
 	 struct ln_equ_posn * position)
 	 
 {
-	double ra, declination, nutation_longitude, nutation_obliquity, nutation_ecliptic, longitude, latitude;
-
+	double ra, declination, longitude, latitude;
+	struct ln_nutation nutation;
 
 	/* get obliquity of ecliptic and change it to rads */
-	get_nutation (JD, &nutation_longitude, &nutation_obliquity, &nutation_ecliptic);
-	nutation_ecliptic = deg_to_rad (nutation_ecliptic); 
-
+	get_nutation (JD, &nutation);
+	nutation.ecliptic = deg_to_rad (nutation.ecliptic); 
 
 	/* change object's position into radians */
 
@@ -182,7 +181,7 @@ void get_equ_from_ecl
 	latitude = deg_to_rad(object->lat);
 
 	/* Equ 12.3, 12.4 */
-	ra = (sin(longitude) * cos(nutation_ecliptic) - tan(latitude) * sin(nutation_ecliptic)) / cos (longitude);
+	ra = (sin(longitude) * cos(nutation.ecliptic) - tan(latitude) * sin(nutation.ecliptic)) / cos (longitude);
 	ra = atan (ra);
 	
 	if (ra < 0)
@@ -191,7 +190,7 @@ void get_equ_from_ecl
 		ra += M_PI;
 
 
-	declination = sin(latitude) * cos(nutation_ecliptic) + cos(latitude) * sin(nutation_ecliptic) * sin(longitude);
+	declination = sin(latitude) * cos(nutation.ecliptic) + cos(latitude) * sin(nutation.ecliptic) * sin(longitude);
 	declination = asin(declination);
 	
 	/* store in position */
@@ -215,21 +214,22 @@ void get_ecl_from_equ
 	struct ln_lnlat_posn * position)
 	
 {
-	double ra, declination, nutation_longitude, nutation_obliquity, nutation_ecliptic, latitude, longitude;
-
+	double ra, declination, latitude, longitude;
+	struct ln_nutation nutation;
+	
 	/* object position */
 	ra = deg_to_rad (object->ra);
 	declination = deg_to_rad (object->dec);
-	get_nutation(JD, &nutation_longitude, &nutation_obliquity, &nutation_ecliptic);
-	nutation_ecliptic = deg_to_rad (nutation_ecliptic);
+	get_nutation(JD, &nutation);
+	nutation.ecliptic = deg_to_rad (nutation.ecliptic);
 
 	/* Equ 12.1, 12.2 */
-	longitude = (sin(ra) * cos(nutation_ecliptic) + tan(declination) * sin(nutation_ecliptic)) / cos(ra);
+	longitude = (sin(ra) * cos(nutation.ecliptic) + tan(declination) * sin(nutation.ecliptic)) / cos(ra);
 	longitude = atan(longitude);
 	if(longitude < 0)
 		longitude += M_PI;
 	
-	latitude = sin(declination) * cos(nutation_ecliptic) - cos(declination) * sin(nutation_ecliptic) * sin(ra);
+	latitude = sin(declination) * cos(nutation.ecliptic) - cos(declination) * sin(nutation.ecliptic) * sin(ra);
 	latitude = asin(latitude);
 
 	/* store in position */

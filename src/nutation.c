@@ -156,36 +156,25 @@ const static struct nutation_coefficients coefficients[TERMS] = {
     {-3.0,	0.0,	0.0,	0.0},
     {-3.0,	0.0,	0.0,	0.0}};
 
-/*! \fn void get_nutation (double JD, double * longitude, double * obliquity, double *ecliptic)
+/* cache values */
+static double c_JD = 0.0, c_longitude = 0.0, c_obliquity = 0.0, c_ecliptic = 0.0; 
+
+	
+/*! \fn void get_nutation (double JD, struct ln_nutation * nutation)
 * \param JD Julian Day.
-* \param longitude Pointer to store returned longitude.
-* \param obliquity Pointer to store returned obliquity.
-* \param ecliptic Pointer to store returned ecliptic.
+* \param nutation Pointer to store nutation
 *
 * Calculate nutation of longitude and obliquity in degrees from Julian Ephemeris Day 
 */
 /* Chapter 21 pg 131-134 Using Table 21A 
 */
 
-void get_nutation (double JD, double * longitude, double * obliquity, double *ecliptic)
+void get_nutation (double JD, struct ln_nutation * nutation)
 {
 	
 	double D,M,MM,F,O,T,T2,T3,JDE;
 	double coeff_sine, coeff_cos;
 	int i,temp;
-
-	/* cache values */
-	static double c_JD, c_longitude, c_obliquity, c_ecliptic; 
-	static int init;
-
-	/* first use? */
-	if (init !=1)
-	{
-		c_longitude = 0;
-		c_obliquity = 0;
-		c_ecliptic = 0;
-		init = 1;
-	}
 
 	/* should we bother recalculating nutation */
 	if (fabs(JD - c_JD) > LN_NUTATION_EPOCH_THRESHOLD)
@@ -264,9 +253,8 @@ void get_nutation (double JD, double * longitude, double * obliquity, double *ec
 	}
 
 	/* return results */
-	*longitude = c_longitude;
-	*obliquity = c_obliquity;
-	*ecliptic = c_ecliptic;
-
+	nutation->longitude = c_longitude;
+	nutation->obliquity = c_obliquity;
+	nutation->ecliptic = c_ecliptic;
 }
 
