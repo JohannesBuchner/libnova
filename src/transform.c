@@ -172,7 +172,7 @@ void ln_get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * ob
 	sidereal = ln_get_apparent_sidereal_time(JD);
 	sidereal *= 2.0 * M_PI / 24.0;
 
-	position->ra = ln_rad_to_deg (sidereal - H + longitude);
+	position->ra = ln_range_degrees(ln_rad_to_deg (sidereal - H + longitude));
 	position->dec = ln_rad_to_deg (declination);
 }
 
