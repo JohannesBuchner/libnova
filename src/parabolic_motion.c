@@ -84,15 +84,15 @@ double get_par_radius_vector (double q, double t)
 }
 
 
-/*! \fn void get_par_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+/*! \fn void get_par_helio_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \param orbit Orbital parameters of object.
 * \param JD Julian day
 * \param posn Position pointer to store objects position
 *
-* Calculate the objects rectangular geocentric position given it's orbital
+* Calculate the objects rectangular heliocentric position given it's orbital
 * elements for the given julian day. 
 */
-void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn)
+void get_par_helio_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn)
 {
 	double A,B,C;
 	double F,G,H;
@@ -141,39 +141,31 @@ void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rec
 	posn->Z = r * c * sin (C + deg_to_rad(orbit->w + v));
 }
 
-/*! \fn void get_par_helio_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn);
+
+/*! \fn void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \param orbit Orbital parameters of object.
 * \param JD Julian day
 * \param posn Position pointer to store objects position
 *
-* Calculate the objects rectangular heliocentric position given it's orbital
+* Calculate the objects rectangular geocentric position given it's orbital
 * elements for the given julian day. 
 */
-void get_par_helio_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn)
+void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn)
 {
-	double t,v,r,u;
-	double sin_omega, sin_i, cos_omega, cos_i, cos_u, sin_u;
-
-	/* time since perihelion */
-	t = JD - orbit->JD;
+	struct ln_rect_posn p_posn, e_posn;
+	struct ln_helio_posn earth;
 	
-	sin_omega = sin (deg_to_rad (orbit->omega));
-	cos_omega = cos (deg_to_rad (orbit->omega));
-	sin_i = sin (deg_to_rad  (orbit->i));
-	cos_i = cos (deg_to_rad  (orbit->i));
-
-	/* get true anomaly */
-	v = get_par_true_anomaly (orbit->q, t);
-	u = orbit->w + v;
-	sin_u = sin (deg_to_rad (u));
-	cos_u = cos (deg_to_rad (u));
+	/* parabolic helio rect coords */
+	get_par_helio_rect_posn (orbit, JD, &p_posn);
 	
-	/* get radius vector */
-	r = get_par_radius_vector (orbit->q, t);
-
-	posn->X = r * (cos_omega * cos_u - sin_omega * sin_u * cos_i);
-	posn->Y = r * (sin_omega * cos_u + cos_omega * sin_u * cos_i);
-	posn->Z = r * sin_i * sin_u;
+	/* earth rect coords */
+	get_earth_helio_coords (JD, &earth);
+	
+	get_rect_from_helio (&earth, JD, &e_posn);
+	printf("E %f %f %f\n",e_posn.X,e_posn.Y,e_posn.Z);
+	posn->X = p_posn.X - e_posn.X;
+	posn->Y = p_posn.Y - e_posn.Y;
+	posn->Z = p_posn.Z - e_posn.Z;
 }
 
 
@@ -192,22 +184,22 @@ void get_par_body_equ_coords (double JD, struct ln_par_orbit * orbit, struct ln_
 	double x,y,z;
 	
 	/* get solar and body rect coords */
-	get_par_geo_rect_posn (orbit, JD, &body_rect_posn);
+	get_par_helio_rect_posn (orbit, JD, &body_rect_posn);
 	get_geo_solar_coords (JD, &sol_rect_posn);
-	
+
 	/* calc distance and light time */
 	dist = get_rect_distance (&body_rect_posn, &sol_rect_posn);
 	t = get_light_time (dist);
 	
 	/* repeat calculation with new time (i.e. JD - t) */
-	get_par_geo_rect_posn (orbit, JD - t, &body_rect_posn);
+	get_par_helio_rect_posn (orbit, JD - t, &body_rect_posn);
 	
 	/* calc equ coords equ 33.10 */
 	x = sol_rect_posn.X + body_rect_posn.X;
 	y = sol_rect_posn.Y + body_rect_posn.Y;
 	z = sol_rect_posn.Z + body_rect_posn.Z;
 
-	posn->ra = rad_to_deg(atan2 (y,x));
+	posn->ra = range_degrees (rad_to_deg(atan2 (y,x)));
 	posn->dec = rad_to_deg(atan2 (z,sqrt (x * x + y * y)));
 }
 
@@ -252,7 +244,9 @@ double get_par_body_solar_dist (double JD, struct ln_par_orbit * orbit)
 	
 	/* get solar and body rect coords */
 	get_par_helio_rect_posn (orbit, JD, &body_rect_posn);
-	get_geo_solar_coords (JD, &sol_rect_posn);
+	sol_rect_posn.X = 0;
+	sol_rect_posn.Y = 0;
+	sol_rect_posn.Z = 0;
 	
 	/* calc distance */
 	dist = get_rect_distance (&body_rect_posn, &sol_rect_posn);
@@ -278,15 +272,47 @@ double get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit)
 	/* get radius vector */
 	r = get_par_radius_vector (orbit->q, t);
 	
-	/* get solar and Earth distances */
-	R = get_par_body_earth_dist (JD, orbit);
+	/* get solar and Earth-Sun distances */
+	R = get_earth_sun_dist (JD);
 	d = get_par_body_solar_dist (JD, orbit);
-	
-	phase = (r * r + d * d + R * R) / ( 2.0 * r * d );
-	phase = acos (deg_to_rad (phase));
+
+	phase = (r * r + d * d - R * R) / ( 2.0 * r * d );
+	phase = deg_to_rad(phase);	
+	phase = range_degrees (rad_to_deg (acos (phase)));
 	
 	return (phase);
 }
+
+/*! \fn double get_par_body_elong (double JD, struct ln_par_orbit * orbit);
+* \param JD Julian day
+* \param orbit Orbital parameters
+* \return Elongation to the Sun.
+*
+* Calculate the bodies elongation to the Sun.. 
+*/
+double get_par_body_elong (double JD, struct ln_par_orbit * orbit)
+{
+	double r,R,d;
+	double t;
+	double phase;
+	
+	/* time since perihelion */
+	t = JD - orbit->JD;
+	
+	/* get radius vector */
+	r = get_par_radius_vector (orbit->q, t);
+	
+	/* get solar and Earth-Sun distances */
+	R = get_earth_sun_dist (JD);
+	d = get_par_body_solar_dist (JD, orbit);
+
+	phase = (R * R + d * d - r * r) / ( 2.0 * R * d );
+	phase = deg_to_rad(phase);	
+	phase = range_degrees (rad_to_deg (acos (phase)));
+	
+	return (phase);
+}
+
 
 /*! \fn double get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst);
 * \param JD Julian day

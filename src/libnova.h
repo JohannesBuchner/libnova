@@ -1733,6 +1733,12 @@ double get_par_body_solar_dist (double JD, struct ln_par_orbit * orbit);
 */
 double get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit);
 
+/*! \fn double get_par_body_elong (double JD, struct ln_par_orbit * orbit);
+* \ingroup parabolic
+* \brief Calculate the bodies elongation to the Sun. 
+*/
+double get_par_body_elong (double JD, struct ln_par_orbit * orbit);
+
 /*! \fn double get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with a parabolic orbit.
 * \ingroup parabolic
