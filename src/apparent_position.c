@@ -32,8 +32,11 @@ Copyright 2000 Liam Girdwood
 * \param JD Julian Day
 * \param position Pointer to store new object position
 *
-* Get the apparent position of an object from its mean position 
-* Uses mean equatorial coordinates 
+* Calculate the apparent equatorial position of a star from its mean equatorial position. 
+* This function takes into account the effects of proper motion, precession, nutation, 
+* annual aberration when calculating the stars apparent position. The effects of annual 
+* parallax and the gravitational deflection of light (Einstein effect) are NOT used
+* in this calculation. 
 */
 void get_apparent_posn 
 	(struct ln_equ_posn * mean_position, 

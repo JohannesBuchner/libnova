@@ -35,7 +35,8 @@ Copyright 2000 Liam Girdwood
 * Calculate equatorial coordinates with the effects of precession for a given Julian Day. 
 * Uses mean equatorial coordinates and is
 * only for initial epoch J2000.0 
-* Equ 20.2, 20.3, 20.4 pg 126 
+*/
+/* Equ 20.2, 20.3, 20.4 pg 126 
 */
 void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
@@ -93,9 +94,10 @@ void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 *
 * Calculate ecliptical coordinates with the effects of precession for a given Julian Day. 
 * Uses mean ecliptical coordinates and is
-* only for initial epoch J2000.0 
-* Equ 20.5, 20.6 pg 128 
+* only for initial epoch J2000.0  
 * \todo To be implemented. 
+*/
+/* Equ 20.5, 20.6 pg 128
 */
 void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 {

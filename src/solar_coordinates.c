@@ -28,7 +28,10 @@ Copyright 2000 Liam Girdwood
 * \param position Pointer to store calculated solar position.
 *
 * Calculate geometric coordinates and radius vector
-* accuracy 0.01 arc second error - uses VSOP87 
+* accuracy 0.01 arc second error - uses VSOP87 solution.
+*
+* Latitude and Longitude returned are in degrees, whilst radius
+* vector returned is in AU.
 */
 
 void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
@@ -49,7 +52,8 @@ void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
-* Calculate apparent equatorial solar coordinates. 
+* Calculate apparent equatorial solar coordinates for given julian day.
+* This function includes the effects of aberration and nutation. 
 */
 void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 {
@@ -80,7 +84,8 @@ void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
-* Calculate apparent ecliptical solar coordinates. 
+* Calculate apparent ecliptical solar coordinates for given julian day.
+* This function includes the effects of aberration and nutation. 
 */
 void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 {
@@ -106,8 +111,9 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
-* Calculate geocentric coordinates (rectangular)
-* accuracy 0.01 arc second error - uses VSOP87 
+* Calculate geocentric coordinates (rectangular) for given julian day.
+* Accuracy 0.01 arc second error - uses VSOP87 solution.
+* Position returned is in units of AU.
 */
 void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
 {		

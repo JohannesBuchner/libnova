@@ -26,8 +26,9 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \return Julian ay
 *
 * Calculate the julian day (JD) from a calendar day. 
-* Valid for positive and negative years but not for negative JD 
-* Formula 7.1 on pg 61 
+* Valid for positive and negative years but not for negative JD.
+*/
+/* Formula 7.1 on pg 61 
 */
 double get_julian_day (struct ln_date * date)
 {
@@ -68,10 +69,10 @@ double get_julian_day (struct ln_date * date)
 
 
 /*! \fn unsigned int get_day_of_week (struct ln_date *date)
-* \param date date required
-* \return day of the week
+* \param date Date required
+* \return Day of the week
 *
-* Calculate the day of the week. pg 65. 
+* Calculate the day of the week. 
 * Returns 0 = Sunday .. 6 = Saturday
 */
 unsigned int get_day_of_week (struct ln_date *date)
@@ -92,7 +93,8 @@ unsigned int get_day_of_week (struct ln_date *date)
 /*! \fn void get_date (double JD, struct ln_date * date)
 * \param JD Julian day
 * \param date Pointer to new calendar date.
-* Calculate the date from the Julian day pg 63 
+*
+* Calculate the date from the Julian day  
 */
 void get_date (double JD, struct ln_date * date)
 {
@@ -150,7 +152,9 @@ void get_date (double JD, struct ln_date * date)
 }	
 	        
 /*! \fn double get_julian_from_sys ()
-* \brief get julian day from system time
+* \return Julian day.
+*
+* Calculate julian day from system time.
 */
 double get_julian_from_sys ()
 {
@@ -166,7 +170,9 @@ double get_julian_from_sys ()
 }
 
 /*! \fn void get_ln_date_from_sys (struct ln_date * date)
-* \brief get date from system date
+* \param date Pointer to store date.
+*
+* Calculate date from system date.
 */
 void get_ln_date_from_sys (struct ln_date * date)
 {
@@ -190,8 +196,10 @@ void get_ln_date_from_sys (struct ln_date * date)
 
 
 /*! \fn double get_julian_from_timet (time_t * time)
-* \brief get julian day from time_t
-* \ingroup calendar
+* \param time The time_t.
+* \return Julian day.
+*
+* Calculate julian day from time_t.
 */
 double get_julian_from_timet (time_t * time)
 {
@@ -216,8 +224,10 @@ double get_julian_from_timet (time_t * time)
 }
 
 /*! \fn void get_timet_from_julian (double JD, time_t * time)
-* \brief get time_t from julian day
-* \ingroup calendar
+* \param JD Julian day
+* \param time Pointer to store time_t
+*
+* Calculate time_t from julian day
 */
 void get_timet_from_julian (double JD, time_t * time)
 {

@@ -38,8 +38,8 @@ double calc_series (const struct vsop * data, int terms, double t)
 
 
 /*! \fn void vsop87_to_fk5 (struct ln_helio_posn * position, double t)
-* \param t Jullian Century
 * \param position Position to transform. 
+* \param JD Julian day
 *
 * Transform from VSOP87 to FK5. 
 * Equation 31.3 Pg 207.         

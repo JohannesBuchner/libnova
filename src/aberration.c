@@ -25,7 +25,7 @@ Copyright 2000 Liam Girdwood
 
 #define TERMS 36
 
-static struct arg arguments[TERMS] = {
+const static struct arg arguments[TERMS] = {
 /* L2  3  4  5  6  7  8  LL D  MM F */
 	0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -65,7 +65,7 @@ static struct arg arguments[TERMS] = {
 	0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0
 };	
 	   
-static struct XYZ x_coefficients[TERMS] = {
+const static struct XYZ x_coefficients[TERMS] = {
 	-1719914, -2, -25, 0,
 	6434, 141, 28007, -107,
 	715, 0, 0, 0,
@@ -104,7 +104,7 @@ static struct XYZ x_coefficients[TERMS] = {
 	5, 0, 0, 0
 };
 
-static struct XYZ y_coefficients[TERMS] = {
+const static struct XYZ y_coefficients[TERMS] = {
 	25, -13, 1578089, 156,
 	25697, -95, -5904, -130,
 	6, 0, -657, 0, 
@@ -143,7 +143,7 @@ static struct XYZ y_coefficients[TERMS] = {
 	0, 0, -5, 0
 };
 
-static struct XYZ z_coefficients[TERMS] = {
+const static struct XYZ z_coefficients[TERMS] = {
 	10, 32, 684185, -358,
 	11141, -48, -2559, -55,
 	-15, 0, -282, 0,
@@ -187,10 +187,10 @@ static struct XYZ z_coefficients[TERMS] = {
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
 *
-* Get equatorial coordinates with the effects of Aberration and nutation for a given Julian Day. 
-* Has low and high accuracy methods for equatorial positions using set_ln_accuracy().
-* Uses mean equatorial coordinates
-* Equ 22.1, 22.1, 22.3, 22.4
+* Calculate a stars equatorial coordinates from it's mean equatorial coordinates
+* with the effects of aberration and nutation for a given Julian Day. 
+*/
+/* Equ 22.1, 22.1, 22.3, 22.4
 */
 void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
@@ -249,9 +249,10 @@ void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
 *
-* Get ecliptical coordinates with the effects of Aberration and nutation for a given Julian Day. 
-* Uses mean ecliptical coordinates
-* Equ 22.2 pg 139
+* Calculate a stars ecliptical coordinates from it's mean ecliptical coordinates
+* with the effects of aberration and nutation for a given Julian Day. 
+*/
+/* Equ 22.2 pg 139
 */
 void get_ecl_aber
 	(struct ln_lnlat_posn * mean_position, 

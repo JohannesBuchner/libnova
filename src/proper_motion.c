@@ -32,9 +32,10 @@ Copyright 2000 Liam Girdwood
 * \param JD Julian Day.
 * \param position Pointer to store new object position.
 *
-* calculate equatorial coordinates with the effects of proper motion for a given Julian Day 
-* uses mean equatorial coordinates
-* Equ 20.2, 20.3, 20.4 pg 126 
+* Calculate a stars equatorial coordinates from it's mean coordinates with the
+* effects of proper motion for a given Julian Day. 
+*/ 
+/* Equ 20.2, 20.3, 20.4 pg 126 
 */
 void get_equ_pm 
 	(struct ln_equ_posn * mean_position, 
