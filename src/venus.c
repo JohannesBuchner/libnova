@@ -2228,3 +2228,17 @@ double get_venus_sdiam (double JD)
 	return (S);
 }
 	
+/*! \fn void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate Venus rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn venus;
+		
+	get_venus_helio_coords (JD, &venus);
+	get_rect_from_helio (&venus, JD, position);
+}

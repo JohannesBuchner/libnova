@@ -3807,7 +3807,7 @@ void get_jupiter_equ_coords
 	
 /*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param Position pointer to store heliocentric position
+* \param position Pointer to store heliocentric position
 *
 * Calculate Jupiters heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
@@ -4156,4 +4156,19 @@ double get_jupiter_pol_sdiam (double JD)
 	S = So / dist;
 	
 	return (S);
+}
+
+/*! \fn void get_jupiter_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate Jupiters rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_jupiter_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn jupiter;
+		
+	get_jupiter_helio_coords (JD, &jupiter);
+	get_rect_from_helio (&jupiter, JD, position);
 }

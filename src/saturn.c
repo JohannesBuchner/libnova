@@ -6488,7 +6488,7 @@ static const struct vsop saturn_radius_r5[RADIUS_R5] = {
 
 /*! \fn void get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param Position pointer to store position
+* \param position Pointer to store position
 *
 * Calculates Saturn's equatorial position for given julian day.
 * This function includes calculations for planetary aberration and refers
@@ -6546,7 +6546,7 @@ void get_saturn_equ_coords
 	
 /*! \fn void get_saturn_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param Position pointer to store heliocentric position
+* \param position Pointer to store heliocentric position
 *
 * Calculate Saturns heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
@@ -6895,4 +6895,20 @@ double get_saturn_pol_sdiam (double JD)
 	S = So / dist;
 	
 	return (S);
+}
+
+
+/*! \fn void get_saturn_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate Saturns rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_saturn_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn saturn;
+		
+	get_saturn_helio_coords (JD, &saturn);
+	get_rect_from_helio (&saturn, JD, position);
 }

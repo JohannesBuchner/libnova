@@ -2754,7 +2754,7 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 	
 	/* change to fk5 reference frame */
 	vsop87_to_fk5 (position, JD);
-
+	
 	/* save cache */
 	cJD = JD;
 	cL = position->L;
@@ -2807,4 +2807,19 @@ void get_earth_centre_dist (float height, double latitude, double *p_sin_o, doub
      *p_cos_o = cos (u) + (height / 6378140) * cos (latitude);
 }
      
+/*! \fn void get_earth_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate the Earths rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_earth_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn earth;
+		
+	get_earth_helio_coords (JD, &earth);
+	get_rect_from_helio (&earth, JD, position);
+}
+
      

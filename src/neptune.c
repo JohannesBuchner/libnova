@@ -2122,7 +2122,7 @@ static const struct vsop neptune_radius_r4[RADIUS_R4] = {
 
 /*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param Position pointer to store position
+* \param position Pointer to store position
 *
 * Calculates Neptune's equatorial position for given julian day.
 * This function includes calculations for planetary aberration and refers
@@ -2181,7 +2181,7 @@ void get_neptune_equ_coords
 
 /*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param Position pointer to store heliocentric position
+* \param position Pointer to store heliocentric position
 *
 * Calculate Neptunes heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
@@ -2351,8 +2351,7 @@ double get_neptune_disk (double JD)
 }
 
 /*! \fn double get_neptune_phase (double JD);
-* \brief Calculate the phase angle of Neptune (Sun - Neptune - Earth)
-* \param Julian day
+* \param JD Julian day
 * \return Phase angle of Neptune (degrees)
 *
 * Calculates the phase angle of Neptune, that is, the angle Sun -
@@ -2510,3 +2509,18 @@ double get_neptune_sdiam (double JD)
 	return (S);
 }
 	
+/*! \fn void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate Neptunes rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn neptune;
+		
+	get_neptune_helio_coords (JD, &neptune);
+	get_rect_from_helio (&neptune, JD, position);
+}
+

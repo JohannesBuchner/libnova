@@ -7257,7 +7257,7 @@ static const struct vsop mercury_radius_r5[RADIUS_R5] = {
 
 /*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param Position pointer to store position 
+* \param position Pointer to store position 
 *
 * Calculates Mercury's equatorial position for given julian day.
 * This function includes calculations for planetary aberration and refers
@@ -7316,7 +7316,7 @@ void get_mercury_equ_coords
 
 /*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param Position pointer to store heliocentric position
+* \param position Pointer to store heliocentric position
 *
 * Calculate Mercury heliocentric (refered to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
@@ -7655,3 +7655,17 @@ double get_mercury_sdiam (double JD)
 	return (S);
 }
 	
+/*! \fn void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
+* \param JD Julian day.
+* \param position ointer to return position
+*
+* Calculate Mercurys rectangular heliocentric coordinates for the
+* given Julian day. Coordinates are in AU.
+*/
+void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
+{
+	struct ln_helio_posn mercury;
+		
+	get_mercury_helio_coords (JD, &mercury);
+	get_rect_from_helio (&mercury, JD, position);
+}
