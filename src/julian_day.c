@@ -308,3 +308,17 @@ double get_julian_local_date(struct ln_date* date)
 	loctime = localtime(&curtime);
 	JD += ((double)loctime->tm_gmtoff) / 24.0;
 }
+
+/*! \fn void get_local_date (double JD, struct ln_date * date)
+* \param JD Julian day
+* \param date Pointer to new calendar date.
+*
+* Calculate the local date from the Julian day  
+*/
+void get_local_date (double JD, struct ln_date * date)
+{
+	/* add timezone to JD */
+	JD += (double)timezone / (24 * 60 * 60);
+	
+	get_date (JD, date);
+}

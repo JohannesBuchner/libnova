@@ -175,9 +175,11 @@ struct lnh_hrz_posn
 
 struct lnh_lnlat_posn
 {
-    struct ln_dms lng; /*!< longitude. Object longitude.
+    struct ln_dms lng; /*!< longitude. Object longitude.<p>
+		NOTE: IAU changed from positive west to negative west longitude
+	    in 1982, however we will currently use the older convention of:- 
 			 Negative East of Greenwich, 
-			 positive West of Greenwich */
+			 Positive West of Greenwich */
     struct ln_dms lat; /*!< latitude. Object latitude */
 };
 
@@ -206,9 +208,9 @@ struct ln_equ_posn
 
 struct ln_hrz_posn
 {
-    double az;	/*!< AZ. Object azimuth. 
+    double az;	/*!< AZ. Object azimuth. <p>
 		  0 deg = South, 90 deg = West, 180 deg = Nord, 270 deg = East */
-    double alt;	/*!< ALT. Object altitude. 0 deg = horizon, 90 deg = zenit, -90 deg = nadir */
+    double alt;	/*!< ALT. Object altitude. <p> 0 deg = horizon, 90 deg = zenit, -90 deg = nadir */
 };
 
 
@@ -222,9 +224,11 @@ struct ln_hrz_posn
 
 struct ln_lnlat_posn
 {
-    double lng; /*!< longitude. Object longitude. 
-		  Negative East of Greenwinch, 
-		  positive West of Greenwinch */
+    double lng; /*!< longitude. Object longitude. <p>
+	NOTE: IAU changed from positive west to negative west longitude
+	    in 1982, however we will currently use the older convention of:- 
+			 Negative East of Greenwich, 
+			 Positive West of Greenwich */
     double lat; /*!< latitude. Object latitude */
 };
 
@@ -356,6 +360,12 @@ double get_julian_day (struct ln_date * date);
 * \brief Calculate the date from the julian day.
 */
 void get_date (double JD, struct ln_date * date);
+
+/*! \fn void get_local_date (double JD, struct ln_date * date)
+* \ingroup calender
+* \brief Calculate the local date from the Julian day  
+*/
+void get_local_date (double JD, struct ln_date * date);
 
 /*! \fn unsigned int get_day_of_week (struct ln_date * date)
 * \ingroup calendar
