@@ -26,7 +26,11 @@ Copyright 2000 Liam Girdwood  */
 #include <stdlib.h>
 #include <libnova/libnova.h>
 
-#define SYS_TIME
+/*
+ * Define DATE or SYS_DATE for testing VSOP87 theory with other JD
+ */
+//#define DATE
+//#define SYS_DATE
 
 double compare_results (double calc, double expect, double tolerance)
 {
@@ -149,6 +153,7 @@ int transform_test(void)
 	hobserver.lng.degrees = 282;
 	hobserver.lng.minutes = 56;
 	hobserver.lng.seconds = 4;
+	hobserver.lat.neg = 0;
 	hobserver.lat.degrees = 38;
 	hobserver.lat.minutes = 55;
 	hobserver.lat.seconds = 17;
@@ -157,9 +162,10 @@ int transform_test(void)
 	hobject.ra.hours = 23;
 	hobject.ra.minutes = 9;
 	hobject.ra.seconds = 16.641;
-	hobject.dec.degrees = -6;
-	hobject.dec.minutes = -43;
-	hobject.dec.seconds = -11.61;
+	hobject.dec.neg = 1;
+	hobject.dec.degrees = 6;
+	hobject.dec.minutes = 43;
+	hobject.dec.seconds = 11.61;
 
 	/* date and time */
 	date.years = 1987;
@@ -185,6 +191,7 @@ int transform_test(void)
 	hpollux.ra.hours = 7;
 	hpollux.ra.minutes = 45;
 	hpollux.ra.seconds = 18.946;
+	hpollux.dec.neg = 0;
 	hpollux.dec.degrees = 28;
 	hpollux.dec.minutes = 1;
 	hpollux.dec.seconds = 34.26;
@@ -249,11 +256,12 @@ int aberration_test (void)
 	
 	/* object position */
 	hobject.ra.hours = 2;
-	hobject.ra.minutes = 46;
-	hobject.ra.seconds = 11.331;
+	hobject.ra.minutes = 44;
+	hobject.ra.seconds = 12.9747;
+	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
-	hobject.dec.minutes = 20;
-	hobject.dec.seconds = 54.54;
+	hobject.dec.minutes = 13;
+	hobject.dec.seconds = 39.896;
 
 	/* date */
 	date.years = 2028;
@@ -267,8 +275,8 @@ int aberration_test (void)
 
 	ln_hequ_to_equ (&hobject, &object);
 	ln_get_equ_aber (&object, JD, &pos);
-	failed += test_result ("(Aberration) RA  ", pos.ra, 41.55557139, 0.00000001);
-	failed += test_result ("(Aberration) DEC  ", pos.dec, 49.35032196, 0.00000001);
+	failed += test_result ("(Aberration) RA  ", pos.ra, 41.06238352, 0.00000001);
+	failed += test_result ("(Aberration) DEC  ", pos.dec, 49.22962359, 0.00000001);
 	return failed;
 }
 
@@ -305,10 +313,12 @@ int apparent_position_test(void)
 	/* objects position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
-	hobject.ra.seconds = 11.986;
+	hobject.ra.seconds = 12.9747;
+	
+	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
-	hobject.dec.seconds = 42.48;
+	hobject.dec.seconds = 39.896;
 
 	/* proper motion of object */
 	hpm.ra.hours = 0;
@@ -323,8 +333,8 @@ int apparent_position_test(void)
 	ln_hequ_to_equ (&hpm, &pm);
 	ln_get_apparent_posn (&object, &pm, JD, &pos);
 	
-	failed += test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55553862, 0.00000001);
-	failed += test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35034910, 0.00000001);
+	failed += test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55967167, 0.00000001);
+	failed += test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35105872, 0.00000001);
 	return failed;
 }
 
@@ -338,7 +348,7 @@ int vsop87_test(void)
 	int failed = 0;
 	
 #ifdef DATE
-	struct ln_date date, pdate;
+	struct ln_date date;
 	date.years = 2003;
 	date.months = 1;
 	date.days = 29; 
