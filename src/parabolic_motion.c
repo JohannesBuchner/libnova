@@ -62,7 +62,7 @@ double get_par_true_anomaly (double q, double t)
 	s = solve_barker (q,t);
 	v = 2.0 * atan (s);
 	
-	return (v);
+	return (rad_to_deg(v));
 }
 
 /*! \fn double get_par_radius_vector (double q, double t);
@@ -162,7 +162,6 @@ void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rec
 	get_earth_helio_coords (JD, &earth);
 	
 	get_rect_from_helio (&earth, JD, &e_posn);
-	printf("E %f %f %f\n",e_posn.X,e_posn.Y,e_posn.Z);
 	posn->X = p_posn.X - e_posn.X;
 	posn->Y = p_posn.Y - e_posn.Y;
 	posn->Z = p_posn.Z - e_posn.Z;
@@ -277,7 +276,6 @@ double get_par_body_phase_angle (double JD, struct ln_par_orbit * orbit)
 	d = get_par_body_solar_dist (JD, orbit);
 
 	phase = (r * r + d * d - R * R) / ( 2.0 * r * d );
-	phase = deg_to_rad(phase);	
 	phase = range_degrees (rad_to_deg (acos (phase)));
 	
 	return (phase);
@@ -294,7 +292,7 @@ double get_par_body_elong (double JD, struct ln_par_orbit * orbit)
 {
 	double r,R,d;
 	double t;
-	double phase;
+	double elong;
 	
 	/* time since perihelion */
 	t = JD - orbit->JD;
@@ -306,11 +304,10 @@ double get_par_body_elong (double JD, struct ln_par_orbit * orbit)
 	R = get_earth_sun_dist (JD);
 	d = get_par_body_solar_dist (JD, orbit);
 
-	phase = (R * R + d * d - r * r) / ( 2.0 * R * d );
-	phase = deg_to_rad(phase);	
-	phase = range_degrees (rad_to_deg (acos (phase)));
+	elong = (R * R + d * d - r * r) / ( 2.0 * R * d );
+	elong = range_degrees (rad_to_deg (acos (elong)));
 	
-	return (phase);
+	return (elong);
 }
 
 

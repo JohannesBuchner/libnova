@@ -452,6 +452,37 @@ double get_ell_body_phase_angle (double JD, struct ln_ell_orbit * orbit)
 	return (phase);
 }
 
+
+/*! \fn double get_ell_body_elong (double JD, struct ln_ell_orbit * orbit);
+* \param JD Julian day
+* \param orbit Orbital parameters
+* \return Elongation to the Sun.
+*
+* Calculate the bodies elongation to the Sun.. 
+*/
+double get_ell_body_elong (double JD, struct ln_ell_orbit * orbit)
+{
+	double r,R,d;
+	double t;
+	double elong;
+	
+	/* time since perihelion */
+	t = JD - orbit->JD;
+	
+	/* get radius vector */
+	r = get_ell_radius_vector (orbit->q, t);
+	
+	/* get solar and Earth-Sun distances */
+	R = get_earth_sun_dist (JD);
+	d = get_ell_body_solar_dist (JD, orbit);
+
+	elong = (R * R + d * d - r * r) / ( 2.0 * R * d );
+	elong = range_degrees (rad_to_deg (acos (elong)));
+	
+	return (elong);
+}
+
+
 /*! \fn double get_ell_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_ell_orbit * orbit, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
