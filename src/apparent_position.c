@@ -26,7 +26,7 @@ Copyright 2000 Liam Girdwood
 ** Apparent place of an Object 
 */
 
-/*! \fn void get_apparent_position (struct ln_equ_position * mean_position, struct ln_equ_position * proper_motion, double JD, struct ln_equ_position * position)
+/*! \fn void get_apparent_posn (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object
 * \param proper_motion Proper motion of object
 * \param JD Julian Day
@@ -35,17 +35,17 @@ Copyright 2000 Liam Girdwood
 * Get the apparent position of an object from its mean position 
 * Uses mean equatorial coordinates 
 */
-void get_apparent_position 
-	(struct ln_equ_position * mean_position, 
-	struct ln_equ_position * proper_motion, 
+void get_apparent_posn 
+	(struct ln_equ_posn * mean_position, 
+	struct ln_equ_posn * proper_motion, 
 	double JD,
-	struct ln_equ_position * position)
+	struct ln_equ_posn * position)
 {
-	struct ln_equ_position proper_position;
-	struct ln_equ_position aberration_position;
+	struct ln_equ_posn proper_position;
+	struct ln_equ_posn aberration_position;
 	
-	get_proper_motion_equatorial (mean_position, proper_motion, JD, &proper_position);
-	get_aberration_equatorial (&proper_position, JD, &aberration_position);
-	get_precession_equatorial (&aberration_position, JD, position);
+	get_equ_pm (mean_position, proper_motion, JD, &proper_position);
+	get_equ_aber (&proper_position, JD, &aberration_position);
+	get_equ_prec (&aberration_position, JD, position);
 }
 

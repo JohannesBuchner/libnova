@@ -20,7 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h"
 #include <math.h>
 
-/*! \fn void get_geocentric_from_heliocentric (struct ln_heliocentric_position *object, double JD, struct ln_geocentric_position * position); 
+/*! \fn void get_geo_from_helio (struct ln_helcnt_posn *object, double JD, struct ln_geocnt_posn * position); 
 * \param object Object heliocentric coordinates
 * \param JD Julian Day
 * \param position Pointer to store new position
@@ -28,10 +28,10 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * Transform heliocentric coordinates into geocentric coordinates
 * Equ 37.1 Pg 264
 */
-void get_geocentric_from_heliocentric 
-	(struct ln_heliocentric_position *object,  
+void get_geo_from_helio 
+	(struct ln_helcnt_posn *object,  
 	double JD,
-	struct ln_geocentric_position * position)
+	struct ln_geocnt_posn * position)
 {
 	double obliquity;
 	double longitude;
@@ -59,7 +59,7 @@ void get_geocentric_from_heliocentric
 	position->Z = object->R * (sin_L * cos_B * sin_e + sin_B * cos_e);
 }
 
-/*! \fn void get_horizontal_from_equatorial (struct ln_equ_position * object, struct ln_long_lat_position * observer, double JD, struct ln_horiz_position * position)
+/*! \fn void get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -69,15 +69,15 @@ void get_geocentric_from_heliocentric
 * Equ 12.1,12.2 pg 88 
 *
 * TODO:
-* Transform horizental coordinates to galactic coordinates.
+* Transform horizontal coordinates to galactic coordinates.
 * Transfrom equatorial coordinates to galactic coordinates.
 */
 
-void get_horizontal_from_equatorial 
-	(struct ln_equ_position * object, 
-	struct ln_long_lat_position * observer, 
+void get_hrz_from_equ 
+	(struct ln_equ_posn * object, 
+	struct ln_lnlat_posn * observer, 
 	double JD, 
-	struct ln_horiz_position * position)
+	struct ln_hrz_posn * position)
 {
 	double H, ra, longitude, latitude, declination, A, h, sidereal;
 
@@ -111,7 +111,7 @@ void get_horizontal_from_equatorial
 	position->az = rad_to_deg (A);
 }
 
-/*! \fn void get_equatorial_from_horizontal (struct ln_horiz_position * object, struct ln_long_lat_position * observer, double JD, struct ln_equ_position * position)
+/*! \fn void get_equ_from_hrz (struct ln_hrz_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -119,11 +119,11 @@ void get_horizontal_from_equatorial
 *
 * Transform horizontal coordinates into equatorial coordinates 
 */
-void get_equatorial_from_horizontal 
-	(struct ln_horiz_position * object, 
-	struct ln_long_lat_position * observer, 
+void get_equ_from_hrz 
+	(struct ln_hrz_posn * object, 
+	struct ln_lnlat_posn * observer, 
 	double JD,
-	struct ln_equ_position * position)
+	struct ln_equ_posn * position)
 	
 {
 	double H, ra, longitude, declination, latitude, A, h, sidereal;
@@ -153,7 +153,7 @@ void get_equatorial_from_horizontal
 	position->dec = rad_to_deg (declination);
 }
 
-/*! \fn void get_equatorial_from_ecliptical (struct ln_long_lat_position * object, double JD, struct ln_equ_position * position)
+/*! \fn void get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -162,10 +162,10 @@ void get_equatorial_from_horizontal
 * get equatorial coordinates from ecliptical coordinates 
 * Equ 12.3, 12.4 pg 89 
 */
-void get_equatorial_from_ecliptical 
-	(struct ln_long_lat_position * object,
+void get_equ_from_ecl 
+	(struct ln_lnlat_posn * object,
 	 double JD,
-	 struct ln_equ_position * position)
+	 struct ln_equ_posn * position)
 	 
 {
 	double ra, declination, nutation_longitude, nutation_obliquity, nutation_ecliptic, longitude, latitude;
@@ -200,7 +200,7 @@ void get_equatorial_from_ecliptical
 	position->dec = rad_to_deg(declination);
 }
 
-/*! \fn void get_ecliptical_from_equatorial (struct ln_equ_position * object, double JD, struct ln_long_lat_position * position)
+/*! \fn void get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
 * \param object Object coordinates.
 * \param observer Observer cordinates.
 * \param JD Julian day
@@ -209,10 +209,10 @@ void get_equatorial_from_ecliptical
 * get ecliptical cordinates from equatorial coordinates 
 * Equ 12.1, 12.2 Pg 88 
 */
-void get_ecliptical_from_equatorial 
-	(struct ln_equ_position * object, 
+void get_ecl_from_equ 
+	(struct ln_equ_posn * object, 
 	double JD,
-	struct ln_long_lat_position * position)
+	struct ln_lnlat_posn * position)
 	
 {
 	double ra, declination, nutation_longitude, nutation_obliquity, nutation_ecliptic, latitude, longitude;

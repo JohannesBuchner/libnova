@@ -290,61 +290,61 @@ void add_hms (struct ln_hms * source, struct ln_hms * dest)
     dest->hours += source->hours;
 }
 
-/*! \fn void hequ_to_equ (struct lnh_equ_position * hpos, struct ln_equ_position * pos)
+/*! \fn void hequ_to_equ (struct lnh_equ_posn * hpos, struct ln_equ_posn * pos)
 * \brief human readable equatorial position to double equatorial position
 * \ingroup conversion
 */
-void hequ_to_equ (struct lnh_equ_position * hpos, struct ln_equ_position * pos)
+void hequ_to_equ (struct lnh_equ_posn * hpos, struct ln_equ_posn * pos)
 {
 	pos->ra = hms_to_deg (&hpos->ra);
 	pos->dec = dms_to_deg (&hpos->dec);
 }
 	
-/*! \fn void equ_to_hequ (struct ln_equ_position * pos, struct lnh_equ_position * hpos)
+/*! \fn void equ_to_hequ (struct ln_equ_posn * pos, struct lnh_equ_posn * hpos)
 * \brief human double equatorial position to human readable equatorial position
 * \ingroup conversion
 */
-void equ_to_hequ (struct ln_equ_position * pos, struct lnh_equ_position * hpos)
+void equ_to_hequ (struct ln_equ_posn * pos, struct lnh_equ_posn * hpos)
 {
 	deg_to_hms (pos->ra, &hpos->ra);
 	deg_to_dms (pos->dec, &hpos->dec);
 }
 	
-/*! \fn void hhoriz_to_horiz (struct lnh_horiz_position * hpos, struct ln_horiz_position * pos)
+/*! \fn void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos)
 * \brief human readable horizontal position to double horizontal position
 * \ingroup conversion
 */
-void hhoriz_to_horiz (struct lnh_horiz_position * hpos, struct ln_horiz_position * pos)
+void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos)
 {
 	pos->alt = dms_to_deg (&hpos->alt);
 	pos->az = dms_to_deg (&hpos->az);
 }
 
-/*! \fn void horiz_to_hhoriz (struct ln_horiz_position * pos, struct lnh_horiz_position * hpos)
+/*! \fn void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 * \brief double horizontal position to human readable horizontal position
 * \ingroup conversion
 */
-void horiz_to_hhoriz (struct ln_horiz_position * pos, struct lnh_horiz_position * hpos)
+void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 {
 	deg_to_dms (pos->alt, &hpos->alt);
 	deg_to_dms (pos->az, &hpos->az);
 }
 	
-/*! \fn void hlong_lat_to_lng_lat (struct lnh_long_lat_position * hpos, struct ln_long_lat_position * pos)
+/*! \fn void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
 * \ingroup conversion
 */
-void hlong_lat_to_long_lat (struct lnh_long_lat_position * hpos, struct ln_long_lat_position * pos)
+void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 {
 	pos->lng = dms_to_deg (&hpos->lng);
 	pos->lat = dms_to_deg (&hpos->lat);
 }
 	
-/*! \fn void long_lat_to_hlong_lat (struct ln_long_lat_position * pos, struct lnh_long_lat_position * hpos)
+/*! \fn void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 * \brief double long/lat position to human readable long/lat position
 * \ingroup conversion
 */
-void long_lat_to_hlong_lat (struct ln_long_lat_position * pos, struct lnh_long_lat_position * hpos)
+void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 {
 	deg_to_dms (pos->lng, &hpos->lng);
 	deg_to_dms (pos->lat, &hpos->lat);

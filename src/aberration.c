@@ -182,7 +182,7 @@ static struct XYZ z_coefficients[TERMS] = {
 	0, 0, -2, 0
 };
 
-/*! \fn void get_aberration_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position)
+/*! \fn void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
@@ -192,7 +192,7 @@ static struct XYZ z_coefficients[TERMS] = {
 * Uses mean equatorial coordinates
 * Equ 22.1, 22.1, 22.3, 22.4
 */
-void get_aberration_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position)
+void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
 	double mean_ra, mean_dec, delta_ra, delta_dec;
 	double L2, L3, L4, L5, L6, L7, L8, LL, D, MM , F, T, X, Y, Z, A, c;
@@ -244,7 +244,7 @@ void get_aberration_equatorial (struct ln_equ_position * mean_position, double J
 	position->dec = rad_to_deg(mean_dec + delta_dec);
 }
 
-/*! \fn void get_aberration_ecliptical (struct ln_long_lat_position * mean_position, double JD, struct ln_long_lat_position * position)
+/*! \fn void get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 * \param mean_position Mean position of object
 * \param JD Julian Day
 * \param position Pointer to store new object position. 
@@ -253,14 +253,14 @@ void get_aberration_equatorial (struct ln_equ_position * mean_position, double J
 * Uses mean ecliptical coordinates
 * Equ 22.2 pg 139
 */
-void get_aberration_ecliptical 
-	(struct ln_long_lat_position * mean_position, 
+void get_ecl_aber
+	(struct ln_lnlat_posn * mean_position, 
 	double JD,
-	struct ln_long_lat_position *position)
+	struct ln_lnlat_posn *position)
 	
 {
 	double delta_lng, delta_lat, mean_lng, mean_lat, e, t, k, true_longitude, T, T2, JDE;
-	struct ln_heliocentric_position sol_position;
+	struct ln_helcnt_posn sol_position;
 
 	/* constant of aberration */
 	k = deg_to_rad(20.49552 *  (1.0 / 3600.0));

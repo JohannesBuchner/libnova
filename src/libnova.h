@@ -20,8 +20,10 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \section intro Introduction
 * libnova is a general purpose, double precision, astronomical calculation library.
 *
+* libnova is the calculation engine used by the <A href="http://nova.sf.net">Nova</A> project and most importantly, is free software.
+*
 * \section features Features
-* This version of libnova can calculate:
+* The current version of libnova can calculate:
 *
 * - Aberration
 * - Nutation
@@ -35,13 +37,22 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Coordinate Transformations
 * - Planetary Positions (Mercury - Neptune using VSOP87)
 * - Planetary Magnitude, illuminated disk and phase angle.
+* - Lunar Position, phase.
+*
+* \section download Download
+* The latest version of libnova is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
+*
+* \section cvs CVS
+* The latest CVS version of libnova is available via CVS <A href="http://sf.net/cvs/?group_id=57697">here.</A>
 *
 * \section licence Licence
-* libnova is release under the LGPL.
+* libnova is released under the <A href="http://www.gnu.org">GNU</A> LGPL.
 *
 * \section thanks Thanks
 * Thanks to Jean Meeus for most of the algorithms used in this library.
 * From his book "Astronomical Algorithms".
+* 
+* Also thanks to Sourceforge for hosting this project. <A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=57697&amp;type=5" width="210" height="62" border="0" alt="SourceForge Logo"></A> 
 */
 
 #ifndef LN_LIBNOVA_H
@@ -91,84 +102,84 @@ struct ln_hms
     double seconds;	/*!< Seconds. Valid 0 - 59.9999... */
 };
 
-/*! \struct lnh_equ_position
+/*! \struct lnh_equ_posn
 ** \brief Human readable Equatorial Coordinates.
 */
 
-struct lnh_equ_position
+struct lnh_equ_posn
 {
     struct ln_hms ra;	/*!< RA. Object right ascension.*/
     struct ln_dms dec;	/*!< DEC. Object declination */
 };
 
-/*! \struct lnh_horiz_position
+/*! \struct lnh_hrz_posn
 ** \brief Human readable Horizontal Coordinates.
 */
 
-struct lnh_horiz_position
+struct lnh_hrz_posn
 {
     struct ln_dms az;	/*!< AZ. Object azimuth. */
     struct ln_dms alt;	/*!< ALT. Object altitude. */
 };
 
 
-/*! \struct lnh_long_lat_position
+/*! \struct lnh_lnlat_posn
 ** \brief Human readable Longitude and Latitude.
 */
 
-struct lnh_long_lat_position
+struct lnh_lnlat_posn
 {
     struct ln_dms lng; /*!< longitude. Object longitude */
     struct ln_dms lat; /*!< latitude. Object latitude */
 };
 
 
-/*! \struct ln_equ_position
+/*! \struct ln_equ_posn
 ** \brief Equatorial Coordinates.
 */
 
-struct ln_equ_position
+struct ln_equ_posn
 {
     double ra;	/*!< RA. Object right ascension.*/
     double dec;	/*!< DEC. Object declination */
 };
 
-/*! \struct ln_horiz_position
+/*! \struct ln_hrz_posn
 ** \brief Horizontal Coordinates.
 */
 
-struct ln_horiz_position
+struct ln_hrz_posn
 {
     double az;	/*!< AZ. Object azimuth. */
     double alt;	/*!< ALT. Object altitude. */
 };
 
 
-/*! \struct ln_long_lat_position
+/*! \struct ln_lnlat_posn
 ** \brief Longitude and Latitude.
 */
 
-struct ln_long_lat_position
+struct ln_lnlat_posn
 {
     double lng; /*!< longitude. Object longitude */
     double lat; /*!< latitude. Object latitude */
 };
 
 
-/*! \struct ln_heliocentric_position
+/*! \struct ln_helcnt_posn
 * \brief heliocentric position 
 */
-struct ln_heliocentric_position
+struct ln_helcnt_posn
 {
 	double L;	/*!< Heliocentric longitude */
 	double B;	/*!< Heliocentric latitude */
 	double R;	/*!< Heliocentric radius vector */
 };
 
-/*! \struct ln_geocentric_position
+/*! \struct ln_geocnt_posn
 * \brief geocentric position
 */
-struct ln_geocentric_position
+struct ln_geocnt_posn
 {
 	double X;	/*!< Geocentric X coordinate */
 	double Y;	/*!< Geocentric Y coordinate */
@@ -390,41 +401,41 @@ double dms_to_rad (struct ln_dms * dms);
 */
 void rad_to_dms (double radians, struct ln_dms * dms);
 
-/*! \fn void hequ_to_equ (struct lnh_equ_position * hpos, struct ln_equ_position * pos)
+/*! \fn void hequ_to_equ (struct lnh_equ_posn * hpos, struct ln_equ_posn * pos)
 * \brief human readable equatorial position to double equatorial position
 * \ingroup conversion
 */
-void hequ_to_equ (struct lnh_equ_position * hpos, struct ln_equ_position * pos);
+void hequ_to_equ (struct lnh_equ_posn * hpos, struct ln_equ_posn * pos);
 	
-/*! \fn void equ_to_hequ (struct ln_equ_position * pos, struct lnh_equ_position * hpos)
+/*! \fn void equ_to_hequ (struct ln_equ_posn * pos, struct lnh_equ_posn * hpos)
 * \brief human double equatorial position to human readable equatorial position
 * \ingroup conversion
 */
-void equ_to_hequ (struct ln_equ_position * pos, struct lnh_equ_position * hpos);
+void equ_to_hequ (struct ln_equ_posn * pos, struct lnh_equ_posn * hpos);
 	
-/*! \fn void hhoriz_to_horiz (struct lnh_horiz_position * hpos, struct ln_horiz_position * pos)
+/*! \fn void hhoriz_to_horiz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos)
 * \brief human readable horizontal position to double horizontal position
 * \ingroup conversion
 */
-void hhoriz_to_horiz (struct lnh_horiz_position * hpos, struct ln_horiz_position * pos);
+void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos);
 	
-/*! \fn void horiz_to_hhoriz (struct ln_horiz_position * pos, struct lnh_horiz_position * hpos)
+/*! \fn void horiz_to_hhoriz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 * \brief double horizontal position to human readable horizontal position
 * \ingroup conversion
 */
-void horiz_to_hhoriz (struct ln_horiz_position * pos, struct lnh_horiz_position * hpos);
+void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos);
 	
-/*! \fn void hlong_lat_to_lng_lat (struct lnh_long_lat_position * hpos, struct ln_long_lat_position * pos)
+/*! \fn void hlong_lat_to_lng_lat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
 * \ingroup conversion
 */
-void hlong_lat_to_long_lat (struct lnh_long_lat_position * hpos, struct ln_long_lat_position * pos);
+void hlnglat_to_lnglat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos);
 	
-/*! \fn void long_lat_to_hlong_lat (struct ln_long_lat_position * pos, struct lnh_long_lat_position * hpos)
+/*! \fn void long_lat_to_hlong_lat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 * \brief double long/lat position to human readable long/lat position
 * \ingroup conversion
 */
-void long_lat_to_hlong_lat (struct ln_long_lat_position * pos, struct lnh_long_lat_position * hpos);
+void lnglat_to_hlnglat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos);
 	
 /*! \fn void add_secs_hms (struct ln_hms * hms, double seconds)
 * \brief add seconds to hms 
@@ -453,79 +464,79 @@ double range_radians (double angle);
 /*! \defgroup transform Transformation of Coordinates using apparent positions 
 */
 
-/*! \fn void get_horizontal_from_equatorial (struct ln_equ_position * object, struct ln_long_lat_position * observer, double JD, struct ln_horiz_position *position);
+/*! \fn void get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn *position);
 * \brief get horizontal coordinates from equatorial coordinates 
 * \ingroup transform 
 */
 /* Equ 12.5,12.6 pg 88 */
-void get_horizontal_from_equatorial 
-	 (struct ln_equ_position * object, 
-	 struct ln_long_lat_position * observer, 
-	 double JD, struct ln_horiz_position *position);
+void get_hrz_from_equ 
+	 (struct ln_equ_posn * object, 
+	 struct ln_lnlat_posn * observer, 
+	 double JD, struct ln_hrz_posn *position);
 
-/*! \fn void get_equatorial_from_ecliptical (struct ln_long_lat_position * object, double JD, struct ln_equ_position * position);
+/*! \fn void get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position);
 * \brief get equatorial coordinates from ecliptical coordinates 
 * \ingroup transform
 */
 /* Equ 12.3, 12.4 pg 89 */
-void get_equatorial_from_ecliptical 
-	(struct ln_long_lat_position * object, 
+void get_equ_from_ecl 
+	(struct ln_lnlat_posn * object, 
 	double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn void get_ecliptical_from_equatorial (struct ln_equ_position * object, double JD, struct ln_long_lat_position * position);
+/*! \fn void get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position);
 * \brief get ecliptical cordinates from equatorial coordinates 
 * \ingroup transform
 */
 /* Equ 12.1, 12.2 Pg 88 */
-void get_ecliptical_from_equatorial 
-	(struct ln_equ_position * object,
+void get_ecl_from_equ 
+	(struct ln_equ_posn * object,
 	double JD,
-	struct ln_long_lat_position * position);
+	struct ln_lnlat_posn * position);
 
-/*! \fn void get_equatorial_from_horizontal (struct ln_horiz_position *object, struct ln_long_lat_position * observer, double JD, struct ln_equ_position * position); 
+/*! \fn void get_equ_from_hrz (struct ln_hrz_posn *object, struct ln_lnlat_posn * observer, double JD, struct ln_equ_posn * position); 
 * \brief get equatorial coordinates from horizontal coordinates  
 * \ingroup transform
 */
 /* Pg 89 */
-void get_equatorial_from_horizontal 
-	(struct ln_horiz_position *object, 
-	struct ln_long_lat_position * observer, 
+void get_equ_from_hrz 
+	(struct ln_hrz_posn *object, 
+	struct ln_lnlat_posn * observer, 
 	double JD,
-	struct ln_equ_position * position); 
+	struct ln_equ_posn * position); 
 
-/*! \fn void get_geocentric_from_heliocentric (struct ln_heliocentric_position *object, double JD, struct ln_geocentric_position * position); 
+/*! \fn void get_geo_from_helio (struct ln_helcnt_posn *object, double JD, struct ln_geocnt_posn * position); 
 * \brief get geocentric coordinates from heliocentric coordinates  
 * \ingroup transform
 */
 /* Pg ?? */
-void get_geocentric_from_heliocentric 
-	(struct ln_heliocentric_position *object,  
+void get_geo_from_helio 
+	(struct ln_helcnt_posn *object,  
 	double JD,
-	struct ln_geocentric_position * position); 
+	struct ln_geocnt_posn * position); 
 
 
 
 /*! \defgroup VSOP87 VSOP87 Theory
 */
 
-/*! \fn void vsop87_to_fk5 (struct ln_heliocentric_position * position, double JD);
+/*! \fn void vsop87_to_fk5 (struct ln_helcnt_posn * position, double JD);
 * \ingroup VSOP87
 * \brief transform from VSOP87 to FK5 
 */
 /* equation 31.3 Pg 207         */
 /* JD Julian Day */
-void vsop87_to_fk5 (struct ln_heliocentric_position * position, double JD);
+void vsop87_to_fk5 (struct ln_helcnt_posn * position, double JD);
 
 
 /*! \defgroup earth Earth
 */
 
-/*! \fn void get_earth_centre_distance (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
+/*! \fn void get_earth_centre_dist (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
 * \ingroup earth
-* \brief get Earth globe centre distance
+* \brief get Earth globe centre dist
 */
-void get_earth_centre_distance (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
+void get_earth_centre_dist (float height, double latitude, double * p_sin_angle, double * p_cos_angle);
 
 /*! \defgroup nutation Nutation
 */
@@ -539,86 +550,86 @@ void get_nutation (double JD, double * longitude, double * obliquity, double * e
 /*! \defgroup apparent Apparent position of an Object
 */
 
-/*! \fn void get_apparent_position (struct ln_equ_position * mean_position, struct ln_equ_position * proper_motion, double JD, struct ln_equ_position * position);
+/*! \fn void get_apparent_posn (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
 * \brief get the apparent position of an object from its mean position, uses mean equatorial coordinates 
 * \ingroup apparent
 */
-void get_apparent_position 
-	(struct ln_equ_position * mean_position, 
-	struct ln_equ_position * proper_motion, 
+void get_apparent_posn 
+	(struct ln_equ_posn * mean_position, 
+	struct ln_equ_posn * proper_motion, 
 	double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
 
 /*! \defgroup precession Precession.
 */
 
-/*! \fn void get_precession_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position);
+/*! \fn void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position);
 * \brief get equatorial coordinates with the effects of precession for a given Julian Day
 *  uses mean equatorial coordinates
 * \ingroup precession
 */
 
 /* Equ 20.2, 20.3, 20.4 pg 126 */
-void get_precession_equatorial 
-	(struct ln_equ_position * mean_position, 
+void get_equ_prec 
+	(struct ln_equ_posn * mean_position, 
 	double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn void get_precession_ecliptical (struct ln_long_lat_position * mean_position, double JD, struct ln_long_lat_position * position); 
+/*! \fn void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position); 
 * \brief get ecliptical coordinates with the effects of precession for a given Julian Day
 *  uses mean ecliptical coordinates
 * \ingroup precession
 */
 /* Equ 20.5, 20.6 pg 128 */
-void get_precession_ecliptical 
-	(struct ln_long_lat_position * mean_position, 
+void get_ecl_prec 
+	(struct ln_lnlat_posn * mean_position, 
 	double JD,
-	struct ln_long_lat_position * position); 
+	struct ln_lnlat_posn * position); 
 
 
 /*! \defgroup motion Proper Motion.
 */
 
-/*! \fn void get_proper_motion_equatorial (struct ln_equ_position * mean_position, struct ln_equ_position * proper_motion, double JD, struct ln_equ_position * position);
+/*! \fn void get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
 * \brief get equatorial coordinates with the effects of proper motion for a given Julian Day 
 * uses mean equatorial coordinates
 * \ingroup motion
 */
 /* Equ 20.2, 20.3, 20.4 pg 126 */
-void get_proper_motion_equatorial 
-	(struct ln_equ_position * mean_position, 
-	struct ln_equ_position * proper_motion, 
+void get_equ_pm 
+	(struct ln_equ_posn * mean_position, 
+	struct ln_equ_posn * proper_motion, 
 	double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
 
 /*! \defgroup aberration Aberration
 */
 
-/*! \fn void get_aberration_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position);
+/*! \fn void get_equ_aber (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position);
 * \brief get equatorial coordinates with the effects of Aberration and nutation for a given Julian Day. 
 * has low and high accuracy methods for equatorial coordinates
 * uses mean equatorial coordinates
 * \ingroup aberration
 */
 /* Equ 22.1, 22.3, 22.4 an Ron-Vondrak expression */
-void get_aberration_equatorial 
-	(struct ln_equ_position * mean_position, 
+void get_equ_aber 
+	(struct ln_equ_posn * mean_position, 
 	double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
 
-/*! \fn void get_aberration_ecliptical (struct ln_long_lat_position * mean_position, double JD, struct ln_long_lat_position * position); 
+/*! \fn void get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position); 
 * \brief get ecliptical coordinates with the effects of Aberration and nutation for a given Julian Day. 
 * uses mean ecliptical coordinates
 * \ingroup aberration
 */
 /* Equ 22.1, 22.2 pg 139 */
-void get_aberration_ecliptical 
-	(struct ln_long_lat_position * mean_position, 
+void get_ecl_aber 
+	(struct ln_lnlat_posn * mean_position, 
 	double JD,
-	struct ln_long_lat_position * position); 
+	struct ln_lnlat_posn * position); 
 
 
 /*! \defgroup solar Solar.
@@ -627,74 +638,74 @@ void get_aberration_ecliptical
 * Accuracy 0.01 arc second error - uses VSOP87. 
 */
 
-/*! \fn void get_geometric_solar_coordinates (double JD, struct ln_solar_position * position);
+/*! \fn void get_geom_solar_coords (double JD, struct ln_solar_position * position);
 * \brief geometric longitude, latitude and radius vector 
 * \ingroup solar 
 */
-void get_geometric_solar_coordinates 
+void get_geom_solar_coords 
 	(double JD,
-	struct ln_heliocentric_position * position);
+	struct ln_helcnt_posn * position);
 
-/*! \fn void get_solar_coordinates_equatorial (double JD, struct ln_equ_position * position);
+/*! \fn void get_equ_solar_coords (double JD, struct ln_equ_posn * position);
 * \brief apparent equatorial coordinates
 * \ingroup solar
 */ 
-void get_solar_coordinates_equatorial 
+void get_equ_solar_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn void get_solar_coordinates_ecliptical (double JD, struct ln_long_lat_position * position);
+/*! \fn void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position);
 * \brief apparent ecliptical coordinates
 * \ingroup solar
 */ 
-void get_solar_coordinates_ecliptical 
+void get_ecl_solar_coords 
 	(double JD,
-	struct ln_long_lat_position * position);
+	struct ln_lnlat_posn * position);
 
-/*! \fn void get_geocentric_solar_coordinates (double JD, struct ln_solar_position * position)
+/*! \fn void get_geoc_solar_coords (double JD, struct ln_solar_position * position)
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
-void get_geocentric_solar_coordinates (double JD, struct ln_geocentric_position * position);
+void get_geoc_solar_coords (double JD, struct ln_geocnt_posn * position);
 	
 
 /*! \defgroup mercury Mercury
 */
 
-/*! \fn void get_mercury_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_mercury_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get Mercury heliocentric coordinates
 * \ingroup mercury
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_mercury_heliocentric_coordinates 
+void get_mercury_helio_coords 
 	(double JD,
-	struct ln_heliocentric_position * position);
+	struct ln_helcnt_posn * position);
 
 
-/*! \fn void get_mercury_equatorial_coordinates (double JD, struct ln_equ_position * position);
-* \brief get Mercury heliocentric coordinates
+/*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
+* \brief get Mercury equatorial coordinates
 * \ingroup mercury
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_mercury_equatorial_coordinates 
+void get_mercury_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn double get_mercury_earth_distance (double JD);
+/*! \fn double get_mercury_earth_dist (double JD);
 * \brief Calculate the distance between mercury and the earth in AU
 * \ingroup mercury
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_mercury_earth_distance (double JD);
+double get_mercury_earth_dist (double JD);
 	
-/*! \fn double get_mercury_sun_distance (double JD);
+/*! \fn double get_mercury_sun_dist (double JD);
 * \brief Calculate the distance between mercury and the sun in AU
 * \ingroup mercury
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_mercury_sun_distance (double JD);
+double get_mercury_sun_dist (double JD);
 	
 /*! \fn double get_mercury_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mercury
@@ -723,40 +734,40 @@ double get_mercury_phase (double JD);
 /*! \defgroup venus Venus
 */
 
-/*! \fn void get_venus_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_venus_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get venus heliocentric coordinates 
 * \ingroup venus
 */
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_venus_heliocentric_coordinates 
+void get_venus_helio_coords 
 	(double JD,
-	struct ln_heliocentric_position * position);
+	struct ln_helcnt_posn * position);
 
 
-/*! \fn void get_venus_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Venus heliocentric coordinates
 * \ingroup venus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_venus_equatorial_coordinates 
+void get_venus_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn double get_venus_earth_distance (double JD);
+/*! \fn double get_venus_earth_dist (double JD);
 * \brief Calculate the distance between venus and the earth in AU
 * \ingroup venus
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_venus_earth_distance (double JD);
+double get_venus_earth_dist (double JD);
 	
-/*! \fn double get_venus_sun_distance (double JD);
+/*! \fn double get_venus_sun_dist (double JD);
 * \brief Calculate the distance between venus and the sun in AU
 * \ingroup venus
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_venus_sun_distance (double JD);
+double get_venus_sun_dist (double JD);
 	
 /*! \fn double get_venus_magnitude (double JD);
 * \brief Calculate the visible magnitude of Venus
@@ -786,14 +797,14 @@ double get_venus_phase (double JD);
 ** Earth
 */
 
-/*! \fn void get_earth_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_earth_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get earth heliocentric coordinates
 * \ingroup earth
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_earth_heliocentric_coordinates 
+void get_earth_helio_coords 
 	(double JD,
-	struct ln_heliocentric_position * position);
+	struct ln_helcnt_posn * position);
 
 /*! \fn void get_earth_sun_distance (double JD);
 * \brief Calculate the distance between earth and the sun in AU
@@ -801,44 +812,44 @@ void get_earth_heliocentric_coordinates
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_earth_sun_distance (double JD);
+double get_earth_sun_dist (double JD);
 
 /*! \defgroup mars Mars
 */
 
-/*! \fn void get_mars_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_mars_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get mars heliocentric coordinates
 * \ingroup mars
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_mars_heliocentric_coordinates 
+void get_mars_helio_coords 
 	(double JD,
-	struct ln_heliocentric_position * position);
+	struct ln_helcnt_posn * position);
 
-/*! \fn void get_mars_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_mars_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Mars heliocentric coordinates
 * \ingroup mars
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_mars_equatorial_coordinates 
+void get_mars_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-	/*! \fn double get_mars_earth_distance (double JD);
+	/*! \fn double get_mars_earth_dist (double JD);
 * \brief Calculate the distance between mars and the earth in AU
 * \ingroup mars
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_mars_earth_distance (double JD);
+double get_mars_earth_dist (double JD);
 	
-/*! \fn double get_mars_sun_distance (double JD);
+/*! \fn double get_mars_sun_dist (double JD);
 * \brief Calculate the distance between mars and the sun in AU
 * \ingroup mars
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_mars_sun_distance (double JD);
+double get_mars_sun_dist (double JD);
 	
 /*! \fn double get_mars_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mars
@@ -867,38 +878,38 @@ double get_mars_phase (double JD);
 /*! \defgroup jupiter Jupiter
 */
 
-/*! \fn void get_jupiter_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_jupiter_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get jupiter heliocentric coordinates
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_jupiter_heliocentric_coordinates 
-	(double JD, struct ln_heliocentric_position * position);
+void get_jupiter_helio_coords 
+	(double JD, struct ln_helcnt_posn * position);
 
-/*! \fn void get_jupiter_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Jupiter heliocentric coordinates
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_jupiter_equatorial_coordinates 
+void get_jupiter_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn double get_jupiter_earth_distance (double JD);
+/*! \fn double get_jupiter_earth_dist (double JD);
 * \brief Calculate the distance between jupiter and the earth in AU
 * \ingroup jupiter
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_jupiter_earth_distance (double JD);
+double get_jupiter_earth_dist (double JD);
 	
-/*! \fn double get_jupiter_sun_distance (double JD);
+/*! \fn double get_jupiter_sun_dist (double JD);
 * \brief Calculate the distance between jupiter and the sun in AU
 * \ingroup jupiter
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_jupiter_sun_distance (double JD);
+double get_jupiter_sun_dist (double JD);
 	
 /*! \fn double get_jupiter_magnitude (double JD);
 * \brief Calculate the visible magnitude of Jupiter
@@ -927,39 +938,39 @@ double get_jupiter_phase (double JD);
 /*! \defgroup saturn Saturn
 */
 
-/*! \fn void get_saturn_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_saturn_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get saturn heliocentric coordinates
 * \ingroup saturn
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_saturn_heliocentric_coordinates 
-	(double JD, struct ln_heliocentric_position * position);
+void get_saturn_helio_coords 
+	(double JD, struct ln_helcnt_posn * position);
 
 
-/*! \fn void get_saturn_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Saturn heliocentric coordinates
 * \ingroup saturn
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_saturn_equatorial_coordinates 
+void get_saturn_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn double get_saturn_earth_distance (double JD);
+/*! \fn double get_saturn_earth_dist (double JD);
 * \brief Calculate the distance between saturn and the earth in AU
 * \ingroup saturn
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_saturn_earth_distance (double JD);
+double get_saturn_earth_dist (double JD);
 	
-/*! \fn double get_saturn_sun_distance (double JD);
+/*! \fn double get_saturn_sun_dist (double JD);
 * \brief Calculate the distance between Saturn and the sun in AU
 * \ingroup saturn
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_saturn_sun_distance (double JD);
+double get_saturn_sun_dist (double JD);
 	
 /*! \fn double get_saturn_magnitude (double JD);
 * \brief Calculate the visible magnitude of Saturn
@@ -988,38 +999,38 @@ double get_saturn_phase (double JD);
 /*! \defgroup uranus Uranus
 */
 
-/*! \fn void get_uranus_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_uranus_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get Uranus heliocentric coordinates
 * \ingroup uranus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_uranus_heliocentric_coordinates 
-	(double JD, struct ln_heliocentric_position * position);
+void get_uranus_helio_coords 
+	(double JD, struct ln_helcnt_posn * position);
 
-/*! \fn void get_uranus_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Uranus heliocentric coordinates
 * \ingroup uranus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_uranus_equatorial_coordinates 
+void get_uranus_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 
-/*! \fn double get_uranus_earth_distance (double JD);
+/*! \fn double get_uranus_earth_dist (double JD);
 * \brief Calculate the distance between uranus and the earth in AU
 * \ingroup uranus
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_uranus_earth_distance (double JD);
+double get_uranus_earth_dist (double JD);
 	
-/*! \fn double get_uranus_sun_distance (double JD);
+/*! \fn double get_uranus_sun_dist (double JD);
 * \brief Calculate the distance between uranus and the sun in AU
 * \ingroup uranus
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_uranus_sun_distance (double JD);
+double get_uranus_sun_dist (double JD);
 	
 /*! \fn double get_uranus_magnitude (double JD);
 * \brief Calculate the visible magnitude of Uranus
@@ -1048,39 +1059,39 @@ double get_uranus_phase (double JD);
 /*! \defgroup neptune Neptune
 */
 
-/*! \fn void get_neptune_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_neptune_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get neptune heliocentric coordinates
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_neptune_heliocentric_coordinates 
-	(double JD, struct ln_heliocentric_position * position);
+void get_neptune_helio_coords 
+	(double JD, struct ln_helcnt_posn * position);
 
 
-/*! \fn void get_neptune_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Neptune heliocentric coordinates
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void get_neptune_equatorial_coordinates 
+void get_neptune_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 		
-/*! \fn double get_neptune_earth_distance (double JD);
+/*! \fn double get_neptune_earth_dist (double JD);
 * \brief Calculate the distance between neptune and the earth in AU
 * \ingroup neptune
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_neptune_earth_distance (double JD);
+double get_neptune_earth_dist (double JD);
 	
-/*! \fn double get_neptune_sun_distance (double JD);
+/*! \fn double get_neptune_sun_dist (double JD);
 * \brief Calculate the distance between neptune and the sun in AU
 * \ingroup neptune
 * \return distance in AU
 */ 
 /* Chapter ?? */
-double get_neptune_sun_distance (double JD);
+double get_neptune_sun_dist (double JD);
 	
 /*! \fn double get_neptune_magnitude (double JD);
 * \brief Calculate the visible magnitude of Neptune
@@ -1109,38 +1120,38 @@ double get_neptune_phase (double JD);
 /*! \defgroup pluto Pluto
 */
 
-/*! \fn void get_pluto_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position);
+/*! \fn void get_pluto_helio_coords (double JD, struct ln_helcnt_posn * position);
 * \brief get pluto heliocentric coordinates
 * \ingroup pluto
 */ 
 /* Chapter 37 Pg 263  */
-void get_pluto_heliocentric_coordinates 
-	(double JD, struct ln_heliocentric_position * position);
+void get_pluto_helio_coords 
+	(double JD, struct ln_helcnt_posn * position);
 
-/*! \fn void get_pluto_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_pluto_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Pluto heliocentric coordinates
 * \ingroup pluto
 */ 
 /* Chapter 37 */
-void get_pluto_equatorial_coordinates 
+void get_pluto_equ_coords 
 	(double JD,
-	struct ln_equ_position * position);
+	struct ln_equ_posn * position);
 		
-/*! \fn double get_pluto_earth_distance (double JD);
+/*! \fn double get_pluto_earth_dist (double JD);
 * \brief Calculate the distance between pluto and the earth in AU
 * \ingroup pluto
 * \return distance in AU
 */ 
 /* Chapter 37 */
-double get_pluto_earth_distance (double JD);
+double get_pluto_earth_dist (double JD);
 	
-/*! \fn double get_pluto_sun_distance (double JD);
+/*! \fn double get_pluto_sun_dist (double JD);
 * \brief Calculate the distance between pluto and the sun in AU
 * \ingroup pluto
 * \return distance in AU
 */ 
 /* Chapter 37 */
-double get_pluto_sun_distance (double JD);
+double get_pluto_sun_dist (double JD);
 	
 /*! \fn double get_pluto_magnitude (double JD);
 * \brief Calculate the visible magnitude of Pluto
