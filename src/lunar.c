@@ -24,6 +24,9 @@ Michelle Chapront-Touze and Jean Chapront.
 #include "lunar.h"
 #include <math.h>
 
+/* AU in KM */
+#define AU			149597870
+
 /* sequence sizes */
 #define ELP1_SIZE	1023  	  	/* Main problem. Longitude periodic terms (sine) */
 #define ELP2_SIZE	918    		/* Main problem. Latitude (sine) */
@@ -96,6 +99,13 @@ Michelle Chapront-Touze and Jean Chapront.
 #define		Q3		0.1265417e-8
 #define		Q4		-0.1371808e-11
 #define		Q5		-0.320334e-14
+
+/* cache values */
+static double c_JD = 0;
+static double c_X = 0;
+static double c_Y = 0;
+static double c_Z = 0;
+static double c_precision = 1.0;
 
 /* constants with corrections for DE200 / LE200 */
 static const double W1[5] = 
@@ -176,7 +186,7 @@ static const double p[8][2] =
 static double pre[3];
 
 /* ELP 2000-82B Arguments */
-const struct main_problem main_elp1[ELP1_SIZE] = 
+static const struct main_problem main_elp1[ELP1_SIZE] = 
 {
 	{0, 0, 0, 2, -411.602870, 168.480000, -18433.810000, -121.620000, 0.400000, -0.180000},
 	{0, 0, 0, 4, 0.420340, -0.390000, 37.650000, 0.570000, 0.000000, 0.000000},
@@ -1203,7 +1213,7 @@ const struct main_problem main_elp1[ELP1_SIZE] =
 	{10, 0, 0, 0, 0.000020, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000}
 };
 
-const struct main_problem main_elp2[ELP2_SIZE] =
+static const struct main_problem main_elp2[ELP2_SIZE] =
 {
 	{0, 0, 0, 1, 18461.400000, 0.000000, 412529.610000, 0.000000, 0.000000, 0.000000},
 	{0, 0, 0, 3, -6.296640, 7.680000, -422.650000, -13.210000, 0.020000, -0.020000},
@@ -2126,7 +2136,7 @@ const struct main_problem main_elp2[ELP2_SIZE] =
 };
 
 
-const struct main_problem main_elp3 [ELP3_SIZE] = 
+static const struct main_problem main_elp3 [ELP3_SIZE] = 
 {
 	{0, 0, 0, 0, 385000.527190, -7992.630000, -11.060000, 21578.080000, -4.530000, 11.390000},
 	{0, 0, 0, 2, -3.148370, -204.480000, -138.940000, 159.640000, -0.390000, 0.120000},
@@ -2835,7 +2845,7 @@ const struct main_problem main_elp3 [ELP3_SIZE] =
 };
 
 
-const struct earth_pert earth_pert_elp4 [ELP4_SIZE] = 
+static const struct earth_pert earth_pert_elp4 [ELP4_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 270.000000, 0.000030, 0.075000},
 	{0, 0, 0, 0, 2, 0.000000, 0.000370, 0.037000},
@@ -3186,7 +3196,7 @@ const struct earth_pert earth_pert_elp4 [ELP4_SIZE] =
 	{2, 4, 0, -1, -2, 180.000000, 0.000010, 0.028000}
 };
 
-const struct earth_pert earth_pert_elp5 [ELP5_SIZE] = 
+static const struct earth_pert earth_pert_elp5 [ELP5_SIZE] = 
 {
 	{0, 0, 0, 0, 3, 0.000000, 0.000030, 0.025000},
 	{0, 0, 0, 1, -3, 180.000000, 0.000210, 0.037000},
@@ -3506,7 +3516,7 @@ const struct earth_pert earth_pert_elp5 [ELP5_SIZE] =
 	{2, 4, 0, -1, -1, 0.000000, 0.000010, 0.020000}
 };
 
-const struct earth_pert earth_pert_elp6 [ELP6_SIZE] = 
+static const struct earth_pert earth_pert_elp6 [ELP6_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.043010, 99999.999000},
 	{0, 0, 0, 0, 1, 180.000000, 0.000030, 0.075000},
@@ -3747,7 +3757,7 @@ const struct earth_pert earth_pert_elp6 [ELP6_SIZE] =
 	{2, 2, 0, 1, -2, 90.000000, 0.000050, 0.026000}
 };
 
-const struct earth_pert earth_pert_elp7 [ELP7_SIZE] = 
+static const struct earth_pert earth_pert_elp7 [ELP7_SIZE] = 
 {
 	{1, -2, 0, 0, -1, 180.000000, 0.000030, 0.040000},
 	{1, -2, 0, 0, 1, 180.000000, 0.000020, 0.487000},
@@ -3765,7 +3775,7 @@ const struct earth_pert earth_pert_elp7 [ELP7_SIZE] =
 	{2, 0, 0, 0, -2, 0.000000, 0.000040, 9.307000}
 };
 
-const struct earth_pert earth_pert_elp8 [ELP8_SIZE] = 
+static const struct earth_pert earth_pert_elp8 [ELP8_SIZE] = 
 {
 	{1, -2, 0, 0, 0, 180.000000, 0.000120, 0.088000},
 	{1, -2, 0, 1, 0, 180.000000, 0.000030, 0.530000},
@@ -3780,7 +3790,7 @@ const struct earth_pert earth_pert_elp8 [ELP8_SIZE] =
 	{2, 0, 0, 0, -1, 180.000000, 0.000090, 0.075000}
 };
 
-const struct earth_pert earth_pert_elp9 [ELP9_SIZE] = 
+static const struct earth_pert earth_pert_elp9 [ELP9_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 270.000000, 0.000040, 99999.999000},
 	{1, -2, 0, 0, -1, 270.000000, 0.000040, 0.040000},
@@ -3792,7 +3802,7 @@ const struct earth_pert earth_pert_elp9 [ELP9_SIZE] =
 	{1, 2, 0, 0, -1, 90.000000, 0.000040, 0.041000}
 };
 
-const struct planet_pert plan_pert_elp10 [ELP10_SIZE] = 
+static const struct planet_pert plan_pert_elp10 [ELP10_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 359.998310, 0.000200, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 359.982540, 0.000070, 0.074000},
@@ -18124,7 +18134,7 @@ const struct planet_pert plan_pert_elp10 [ELP10_SIZE] =
 	{17, 0, -22, 0, 0, 0, 0, 0, -5, 1, 0, 332.538240, 0.000020, 411.722000}
 };
 
-const struct planet_pert plan_pert_elp11 [ELP11_SIZE] = 
+static const struct planet_pert plan_pert_elp11 [ELP11_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 179.931970, 0.000680, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 359.928610, 0.000070, 5.997000},
@@ -23362,7 +23372,7 @@ const struct planet_pert plan_pert_elp11 [ELP11_SIZE] =
 };
 
 
-const struct planet_pert plan_pert_elp12 [ELP12_SIZE] = 
+static const struct planet_pert plan_pert_elp12 [ELP12_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90.000000, 0.020450, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 270.015620, 0.000370, 0.037000},
@@ -29997,7 +30007,7 @@ const struct planet_pert plan_pert_elp12 [ELP12_SIZE] =
 	{5, 0, -7, 0, 0, 0, 0, 0, 0, 0, 0, 52.907800, 0.000030, 0.073000}
 };
 
-const struct planet_pert plan_pert_elp13 [ELP13_SIZE] = 
+static const struct planet_pert plan_pert_elp13 [ELP13_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.000110, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 277.117190, 0.000020, 0.075000},
@@ -34385,7 +34395,7 @@ const struct planet_pert plan_pert_elp13 [ELP13_SIZE] =
 	{13, 0, -16, 0, 0, 0, 0, 0, -2, -1, 0, 214.043790, 0.000010, 62.252000}
 };
 
-const struct planet_pert plan_pert_elp14 [ELP14_SIZE] = 
+static const struct planet_pert plan_pert_elp14 [ELP14_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 73.435780, 0.000100, 0.081000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 2, 0, -1, 277.117190, 0.000050, 0.088000},
@@ -35222,7 +35232,7 @@ const struct planet_pert plan_pert_elp14 [ELP14_SIZE] =
 	{3, 0, -1, 0, 0, 0, 0, 0, -2, 1, 1, 218.714940, 0.000010, 0.075000}
 };
 
-const struct planet_pert plan_pert_elp15 [ELP15_SIZE] = 
+static const struct planet_pert plan_pert_elp15 [ELP15_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90.000000, 0.000030, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 2, -3, 0, 277.418350, 0.000020, 0.067000},
@@ -36941,7 +36951,7 @@ const struct planet_pert plan_pert_elp15 [ELP15_SIZE] =
 	{3, 0, -1, 0, 0, 0, 0, 0, -2, 0, 0, 63.348720, 0.000050, 0.075000}
 };
 
-const struct planet_pert plan_pert_elp16 [ELP16_SIZE] = 
+static const struct planet_pert plan_pert_elp16 [ELP16_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 180.000310, 0.000020, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 359.999680, 0.000120, 0.074000},
@@ -37116,7 +37126,7 @@ const struct planet_pert plan_pert_elp16 [ELP16_SIZE] =
 };
 
 
-const struct planet_pert plan_pert_elp17 [ELP17_SIZE] = 
+static const struct planet_pert plan_pert_elp17 [ELP17_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.000020, 0.000680, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 180.000000, 0.000410, 5.997000},
@@ -37271,7 +37281,7 @@ const struct planet_pert plan_pert_elp17 [ELP17_SIZE] =
 };
 
 
-const struct planet_pert plan_pert_elp18 [ELP18_SIZE] = 
+static const struct planet_pert plan_pert_elp18 [ELP18_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.027020, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 270.000300, 0.000040, 0.037000},
@@ -37390,7 +37400,7 @@ const struct planet_pert plan_pert_elp18 [ELP18_SIZE] =
 };
 
 
-const struct planet_pert plan_pert_elp19 [ELP19_SIZE] = 
+static const struct planet_pert plan_pert_elp19 [ELP19_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 180.000000, 0.000020, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0.000000, 0.000110, 0.074000},
@@ -37620,7 +37630,7 @@ const struct planet_pert plan_pert_elp19 [ELP19_SIZE] =
 	{0, 0, 1, 0, 0, 0, 0, 3, 0, 0, -1, 194.813110, 0.000050, 0.041000}
 };
 
-const struct planet_pert plan_pert_elp20 [ELP20_SIZE] = 
+static const struct planet_pert plan_pert_elp20 [ELP20_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.000000, 0.000070, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0.000000, 0.000080, 5.997000},
@@ -37812,7 +37822,7 @@ const struct planet_pert plan_pert_elp20 [ELP20_SIZE] =
 	{0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 14.813110, 0.000070, 0.026000}
 };
 
-const struct planet_pert plan_pert_elp21 [ELP21_SIZE] = 
+static const struct planet_pert plan_pert_elp21 [ELP21_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.001490, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 90.000000, 0.000100, 0.074000},
@@ -37986,7 +37996,7 @@ const struct planet_pert plan_pert_elp21 [ELP21_SIZE] =
 };
 
 
-const tidal_effects tidal_effects_elp22 [ELP22_SIZE] = 
+static const tidal_effects tidal_effects_elp22 [ELP22_SIZE] = 
 {
 	{0, 1, 1, -1, -1, 192.936650, 0.000040, 0.075000},
 	{0, 1, 1, 0, -1, 192.936650, 0.000820, 18.600000},
@@ -37994,19 +38004,19 @@ const tidal_effects tidal_effects_elp22 [ELP22_SIZE] =
 };
 
 
-const tidal_effects tidal_effects_elp23 [ELP23_SIZE] = 
+static const tidal_effects tidal_effects_elp23 [ELP23_SIZE] = 
 {
 	{0, 1, 1, 0, -2, 192.936630, 0.000040, 0.074000},
 	{0, 1, 1, 0, 0, 192.936640, 0.000040, 0.075000}
 };
 
-const tidal_effects tidal_effects_elp24 [ELP24_SIZE] = 
+static const tidal_effects tidal_effects_elp24 [ELP24_SIZE] = 
 {
 	{0, 1, 1, -1, -1, 282.936650, 0.000040, 0.075000},
 	{0, 1, 1, 1, -1, 102.936650, 0.000040, 0.076000}
 };
 
-const tidal_effects tidal_effects_elp25 [ELP25_SIZE] = 
+static const tidal_effects tidal_effects_elp25 [ELP25_SIZE] = 
 {
 	{0, 0, 0, 1, 0, 0.000000, 0.000580, 0.075000},
 	{0, 0, 0, 2, 0, 0.000000, 0.000040, 0.038000},
@@ -38016,7 +38026,7 @@ const tidal_effects tidal_effects_elp25 [ELP25_SIZE] =
 	{0, 2, 0, 1, 0, 0.000000, 0.000010, 0.026000}
 };
 
-const tidal_effects tidal_effects_elp26 [ELP26_SIZE] = 
+static const tidal_effects tidal_effects_elp26 [ELP26_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 180.000000, 0.000050, 0.075000},
 	{0, 0, 0, 1, -1, 0.000000, 0.000030, 5.997000},
@@ -38024,7 +38034,7 @@ const tidal_effects tidal_effects_elp26 [ELP26_SIZE] =
 	{0, 2, 0, 0, -1, 0.000000, 0.000010, 0.088000}
 };
 
-const tidal_effects tidal_effects_elp27 [ELP27_SIZE] = 
+static const tidal_effects tidal_effects_elp27 [ELP27_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.003560, 99999.999000},
 	{0, 0, 0, 1, 0, 270.000000, 0.000720, 0.075000},
@@ -38033,7 +38043,7 @@ const tidal_effects tidal_effects_elp27 [ELP27_SIZE] =
 	{0, 2, 0, 0, 0, 270.000000, 0.000130, 0.040000}
 };
 
-const moon_pert moon_pert_elp28 [ELP28_SIZE] = 
+static const moon_pert moon_pert_elp28 [ELP28_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 303.961850, 0.000040, 0.075000},
 	{0, 0, 0, 1, -1, 259.883930, 0.000160, 5.997000},
@@ -38058,7 +38068,7 @@ const moon_pert moon_pert_elp28 [ELP28_SIZE] =
 };
 
 
-const moon_pert moon_pert_elp29 [ELP29_SIZE] = 
+static const moon_pert moon_pert_elp29 [ELP29_SIZE] = 
 {
 	{0, 0, 0, 1, -1, 0.021990, 0.000030, 5.997000},
 	{0, 0, 0, 1, 0, 245.990670, 0.000010, 0.075000},
@@ -38074,7 +38084,7 @@ const moon_pert moon_pert_elp29 [ELP29_SIZE] =
 	{0, 2, 0, 0, -1, 179.994780, 0.000050, 0.088000}
 };
 
-const moon_pert moon_pert_elp30 [ELP30_SIZE] = 
+static const moon_pert moon_pert_elp30 [ELP30_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.001300, 99999.999000},
 	{0, 0, 0, 0, 1, 213.957200, 0.000030, 0.075000},
@@ -38093,7 +38103,7 @@ const moon_pert moon_pert_elp30 [ELP30_SIZE] =
 };
 
 
-const rel_pert rel_pert_elp31 [ELP31_SIZE] = 
+static const rel_pert rel_pert_elp31 [ELP31_SIZE] = 
 {
 	{0, 0, 1, -1, 0, 179.934730, 0.000060, 0.082000},
 	{0, 0, 1, 0, 0, 179.985320, 0.000810, 1.000000},
@@ -38108,7 +38118,7 @@ const rel_pert rel_pert_elp31 [ELP31_SIZE] =
 	{0, 4, 0, -1, 0, 180.000350, 0.000010, 0.028000}
 };
 
-const rel_pert rel_pert_elp32 [ELP32_SIZE] = 
+static const rel_pert rel_pert_elp32 [ELP32_SIZE] = 
 {
 	{0, 0, 1, 0, -1, 179.998030, 0.000040, 0.081000},
 	{0, 0, 1, 0, 1, 179.997980, 0.000040, 0.069000},
@@ -38116,7 +38126,7 @@ const rel_pert rel_pert_elp32 [ELP32_SIZE] =
 	{0, 2, 0, 0, 1, 180.000260, 0.000020, 0.026000}
 };
 
-const rel_pert rel_pert_elp33 [ELP33_SIZE] = 
+static const rel_pert rel_pert_elp33 [ELP33_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 270.000000, 0.008280, 99999.999000},
 	{0, 0, 0, 1, 0, 89.999940, 0.000430, 0.075000},
@@ -38131,7 +38141,7 @@ const rel_pert rel_pert_elp33 [ELP33_SIZE] =
 };
 
 
-const plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] = 
+static const plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] = 
 {
 	{0, 0, 1, -2, 0, 0.000000, 0.000070, 0.039000},
 	{0, 0, 1, -1, 0, 0.000000, 0.001080, 0.082000},
@@ -38163,7 +38173,7 @@ const plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] =
 	{0, 4, -1, 0, 0, 180.000000, 0.000010, 0.021000}
 };
 
-const plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] = 
+static const plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] = 
 {
 	{0, 0, 1, -1, -1, 0.000000, 0.000050, 0.039000},
 	{0, 0, 1, -1, 1, 0.000000, 0.000040, 0.857000},
@@ -38180,7 +38190,7 @@ const plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] =
 	{0, 2, 1, 0, -1, 0.000000, 0.000090, 0.081000}
 };
 
-const plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] = 
+static const plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] = 
 {
 	{0, 0, 1, -2, 0, 90.000000, 0.000050, 0.039000},
 	{0, 0, 1, -1, 0, 90.000000, 0.000950, 0.082000},
@@ -39315,10 +39325,10 @@ double sum_series_elp36 (double *t)
 * \param JD Julian day.
 * \param pos Pointer to a geocentric position structure to held result.
 * \param precision The truncation level of the series in radians for longitude 
-* and latitude and in km for distance. (Valid range 0 - 0.01) 
+* and latitude and in km for distance. (Valid range 0 - 0.01, 0 being highest accuracy) 
 * \ingroup lunar
 *
-* Calculate the rectangular geocentric lunar cordinates to the inertial mean
+* Calculate the rectangular geocentric lunar coordinates to the inertial mean
 * ecliptic and equinox of J2000. 
 * The geocentric coordinates returned are in units of km.
 * 
@@ -39336,9 +39346,19 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 	double x,y,z;
 	double pw,qw, pwqw, pw2, qw2, ra;
 	
+	
 	/* is precision too low ? */
 	if (precision > 0.01)
 		precision = 0.01;
+	
+	/* is value in cache ? */
+	if (JD == c_JD && precision >= c_precision)
+	{
+		moon->X = c_X;
+		moon->Y = c_Y;
+		moon->Z = c_Z;
+		return;
+	}
 	
 	/* calc julian centuries */
 	t[0] = 1.0;
@@ -39423,8 +39443,168 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 	b = pwqw * x + qw2 * y - qw * z;
 	c = -pw * x + qw * y + (pw2 + qw2 -1) * z;
 
-	moon->X = a;
-	moon->Y = b;
-	moon->Z = c;
+	/* save cache and result */
+	c_JD = JD;
+	c_X = moon->X = a;
+	c_Y = moon->Y = b;
+	c_Z = moon->Z = c;
+}
 
+/*! \fn void get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+* \param JD Julian Day
+* \param position Pointer to a struct ln_lnlat_posn to store result.
+* \param precision The truncation level of the series in radians for longitude 
+* and latitude and in km for distance. (Valid range 0 - 0.01, 0 being highest accuracy) 
+* \brief get Lunar equatorial coordinates
+* \ingroup lunar
+*
+* Calculate the lunar RA and DEC for Julian day JD. 
+* Accuracy is better than 10 arcsecs in right ascension and 4 arcsecs in declination.
+*/ 
+void get_lunar_equ_coords 
+	(double JD,
+	struct ln_equ_posn * position, double precision)
+{
+	struct ln_lnlat_posn ecl;
+		
+	get_lunar_ecl_coords (JD, &ecl, precision);
+	get_equ_from_ecl (&ecl, JD, position);
+}
+
+/*! \fn void get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
+* \param JD Julian Day
+* \param position Pointer to a struct ln_lnlat_posn to store result.
+* \param precision The truncation level of the series in radians for longitude 
+* and latitude and in km for distance. (Valid range 0 - 0.01, 0 being highest accuracy) 
+* \brief get Lunar ecliptical coordinates
+* \ingroup lunar
+*
+* Calculate the lunar longitude and latitude for Julian day JD.
+* Accuracy is better than 10 arcsecs in longitude and 4 arcsecs in latitude.
+*/ 
+void get_lunar_ecl_coords 
+	(double JD,
+	struct ln_lnlat_posn * position, double precision)
+{
+	struct ln_geo_posn moon;
+	
+	/* get lunar geocentric position */
+	get_lunar_geo_posn (JD, &moon, precision);
+	
+	/* convert to long and lat */
+	position->lng = atan2(moon.Y, moon.X);
+	position->lat = atan (moon.Z / (sqrt((moon.X * moon.X) + (moon.Y * moon.Y))));
+	position->lng = rad_to_deg (position->lng);
+	position->lat = rad_to_deg (position->lat);
+}
+
+/*! \fn double get_lunar_earth_dist (double JD);
+* \param JD Julian Day
+* \return The distance between the Earth and Moon in km.
+* \brief Calculate the distance between the earth and the moon in km.
+* \ingroup lunar
+*
+* Calculates the distance between the centre of the Earth and the
+* centre of the Moon in km.
+*/ 
+double get_lunar_earth_dist (double JD)
+{
+	double dist = 0;
+	struct ln_geo_posn moon;
+		
+	get_lunar_geo_posn (JD, &moon, 0.00001);
+	dist = sqrt ((moon.X * moon.X) + (moon.Y * moon.Y) + (moon.Z * moon.Z));
+	
+	return (dist);
+}
+
+
+/*! \fn double get_lunar_phase (double JD);
+* \param JD Julian Day
+* \return Phase angle. (Value between 0 and 1)
+* \brief Calculate the phase angle of the moon (sun - moon - earth)
+* \ingroup lunar
+*
+* Calculates the selenocentric elongation of the Earth from the Sun.
+* This is the ratio of the illuminated area to the disk to the total area
+* and is the ratio of of the illuminated length of the diameter
+* perpendicular to the line of cusps to the complete diameter.
+*/ 
+double get_lunar_phase (double JD)
+{
+	double phase = 0;
+	struct ln_lnlat_posn moon, sun;
+	double lunar_elong;
+	double R, delta;
+		
+	/* get lunar and solar long + lat */
+	get_lunar_ecl_coords (JD, &moon, 0.0001);
+	get_ecl_solar_coords (JD, &sun);
+	
+	/* calc lunar geocentric elongation equ 48.2 */
+	lunar_elong = acos ( cos (deg_to_rad(moon.lat)) * cos (deg_to_rad(sun.lng - moon.lng)));
+	
+	/* now calc phase Equ 48.2 */
+	R = get_earth_sun_dist (JD);
+	delta = get_lunar_earth_dist (JD);
+	R = R * AU; /* convert R to km */
+	phase = atan ((R * sin (lunar_elong)) / (delta - R * cos (lunar_elong)));
+	phase = rad_to_deg (phase);
+	
+	return (phase);
+}
+
+/*! \fn double get_lunar_disk (double JD);
+* \param JD Julian Day
+* \return Illuminated fraction. (Value between 0 and 1)
+* \brief Calculate the illuminated fraction of the moons disk
+* \ingroup lunar
+*
+* Calculates the illuminated fraction of the Moon's disk. 
+*/ 
+double get_lunar_disk (double JD)
+{
+	double disk = 0;
+	double i;
+	
+	/* Equ 48.1 */
+	i = deg_to_rad (get_lunar_phase (JD));
+	disk = (1.0 + cos(i)) / 2.0;
+	
+	return (disk);
+}
+
+/*! \fn double get_lunar_bright_limb (double JD);
+* \param JD Julian Day
+* \return The position angle in degrees.
+* \brief Calculate the position angle of the Moon's bright limb.
+* \ingroup lunar
+*
+* Calculates the position angle of the midpoint of the illuminated limb of the 
+* moon, reckoned eastward from the north point of the disk.
+*
+* The angle is near 270 deg for first quarter and near 90 deg after a full moon.
+* The position angle of the cusps are +90 deg and -90 deg. 
+*/ 
+double get_lunar_bright_limb (double JD)
+{
+	double angle;
+	double x,y;
+	
+	struct ln_equ_posn moon, sun;
+		
+	/* get lunar and solar long + lat */
+	get_lunar_equ_coords (JD, &moon, 0.0001);
+	get_equ_solar_coords (JD, &sun);
+	
+	/* Equ 48.5 */
+	x = cos (deg_to_rad(sun.dec)) * sin (deg_to_rad(sun.ra - moon.ra));
+	y = sin ((deg_to_rad(sun.dec)) * cos (deg_to_rad(moon.dec))) 
+		- (cos (deg_to_rad(sun.dec)) * sin (deg_to_rad(moon.dec)) 
+		* cos (deg_to_rad(sun.ra - moon.ra)));
+	angle = atan2 (x,y);
+
+	angle = range_radians (angle);
+	angle = rad_to_deg (angle);
+	return (angle);
 }

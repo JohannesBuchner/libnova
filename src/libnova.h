@@ -1197,6 +1197,46 @@ double get_pluto_phase (double JD);
 /* ELP 2000-82B theory */
 void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
 
+/*! \fn void get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+* \brief get Lunar equatorial coordinates
+* \ingroup lunar
+*/ 
+void get_lunar_equ_coords 
+	(double JD,
+	struct ln_equ_posn * position, double precision);
+
+/*! \fn void get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
+* \brief get Lunar ecliptical coordinates
+* \ingroup lunar
+*/ 
+void get_lunar_ecl_coords 
+	(double JD,
+	struct ln_lnlat_posn * position, double precision);
+
+/*! \fn double get_lunar_phase (double JD);
+* \brief Calculate the phase angle of the moon (sun - moon - earth)
+* \ingroup lunar
+*/ 
+double get_lunar_phase (double JD);
+
+/*! \fn double get_lunar_disk (double JD);
+* \brief Calculate the illuminated fraction of the moons disk
+* \ingroup lunar
+*/ 
+double get_lunar_disk (double JD);
+	
+/*! \fn double get_lunar_earth_dist (double JD);
+* \brief Calculate the distance between the earth and the moon in km.
+* \ingroup lunar
+*/ 
+double get_lunar_earth_dist (double JD);	
+	
+/*! \fn double get_lunar_bright_limb (double JD);
+* \brief Calculate the position angle of the Moon's bright limb.
+* \ingroup lunar
+*/ 
+double get_lunar_bright_limb (double JD);
+	
 #ifdef __cplusplus
 };
 #endif

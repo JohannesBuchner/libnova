@@ -467,12 +467,23 @@ void vsop87_test(void)
 
 int lunar_test ()
 {
-	double JD = 2469000.5;
+	double JD = 2448724.5;
 	
 	struct ln_geo_posn moon;
+	struct ln_equ_posn equ;
+	struct ln_lnlat_posn ecl;
+	/*	JD = get_julian_from_sys();*/
 	/*JD=2448724.5;*/
 	get_lunar_geo_posn (JD, &moon, 0);
 	printf ("lunar x %f  y %f  z %f\n",moon.X, moon.Y, moon.Z);
+	get_lunar_ecl_coords (JD, &ecl, 0);
+	printf ("lunar long %f  lat %f\n",ecl.lng, ecl.lat);
+	get_lunar_equ_coords (JD, &equ, 0);
+	printf ("lunar RA %f  Dec %f\n",equ.ra, equ.dec);
+	printf ("lunar distance km %f\n", get_lunar_earth_dist(JD));
+	printf ("lunar disk %f\n", get_lunar_disk(JD));
+	printf ("lunar phase %f\n", get_lunar_phase(JD));
+	printf ("lunar bright limb %f\n", get_lunar_bright_limb(JD));
 	return 0;
 }
 
