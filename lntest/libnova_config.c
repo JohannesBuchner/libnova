@@ -16,11 +16,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright 2001 Liam Girdwood 
 */
 
-#include "libnova.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <libnova/utility.h>
 
 void usage ()
 {
@@ -30,7 +29,7 @@ void usage ()
 
 void get_version ()
 {
-	printf ("libnova %s\n", get_ln_version());
+	printf ("libnova %s\n", ln_get_version());
 }
 
 int main (int argc, char * argv[])
@@ -41,15 +40,12 @@ int main (int argc, char * argv[])
 	if (argc < 2)
 		usage ();
 		
-	argc --;
+	argc--;
 	arg = 1;
 			
-	while (argc)
-	{
+	while (argc) {
 		if (strcmp (argv[arg], "--version") == 0)
-		{
 			version = 1;
-		}
 		arg++;
 		argc--;
 	}
@@ -59,6 +55,3 @@ int main (int argc, char * argv[])
 		
 	exit (0);
 }
-		
-	
-
