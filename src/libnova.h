@@ -434,17 +434,17 @@ void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos);
 */
 void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos);
 	
-/*! \fn void hlnglat_to_lnglat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
+/*! \fn void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
 * \ingroup conversion
 */
-void hlnglat_to_lnglat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos);
+void hlnlat_to_lnlat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos);
 	
 /*! \fn void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 * \brief double long/lat position to human readable long/lat position
 * \ingroup conversion
 */
-void lnglat_to_hlnglat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos);
+void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos);
 	
 /*! \fn void add_secs_hms (struct ln_hms * hms, double seconds)
 * \brief add seconds to hms 
