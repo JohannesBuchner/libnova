@@ -40,7 +40,7 @@ int test_result (char * test, double calc, double expect)
 	if (diff)
 	{
 		printf ("[FAILED]\n");
-		printf ("	Expected %8.8f but got %8.8f %f % error.\n", expect, calc, diff);
+		printf ("	Expected %8.8f but got %8.8f %f %% error.\n", expect, calc, diff);
 		return 1;
 	}
 	else
@@ -228,16 +228,16 @@ void sidereal_test ()
 
 void solar_coord_test (void)
 {
-	struct ln_helio_position pos;
+	struct ln_helio_posn pos;
 	printf("\n\nSolar Coords Test....\n");
-	get_geometric_solar_coords (2448908.5, &pos);
+	get_geom_solar_coords (2448908.5, &pos);
 	printf("long %f lat %f radius vec %f\n", pos.L, pos.B, pos.R);
 }
 
 void aberration_test (void)
 {
-	struct lnh_equ_position hobject, hpos;
-	struct ln_equ_position object, pos;
+	struct lnh_equ_posn hobject, hpos;
+	struct ln_equ_posn object, pos;
 	struct ln_date date;
 	double JD;
 
@@ -260,7 +260,7 @@ void aberration_test (void)
 	JD = get_julian_day (&date);
 
 	hequ_to_equ (&hobject, &object);
-	get_aberration_equ (&object, JD, &pos);
+	get_equ_aber (&object, JD, &pos);
 	equ_to_hequ(&pos, &hpos);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);
 }
@@ -268,8 +268,8 @@ void aberration_test (void)
 void precession_test(void)
 {
 	double JD;
-	struct ln_equ_position object, pos;
-	struct lnh_equ_position hobject, hpos;
+	struct ln_equ_posn object, pos;
+	struct lnh_equ_posn hobject, hpos;
 
 	printf("\n\nPrecession test\n");
 
@@ -282,7 +282,7 @@ void precession_test(void)
 
 	JD = 2462088.69;
 
-	get_precession_equ (&object, JD, &pos);
+	get_equ_prec (&object, JD, &pos);
 	equ_to_hequ (&pos, &hpos);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);	
 }
@@ -290,8 +290,8 @@ void precession_test(void)
 void apparent_position_test(void)
 {
 	double JD;
-	struct lnh_equ_position hobject, hpm, hpos;
-	struct ln_equ_position object, pm, pos;	
+	struct lnh_equ_posn hobject, hpm, hpos;
+	struct ln_equ_posn object, pm, pos;	
 
 	printf("\n\nApparent Position test\n");
 
@@ -312,16 +312,16 @@ void apparent_position_test(void)
 	JD = 2462088.69;
 	hequ_to_equ (&hobject, &object);
 	hequ_to_equ (&hpm, &pm);
-	get_apparent_position (&object, &pm, JD, &pos);
+	get_apparent_posn (&object, &pm, JD, &pos);
 	equ_to_hequ (&pos, &hpos);
 	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);
 }
 
 void vsop87_test(void)
 {
-	struct ln_helio_position pos;
-	struct lnh_equ_position hequ;
-	struct ln_equ_position equ;
+	struct ln_helio_posn pos;
+	struct lnh_equ_posn hequ;
+	struct ln_equ_posn equ;
 	double JD = 2448976.5;
 	double au;
 	struct ln_date date, pdate;
@@ -338,7 +338,7 @@ void vsop87_test(void)
 #endif
 	printf("\n\nVSOP87 Test... for Julian Day %f\n",JD);
 	
-	get_solar_coords_equ (JD, &equ);
+	get_equ_solar_coords (JD, &equ);
 	equ_to_hequ (&equ, &hequ);
 	printf("Sun RA %d:%d:%f Dec %d:%d:%f\n", hequ.ra.hours, hequ.ra.minutes, hequ.ra.seconds, hequ.dec.degrees, hequ.dec.minutes, hequ.dec.seconds);
 	
