@@ -55,7 +55,7 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.10.0 and was released on the 1st June 2004.
+* The latest released version of libnova is 0.10.1 and was released on the 9th June 2004.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
