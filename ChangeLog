@@ -1,5 +1,12 @@
 ChangeLog
 
+20050506
+	- src/refraction.c
+	
+	Fixed bug in refraction calculation.
+	
+	Radu Corlan
+
 20050503
 	- src/libnova/ln_types.h, src/utility.h
 
