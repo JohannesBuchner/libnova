@@ -3,7 +3,7 @@
 # General configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = libnova
-PROJECT_NUMBER         = "v 0.9.0"
+PROJECT_NUMBER         = "v 0.10.0"
 OUTPUT_DIRECTORY       = .
 OUTPUT_LANGUAGE        = English
 EXTRACT_ALL            = NO
@@ -17,7 +17,7 @@ ALWAYS_DETAILED_SEC    = NO
 FULL_PATH_NAMES        = NO
 STRIP_FROM_PATH        = 
 INTERNAL_DOCS          = NO
-CLASS_DIAGRAMS         = YES
+CLASS_DIAGRAMS         = NO
 SOURCE_BROWSER         = NO
 INLINE_SOURCES         = NO
 STRIP_CODE_COMMENTS    = YES
@@ -58,7 +58,7 @@ EXCLUDE                =
 EXCLUDE_PATTERNS       = 
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = 
-IMAGE_PATH             = 
+IMAGE_PATH             = .
 INPUT_FILTER           = 
 FILTER_SOURCE_FILES    = NO
 #---------------------------------------------------------------------------

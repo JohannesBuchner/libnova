@@ -7,4 +7,4 @@ clean:
 maintainer-clean: clean
 	rm -fr Makefile
 	
-EXTRA_DIST = doxyfile
+EXTRA_DIST = doxyfile libnova-logo.jpg

@@ -1,5 +1,25 @@
 ChangeLog
 
+20042905
+	- Added logo
+	
+	Edward Rands, Liam Girdwood
+
+
+20042805
+	-src/hyperbolic.c, src/libnova/hyperbolic.h, src/libnova/solar.h
+
+	Fixed doxygen typos
+	
+	Liam Girdwood
+	
+20042005
+	-src/hyperbolic.c, src/libnova/hyperbolic.h
+	
+	Added hyperbolic motion of bodies
+	
+	Petr Kubanek
+
 20040205
 	-src/utility.c
 	
