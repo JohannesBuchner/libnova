@@ -3,7 +3,7 @@
 # General configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = libnova
-PROJECT_NUMBER         = "v 0.7.0"
+PROJECT_NUMBER         = "v 0.8.0"
 OUTPUT_DIRECTORY       = .
 OUTPUT_LANGUAGE        = English
 EXTRACT_ALL            = NO
@@ -151,4 +151,4 @@ CGI_URL                =
 DOC_URL                = 
 DOC_ABSPATH            = 
 BIN_ABSPATH            = /usr/local/bin/
-EXT_DOC_PATHS          = 
+EXT_DOC_PATHS          =
