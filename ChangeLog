@@ -6,6 +6,9 @@ ChangeLog
 	
 	John R. Thorstensen Liam Girdwood
 
+
+**** Release 0.7.0 ****
+
 20032203
 	-src/lunar.c, libnova.h
 	Added Lunar longitudes for ascending node and perigee.
@@ -117,4 +120,4 @@ ChangeLog
 	Fix supplied by Petr Kubanek <petr@lascaux.asu.cas.cz>
 
 
-
+****** Release 0.6.0 ********
