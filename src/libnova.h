@@ -37,7 +37,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Sidereal Time
 * - Solar Coordinates (using VSOP87)
 * - Coordinate Transformations
-* - Planetary Positions (Mercury - Neptune using VSOP87)
+* - Planetary Positions Mercury - Pluto (Mercury - Neptune using VSOP87)
 * - Planetary Magnitude, illuminated disk and phase angle.
 * - Lunar Position (using ELP82), phase angle.
 * - Elliptic Motion of bodies (Asteroid + Comet positional and orbit data)
@@ -46,7 +46,8 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Orbit velocities and lengths
 * - Atmospheric refraction
 * - Rise, Set and Transit times.
-* - Semidiameters of the Sun, Moon, Planets and asteroids. 
+* - Semidiameters of the Sun, Moon, Planets and asteroids.
+* - Angular separation of bodies
 *
 * \section docs Documentation
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
@@ -1986,6 +1987,26 @@ int get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_e
 int get_body_rst_horizont (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), 
 		double horizont, struct ln_rst_time * rst);
 
+/*! \defgroup angular Angular Separation
+*
+* Functions relating to an the angular separation and position
+* angle between 2 bodies.
+*
+* All angles are expressed in degrees.
+*/		
+		
+/*! \fn double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+* \brief Calculate the angular separation between 2 bodies
+* \ingroup angular
+*/		
+double get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+
+/*! \fn double get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+* \brief Calculate the position angle between 2 bodies
+* \ingroup angular
+*/	
+double get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+		
 #ifdef __cplusplus
 };
 #endif

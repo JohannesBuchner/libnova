@@ -4,6 +4,13 @@ ChangeLog
 	-lntest/lntest.c
 	Updated test's to use dynamical time diff in nutation.
 	
+	-src/Makefile.am
+	-src/libnova.h
+	-src/angular_separation.c
+	-lntest/test.c
+	
+	Added angular separation and position angle functions.
+	
 	Liam Girdwood
 
 20031508

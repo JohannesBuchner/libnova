@@ -31,7 +31,8 @@ libnova_la_SOURCES = \
 	parabolic_motion.c \
 	misc.c \
 	refraction.c \
-	rise_set.c
+	rise_set.c \
+	angular_separation.c
 
 
 include_HEADERS = libnova.h  
@@ -55,4 +56,3 @@ libnova_la_LDFLAGS = \
 	-version-info $(LT_VERSION) \
 	-release $(LT_RELEASE) 
 	-export-dynamic
-

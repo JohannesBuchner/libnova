@@ -671,6 +671,29 @@ int rst_test ()
 	return (failed);
 }
 
+int angular_test ()
+{
+	int failed = 0;
+	double d;
+	struct ln_equ_posn posn1, posn2;
+		
+	/* alpha Bootes (Arcturus) */
+	posn1.ra = 213.9154;
+	posn1.dec = 19.1825;
+	
+	/* alpha Virgo (Spica) */
+	posn2.ra = 201.2983;
+	posn2.dec = -11.1614;
+	
+	d = get_angular_separation(&posn1, &posn2);
+	failed += test_result ("(Angular) Separation of Arcturus and Spica   ", d, 32.79302684, 0.00001);
+	
+	d = get_rel_posn_angle(&posn1, &posn2);
+	failed += test_result ("(Angular) Position Angle of Arcturus and Spica   ", d, 22.39042787, 0.00001);
+	
+	return (failed);
+}
+
 int main ()
 {
 	int failed = 0;
@@ -689,6 +712,7 @@ int main ()
 	failed += elliptic_motion_test();
 	failed += parabolic_motion_test ();
 	failed += rst_test ();
+	failed += angular_test();
 	
 	printf ("Test completed: %d errors.\n",failed);
 		
