@@ -118,7 +118,7 @@ void get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 	get_earth_helio_coords (JD, &sol);
 	
 	/* now get rectangular coords */
-	get_rect_from_helio (&sol, JD, position);
+	get_rect_from_helio (&sol, position);
 	position->X *=-1.0;
 	position->Y *=-1.0;
 	position->Z *=-1.0;
@@ -156,4 +156,3 @@ double get_solar_sdiam (double JD)
 	
 	return (S);
 }
-	

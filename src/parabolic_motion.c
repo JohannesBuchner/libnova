@@ -161,7 +161,7 @@ void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rec
 	/* earth rect coords */
 	get_earth_helio_coords (JD, &earth);
 	
-	get_rect_from_helio (&earth, JD, &e_posn);
+	get_rect_from_helio (&earth, &e_posn);
 	posn->X = p_posn.X - e_posn.X;
 	posn->Y = p_posn.Y - e_posn.Y;
 	posn->Z = p_posn.Z - e_posn.Z;

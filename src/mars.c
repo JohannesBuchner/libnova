@@ -6545,13 +6545,13 @@ void get_mars_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol, &g_sol);
 	
 	do
 	{
 		last = t;
 		get_mars_helio_coords (JD - t, &h_mars);
-		get_rect_from_helio (&h_mars, JD - t, &g_mars);
+		get_rect_from_helio (&h_mars, &g_mars);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mars.X;
@@ -6671,8 +6671,8 @@ double get_mars_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_mars, JD, &g_mars);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_mars, &g_mars);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_mars.X - g_earth.X;
@@ -6825,5 +6825,5 @@ void get_mars_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn mars;
 		
 	get_mars_helio_coords (JD, &mars);
-	get_rect_from_helio (&mars, JD, position);
+	get_rect_from_helio (&mars, position);
 }

@@ -3770,13 +3770,13 @@ void get_jupiter_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_jupiter_helio_coords (JD - t, &h_jupiter);
-		get_rect_from_helio (&h_jupiter, JD - t, &g_jupiter);
+		get_rect_from_helio (&h_jupiter, &g_jupiter);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_jupiter.X;
@@ -3895,8 +3895,8 @@ double get_jupiter_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_jupiter, JD, &g_jupiter);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_jupiter, &g_jupiter);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_jupiter.X - g_earth.X;
@@ -4067,5 +4067,5 @@ void get_jupiter_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn jupiter;
 		
 	get_jupiter_helio_coords (JD, &jupiter);
-	get_rect_from_helio (&jupiter, JD, position);
+	get_rect_from_helio (&jupiter, position);
 }

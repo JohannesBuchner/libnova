@@ -7279,13 +7279,13 @@ void get_mercury_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol, &g_sol);
 	
 	do
 	{
 		last = t;
 		get_mercury_helio_coords (JD - t, &h_mercury);
-		get_rect_from_helio (&h_mercury, JD - t, &g_mercury);
+		get_rect_from_helio (&h_mercury, &g_mercury);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mercury.X;
@@ -7406,8 +7406,8 @@ double get_mercury_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_mercury, JD, &g_mercury);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_mercury, &g_mercury);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_mercury.X - g_earth.X;
@@ -7564,5 +7564,5 @@ void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn mercury;
 		
 	get_mercury_helio_coords (JD, &mercury);
-	get_rect_from_helio (&mercury, JD, position);
+	get_rect_from_helio (&mercury, position);
 }

@@ -32,7 +32,6 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 */
 void get_rect_from_helio 
 	(struct ln_helio_posn *object,  
-	double JD,
 	struct ln_rect_posn * position)
 {
 	double sin_e, cos_e;
@@ -166,7 +165,7 @@ void get_equ_from_hrz
 	struct ln_equ_posn * position)
 	
 {
-	double H, ra, longitude, declination, latitude, A, h, sidereal;
+	double H, longitude, declination, latitude, A, h, sidereal;
 
 
 	/* change observer/object position into radians */

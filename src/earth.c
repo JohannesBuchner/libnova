@@ -2818,7 +2818,5 @@ void get_earth_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn earth;
 		
 	get_earth_helio_coords (JD, &earth);
-	get_rect_from_helio (&earth, JD, position);
+	get_rect_from_helio (&earth, position);
 }
-
-     

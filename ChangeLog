@@ -1,6 +1,23 @@
 ChangeLog
 
 20031308
+	-src/mercury.c
+	-src/venus.c
+	-src/earth.c
+	-src/mars.c
+	-src/jupiter.c
+	-src/saturn.c
+	-src/uranus.c
+	-src/neptune.c
+	-src/pluto.c
+	-src/elliptic_motion.c
+	-src/parabolic_motion.c
+	-src/solar.c
+	
+	Removed unused variable JD in get_rect_from_helio()
+	
+	Pablo Martikian, Liam Girdwood
+
 	-src/misc.c
 	Fixed uninitialised variable in interpolate5
 	

@@ -2144,13 +2144,13 @@ void get_neptune_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_neptune_helio_coords (JD - t, &h_neptune);
-		get_rect_from_helio (&h_neptune, JD - t, &g_neptune);
+		get_rect_from_helio (&h_neptune, &g_neptune);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_neptune.X;
@@ -2267,8 +2267,8 @@ double get_neptune_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_neptune, JD, &g_neptune);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_neptune, &g_neptune);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_neptune.X - g_earth.X;
@@ -2418,6 +2418,5 @@ void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn neptune;
 		
 	get_neptune_helio_coords (JD, &neptune);
-	get_rect_from_helio (&neptune, JD, position);
+	get_rect_from_helio (&neptune, position);
 }
-

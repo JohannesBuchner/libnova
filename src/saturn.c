@@ -6510,13 +6510,13 @@ void get_saturn_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_saturn_helio_coords (JD - t, &h_saturn);
-		get_rect_from_helio (&h_saturn, JD - t, &g_saturn);
+		get_rect_from_helio (&h_saturn, &g_saturn);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_saturn.X;
@@ -6635,8 +6635,8 @@ double get_saturn_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_saturn, JD, &g_saturn);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_saturn, &g_saturn);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_saturn.X - g_earth.X;
@@ -6807,5 +6807,5 @@ void get_saturn_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn saturn;
 		
 	get_saturn_helio_coords (JD, &saturn);
-	get_rect_from_helio (&saturn, JD, position);
+	get_rect_from_helio (&saturn, position);
 }

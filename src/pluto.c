@@ -230,13 +230,13 @@ void get_pluto_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_pluto_helio_coords (JD - t, &h_pluto);
-		get_rect_from_helio (&h_pluto, JD - t, &g_pluto);
+		get_rect_from_helio (&h_pluto, &g_pluto);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_pluto.X;
@@ -348,8 +348,8 @@ double get_pluto_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_pluto, JD, &g_pluto);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_pluto, &g_pluto);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_pluto.X - g_earth.X;
@@ -499,5 +499,5 @@ void get_pluto_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn pluto;
 		
 	get_pluto_helio_coords (JD, &pluto);
-	get_rect_from_helio (&pluto, JD, position);
+	get_rect_from_helio (&pluto, position);
 }

@@ -39340,7 +39340,6 @@ void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision
 {
 	double t[5];
 	double elp[36];
-	int i;
 	double a,b,c;
 	double x,y,z;
 	double pw,qw, pwqw, pw2, qw2, ra;

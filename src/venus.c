@@ -1853,13 +1853,13 @@ void get_venus_equ_coords
 	
 	/* need typdef for solar heliocentric coords */
 	get_geom_solar_coords (JD, &h_sol);
-	get_rect_from_helio (&h_sol, JD,  &g_sol);
+	get_rect_from_helio (&h_sol,  &g_sol);
 	
 	do
 	{
 		last = t;
 		get_venus_helio_coords (JD - t, &h_venus);
-		get_rect_from_helio (&h_venus, JD - t, &g_venus);
+		get_rect_from_helio (&h_venus, &g_venus);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_venus.X;
@@ -1978,8 +1978,8 @@ double get_venus_earth_dist (double JD)
 	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_rect_from_helio (&h_venus, JD, &g_venus);
-	get_rect_from_helio (&h_earth, JD, &g_earth);
+	get_rect_from_helio (&h_venus, &g_venus);
+	get_rect_from_helio (&h_earth, &g_earth);
 	
 	/* use pythag */
 	x = g_venus.X - g_earth.X;
@@ -2137,5 +2137,5 @@ void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 	struct ln_helio_posn venus;
 		
 	get_venus_helio_coords (JD, &venus);
-	get_rect_from_helio (&venus, JD, position);
+	get_rect_from_helio (&venus, position);
 }
