@@ -260,7 +260,7 @@ void get_ecl_aber
 	
 {
 	double delta_lng, delta_lat, mean_lng, mean_lat, e, t, k, true_longitude, T, T2, JDE;
-	struct ln_helcnt_posn sol_position;
+	struct ln_helio_posn sol_position;
 
 	/* constant of aberration */
 	k = deg_to_rad(20.49552 *  (1.0 / 3600.0));

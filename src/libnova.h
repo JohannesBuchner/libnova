@@ -166,20 +166,20 @@ struct ln_lnlat_posn
 };
 
 
-/*! \struct ln_helcnt_posn
+/*! \struct ln_helio_posn
 * \brief heliocentric position 
 */
-struct ln_helcnt_posn
+struct ln_helio_posn
 {
 	double L;	/*!< Heliocentric longitude */
 	double B;	/*!< Heliocentric latitude */
 	double R;	/*!< Heliocentric radius vector */
 };
 
-/*! \struct ln_geocnt_posn
+/*! \struct ln_geo_posn
 * \brief geocentric position
 */
-struct ln_geocnt_posn
+struct ln_geo_posn
 {
 	double X;	/*!< Geocentric X coordinate */
 	double Y;	/*!< Geocentric Y coordinate */
@@ -505,28 +505,28 @@ void get_equ_from_hrz
 	double JD,
 	struct ln_equ_posn * position); 
 
-/*! \fn void get_geo_from_helio (struct ln_helcnt_posn *object, double JD, struct ln_geocnt_posn * position); 
+/*! \fn void get_geo_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
 * \brief get geocentric coordinates from heliocentric coordinates  
 * \ingroup transform
 */
 /* Pg ?? */
 void get_geo_from_helio 
-	(struct ln_helcnt_posn *object,  
+	(struct ln_helio_posn *object,  
 	double JD,
-	struct ln_geocnt_posn * position); 
+	struct ln_geo_posn * position); 
 
 
 
 /*! \defgroup VSOP87 VSOP87 Theory
 */
 
-/*! \fn void vsop87_to_fk5 (struct ln_helcnt_posn * position, double JD);
+/*! \fn void vsop87_to_fk5 (struct ln_helio_posn * position, double JD);
 * \ingroup VSOP87
 * \brief transform from VSOP87 to FK5 
 */
 /* equation 31.3 Pg 207         */
 /* JD Julian Day */
-void vsop87_to_fk5 (struct ln_helcnt_posn * position, double JD);
+void vsop87_to_fk5 (struct ln_helio_posn * position, double JD);
 
 
 /*! \defgroup earth Earth
@@ -644,7 +644,7 @@ void get_ecl_aber
 */
 void get_geom_solar_coords 
 	(double JD,
-	struct ln_helcnt_posn * position);
+	struct ln_helio_posn * position);
 
 /*! \fn void get_equ_solar_coords (double JD, struct ln_equ_posn * position);
 * \brief apparent equatorial coordinates
@@ -666,20 +666,20 @@ void get_ecl_solar_coords
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
-void get_geoc_solar_coords (double JD, struct ln_geocnt_posn * position);
+void get_geoc_solar_coords (double JD, struct ln_geo_posn * position);
 	
 
 /*! \defgroup mercury Mercury
 */
 
-/*! \fn void get_mercury_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get Mercury heliocentric coordinates
 * \ingroup mercury
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_mercury_helio_coords 
 	(double JD,
-	struct ln_helcnt_posn * position);
+	struct ln_helio_posn * position);
 
 
 /*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
@@ -734,14 +734,14 @@ double get_mercury_phase (double JD);
 /*! \defgroup venus Venus
 */
 
-/*! \fn void get_venus_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_venus_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get venus heliocentric coordinates 
 * \ingroup venus
 */
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_venus_helio_coords 
 	(double JD,
-	struct ln_helcnt_posn * position);
+	struct ln_helio_posn * position);
 
 
 /*! \fn void get_venus_equ_coords (double JD, struct ln_equ_posn * position);
@@ -797,14 +797,14 @@ double get_venus_phase (double JD);
 ** Earth
 */
 
-/*! \fn void get_earth_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_earth_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get earth heliocentric coordinates
 * \ingroup earth
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_earth_helio_coords 
 	(double JD,
-	struct ln_helcnt_posn * position);
+	struct ln_helio_posn * position);
 
 /*! \fn void get_earth_sun_distance (double JD);
 * \brief Calculate the distance between earth and the sun in AU
@@ -817,14 +817,14 @@ double get_earth_sun_dist (double JD);
 /*! \defgroup mars Mars
 */
 
-/*! \fn void get_mars_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_mars_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get mars heliocentric coordinates
 * \ingroup mars
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_mars_helio_coords 
 	(double JD,
-	struct ln_helcnt_posn * position);
+	struct ln_helio_posn * position);
 
 /*! \fn void get_mars_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Mars heliocentric coordinates
@@ -878,13 +878,13 @@ double get_mars_phase (double JD);
 /*! \defgroup jupiter Jupiter
 */
 
-/*! \fn void get_jupiter_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get jupiter heliocentric coordinates
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_jupiter_helio_coords 
-	(double JD, struct ln_helcnt_posn * position);
+	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Jupiter heliocentric coordinates
@@ -938,13 +938,13 @@ double get_jupiter_phase (double JD);
 /*! \defgroup saturn Saturn
 */
 
-/*! \fn void get_saturn_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_saturn_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get saturn heliocentric coordinates
 * \ingroup saturn
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_saturn_helio_coords 
-	(double JD, struct ln_helcnt_posn * position);
+	(double JD, struct ln_helio_posn * position);
 
 
 /*! \fn void get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
@@ -999,13 +999,13 @@ double get_saturn_phase (double JD);
 /*! \defgroup uranus Uranus
 */
 
-/*! \fn void get_uranus_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_uranus_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get Uranus heliocentric coordinates
 * \ingroup uranus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_uranus_helio_coords 
-	(double JD, struct ln_helcnt_posn * position);
+	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Uranus heliocentric coordinates
@@ -1059,13 +1059,13 @@ double get_uranus_phase (double JD);
 /*! \defgroup neptune Neptune
 */
 
-/*! \fn void get_neptune_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get neptune heliocentric coordinates
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
 void get_neptune_helio_coords 
-	(double JD, struct ln_helcnt_posn * position);
+	(double JD, struct ln_helio_posn * position);
 
 
 /*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
@@ -1120,13 +1120,13 @@ double get_neptune_phase (double JD);
 /*! \defgroup pluto Pluto
 */
 
-/*! \fn void get_pluto_helio_coords (double JD, struct ln_helcnt_posn * position);
+/*! \fn void get_pluto_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief get pluto heliocentric coordinates
 * \ingroup pluto
 */ 
 /* Chapter 37 Pg 263  */
 void get_pluto_helio_coords 
-	(double JD, struct ln_helcnt_posn * position);
+	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_pluto_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief get Pluto heliocentric coordinates

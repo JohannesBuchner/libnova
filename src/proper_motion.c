@@ -26,7 +26,7 @@ Copyright 2000 Liam Girdwood
 ** Proper Motion.
 */
 
-/*! \fn void get_proper_motion_equatorial (struct ln_equ_position * mean_position, struct ln_equ_position * proper_motion, double JD, struct ln_equ_position * position)
+/*! \fn void get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object.
 * \param proper_motion Proper motion of object.
 * \param JD Julian Day.
@@ -36,11 +36,11 @@ Copyright 2000 Liam Girdwood
 * uses mean equatorial coordinates
 * Equ 20.2, 20.3, 20.4 pg 126 
 */
-void get_proper_motion_equatorial 
-	(struct ln_equ_position * mean_position, 
-	struct ln_equ_position * proper_motion, 
+void get_equ_pm 
+	(struct ln_equ_posn * mean_position, 
+	struct ln_equ_posn * proper_motion, 
 	double JD,
-	struct ln_equ_position * position)
+	struct ln_equ_posn * position)
 {
 	double mean_ra, mean_dec, T;
 	

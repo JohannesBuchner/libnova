@@ -2117,30 +2117,30 @@ static struct vsop neptune_radius_r4[RADIUS_R4] = {
 };
 
 
-/*! \fn void get_neptune_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position
 *
 * Calculates neptune's equatorial position for Julian Day JD.
 */ 
-void get_neptune_equatorial_coordinates 
+void get_neptune_equ_coords 
 	(double JD,
-	struct ln_equ_position * position)
+	struct ln_equ_posn * position)
 {
-	struct ln_heliocentric_position h_sol, h_neptune;
-	struct ln_geocentric_position g_sol, g_neptune;
+	struct ln_helio_posn h_sol, h_neptune;
+	struct ln_geo_posn g_sol, g_neptune;
 	double a,b,c;
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geometric_solar_coordinates (JD, &h_sol);
-	get_geocentric_from_heliocentric (&h_sol, JD,  &g_sol);
+	get_geom_solar_coords (JD, &h_sol);
+	get_geo_from_helio (&h_sol, JD,  &g_sol);
 	
 	do
 	{
 		last = t;
-		get_neptune_heliocentric_coordinates (JD - t, &h_neptune);
-		get_geocentric_from_heliocentric (&h_neptune, JD - t, &g_neptune);
+		get_neptune_helio_coords (JD - t, &h_neptune);
+		get_geo_from_helio (&h_neptune, JD - t, &g_neptune);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_neptune.X;
@@ -2169,14 +2169,14 @@ void get_neptune_equatorial_coordinates
 }
 	
 
-/*! \fn void get_neptune_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+/*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
 * Calculate Neptunes heliocentric coordinates. 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_neptune_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3;
@@ -2240,25 +2240,25 @@ void get_neptune_heliocentric_coordinates (double JD, struct ln_heliocentric_pos
 
 
 
-/*! \fn double get_neptune_earth_distance (double JD);
+/*! \fn double get_neptune_earth_dist (double JD);
 * \brief Calculate the distance between neptune and the earth in AU
 * \return distance in AU
 *
 * Calculates the distance in AU between the Earth and neptune.
 */
-double get_neptune_earth_distance (double JD)
+double get_neptune_earth_dist (double JD)
 {
-	struct ln_heliocentric_position  h_neptune, h_earth;
-	struct ln_geocentric_position g_neptune, g_earth;
+	struct ln_helio_posn h_neptune, h_earth;
+	struct ln_geo_posn g_neptune, g_earth;
 	double x, y, z, au;
 	
 	/* get heliocentric positions */
-	get_neptune_heliocentric_coordinates (JD, &h_neptune);
-	get_earth_heliocentric_coordinates (JD, &h_earth);
+	get_neptune_helio_coords (JD, &h_neptune);
+	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_geocentric_from_heliocentric (&h_neptune, JD, &g_neptune);
-	get_geocentric_from_heliocentric (&h_earth, JD, &g_earth);
+	get_geo_from_helio (&h_neptune, JD, &g_neptune);
+	get_geo_from_helio (&h_earth, JD, &g_earth);
 	
 	/* use pythag */
 	x = g_neptune.X - g_earth.X;
@@ -2273,24 +2273,24 @@ double get_neptune_earth_distance (double JD)
 	return (au);
 }
 	
-/*! \fn double get_neptune_sun_distance (double JD);
+/*! \fn double get_neptune_sun_dist (double JD);
 * \brief Calculate the distance between neptune and the sun in AU
 * \return distance in AU
 *
 * Calculates the distance in AU between the Sun and neptune.
 */ 
-double get_neptune_sun_distance (double JD)
+double get_neptune_sun_dist (double JD)
 {
-	struct ln_heliocentric_position  h_neptune;
-	struct ln_geocentric_position g_sol, g_neptune;
+	struct ln_helio_posn  h_neptune;
+	struct ln_geo_posn g_sol, g_neptune;
 	double x, y, z, au;
 	
 	/* get heliocentric position */
-	get_neptune_heliocentric_coordinates (JD, &h_neptune);
+	get_neptune_helio_coords (JD, &h_neptune);
 	
 	/* get geocentric position */
-	get_geocentric_solar_coordinates (JD, &g_sol);
-	get_geocentric_from_heliocentric (&h_neptune, JD, &g_neptune);
+	get_geo_solar_coords (JD, &g_sol);
+	get_geo_from_helio (&h_neptune, JD, &g_neptune);
 	
 	/* use pythag */
 	x = g_neptune.X - g_sol.X;
@@ -2315,8 +2315,8 @@ double get_neptune_magnitude (double JD)
 	double mag, delta, r;
 	
 	/* get distances */
-	r = get_neptune_sun_distance (JD);
-	delta = get_neptune_earth_distance (JD);
+	r = get_neptune_sun_dist (JD);
+	delta = get_neptune_earth_dist (JD);
 
 	mag = -6.87 + 5 * log10 (r * delta);
 	
@@ -2333,9 +2333,9 @@ double get_neptune_disk (double JD)
 	double k,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_distance (JD);
-	r = get_neptune_sun_distance (JD);
-	delta = get_neptune_earth_distance (JD);
+	R = get_earth_sun_dist (JD);
+	r = get_neptune_sun_dist (JD);
+	delta = get_neptune_earth_dist (JD);
 	
 	/* calc fraction angle */
 	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
@@ -2353,9 +2353,9 @@ double get_neptune_phase (double JD)
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_distance (JD);
-	r = get_neptune_sun_distance (JD);
-	delta = get_neptune_earth_distance (JD);
+	R = get_earth_sun_dist (JD);
+	r = get_neptune_sun_dist (JD);
+	delta = get_neptune_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);

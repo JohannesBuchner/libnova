@@ -31,7 +31,7 @@ Copyright 2000 Liam Girdwood
 * accuracy 0.01 arc second error - uses VSOP87 
 */
 
-void get_geom_solar_coords (double JD, struct ln_helcnt_posn * position)
+void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
 {		
 	/* get earths heliocentric position */
 	get_earth_heliocentric_coordinates (JD, position);
@@ -53,7 +53,7 @@ void get_geom_solar_coords (double JD, struct ln_helcnt_posn * position)
 */
 void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 {
-	struct ln_helcnt_posn sol;
+	struct ln_helio_posn sol;
 	struct ln_lnlat_posn LB;
 	double aberration, longitude, obliquity, ecliptic;
 	
@@ -84,7 +84,7 @@ void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 */
 void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 {
-	struct ln_helcnt_posn sol;
+	struct ln_helio_posn sol;
 	double aberration, longitude, obliquity, ecliptic;
 	
 	/* get geometric coords */
@@ -102,17 +102,17 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 	position->lat = sol.B;
 }
 
-/*! \fn void get_geoc_solar_coords (double JD, struct ln_geocnt_posn * position)
+/*! \fn void get_geoc_solar_coords (double JD, struct ln_geo_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
 * Calculate geocentric coordinates (rectangular)
 * accuracy 0.01 arc second error - uses VSOP87 
 */
-void get_geoc_solar_coords (double JD, struct ln_geocnt_posn * position)
+void get_geoc_solar_coords (double JD, struct ln_geo_posn * position)
 {		
 	/* get earths's heliocentric position */
-	struct ln_helcnt_posn sol;
+	struct ln_helio_posn sol;
 	get_earth_helio_coords (JD, &sol);
 	sol.L +=180.0;
 	sol.B *=-1.0;

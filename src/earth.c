@@ -2682,14 +2682,14 @@ static struct vsop earth_radius_r5[RADIUS_R5] = {
     {     0.00000000012,  0.65572878044,    12566.15169998280}, 
 };
 
-/*! \fn void get_earth_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+/*! \fn void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
 * Calculate Earths heliocentric coordinates. 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_earth_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4, L5;
@@ -2756,24 +2756,24 @@ void get_earth_heliocentric_coordinates (double JD, struct ln_heliocentric_posit
 	cR = position->R;
 }
 	
-/*! \fn double get_earth_sun_distance (double JD);
+/*! \fn double get_earth_sun_dist (double JD);
 * \brief Calculate the distance between earth and the sun in AU
 * \return distance in AU
 *
 * Calculates the distance in AU between the Sun and earth.
 */ 
-double get_earth_sun_distance (double JD)
+double get_earth_sun_dist (double JD)
 {
-	struct ln_heliocentric_position  h_earth;
-	struct ln_geocentric_position g_sol, g_earth;
+	struct ln_helio_posn h_earth;
+	struct ln_geo_posn g_sol, g_earth;
 	double x, y, z, au;
 	
 	/* get heliocentric position */
-	get_earth_heliocentric_coordinates (JD, &h_earth);
+	get_earth_helio_coords (JD, &h_earth);
 
 	/* get geocentric position */
-	get_geocentric_solar_coordinates (JD, &g_sol);
-	get_geocentric_from_heliocentric (&h_earth, JD, &g_earth);
+	get_geo_solar_coords (JD, &g_sol);
+	get_geo_from_helio (&h_earth, JD, &g_earth);
 	
 	/* use pythag */
 	x = g_earth.X - g_sol.X;

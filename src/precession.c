@@ -27,7 +27,7 @@ Copyright 2000 Liam Girdwood
 ** Precession
 */
 
-/*! \fn void get_precession_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position)
+/*! \fn void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean object position
 * \param JD Julian day
 * \param position Pointer to store new object position.
@@ -37,7 +37,7 @@ Copyright 2000 Liam Girdwood
 * only for initial epoch J2000.0 
 * Equ 20.2, 20.3, 20.4 pg 126 
 */
-void get_precession_equatorial (struct ln_equ_position * mean_position, double JD, struct ln_equ_position * position)
+void get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
 	double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T;
 	
@@ -86,7 +86,7 @@ void get_precession_equatorial (struct ln_equ_position * mean_position, double J
 	position->dec = rad_to_deg (dec);
 }
 
-/*! \fn void get_precession_ecliptical (struct ln_long_lat_position * mean_position, double JD, struct ln_long_lat_position * position)
+/*! \fn void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 * \param mean_position Mean object position
 * \param JD Julian day
 * \param position Pointer to store new object position.
@@ -97,7 +97,7 @@ void get_precession_equatorial (struct ln_equ_position * mean_position, double J
 * Equ 20.5, 20.6 pg 128 
 * \todo To be implemented. 
 */
-void get_precession_ecliptical (struct ln_long_lat_position * mean_position, double JD, struct ln_long_lat_position * position)
+void get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 {
 
 }

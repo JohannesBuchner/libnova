@@ -37,14 +37,14 @@ double calc_series (struct vsop * data, int terms, double t)
 }
 
 
-/*! \fn void vsop87_to_fk5 (struct ln_heliocentric_position * position, double t)
+/*! \fn void vsop87_to_fk5 (struct ln_helio_posn * position, double t)
 * \param JD Jullian Day
 * \param position Position to transform. 
 *
 * Transform from VSOP87 to FK5. 
 * Equation 31.3 Pg 207.         
 */
-void vsop87_to_fk5 (struct ln_heliocentric_position * position, double JD)
+void vsop87_to_fk5 (struct ln_helio_posn * position, double JD)
 {
 	double LL, T, delta_L, delta_B, B, t;
 	

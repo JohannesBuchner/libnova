@@ -7252,30 +7252,30 @@ static struct vsop mercury_radius_r5[RADIUS_R5] = {
     {     0.00000000000,  4.00511196914,   234791.12827416777} 
 };
 
-/*! \fn void get_mercury_equatorial_coordinates (double JD, struct ln_equ_position * position);
+/*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position
 *
 * Calculates mercury's equatorial position for Julian Day JD.
 */ 
-void get_mercury_equatorial_coordinates 
+void get_mercury_equ_coords 
 	(double JD,
-	struct ln_equ_position * position)
+	struct ln_equ_posn * position)
 {
-	struct ln_heliocentric_position h_sol, h_mercury;
-	struct ln_geocentric_position g_sol, g_mercury;
+	struct ln_helio_posn h_sol, h_mercury;
+	struct ln_geo_posn g_sol, g_mercury;
 	double a,b,c;
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	get_geometric_solar_coordinates (JD, &h_sol);
-	get_geocentric_from_heliocentric (&h_sol, JD,  &g_sol);
+	get_geom_solar_coords (JD, &h_sol);
+	get_geo_from_helio (&h_sol, JD,  &g_sol);
 	
 	do
 	{
 		last = t;
-		get_mercury_heliocentric_coordinates (JD - t, &h_mercury);
-		get_geocentric_from_heliocentric (&h_mercury, JD - t, &g_mercury);
+		get_mercury_helio_coords (JD - t, &h_mercury);
+		get_geo_from_helio (&h_mercury, JD - t, &g_mercury);
 
 		/* equ 33.10 pg 229 */
 		a = g_sol.X + g_mercury.X;
@@ -7304,14 +7304,14 @@ void get_mercury_equatorial_coordinates
 }
 	
 
-/*! \fn void get_mercury_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+/*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
 * Calculate Mercurys heliocentric coordinates. 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
-void get_mercury_heliocentric_coordinates (double JD, struct ln_heliocentric_position * position)
+void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 {
 	double t, t2, t3, t4, t5;
 	double L0, L1, L2, L3, L4, L5;
@@ -7379,25 +7379,25 @@ void get_mercury_heliocentric_coordinates (double JD, struct ln_heliocentric_pos
 }
 
 
-/*! \fn double get_mercury_earth_distance (double JD);
+/*! \fn double get_mercury_earth_dit (double JD);
 * \brief Calculate the distance between mercury and the earth in AU
 * \return distance in AU
 *
 * Calculates the distance in AU between the Earth and mercury.
 */
-double get_mercury_earth_distance (double JD)
+double get_mercury_earth_dist (double JD)
 {
-	struct ln_heliocentric_position  h_mercury, h_earth;
-	struct ln_geocentric_position g_mercury, g_earth;
+	struct ln_helio_posn  h_mercury, h_earth;
+	struct ln_geo_posn g_mercury, g_earth;
 	double x, y, z, au;
 	
 	/* get heliocentric positions */
-	get_mercury_heliocentric_coordinates (JD, &h_mercury);
-	get_earth_heliocentric_coordinates (JD, &h_earth);
+	get_mercury_helio_coords (JD, &h_mercury);
+	get_earth_helio_coords (JD, &h_earth);
 	
 	/* get geocentric coords */
-	get_geocentric_from_heliocentric (&h_mercury, JD, &g_mercury);
-	get_geocentric_from_heliocentric (&h_earth, JD, &g_earth);
+	get_geo_from_helio (&h_mercury, JD, &g_mercury);
+	get_geo_from_helio (&h_earth, JD, &g_earth);
 	
 	/* use pythag */
 	x = g_mercury.X - g_earth.X;
@@ -7412,24 +7412,24 @@ double get_mercury_earth_distance (double JD)
 	return (au);
 }
 	
-/*! \fn double get_mercury_sun_distance (double JD);
+/*! \fn double get_mercury_sun_dist (double JD);
 * \brief Calculate the distance between mercury and the sun in AU
 * \return distance in AU
 *
 * Calculates the distance in AU between the Sun and mercury.
 */ 
-double get_mercury_sun_distance (double JD)
+double get_mercury_sun_dist (double JD)
 {
-	struct ln_heliocentric_position  h_mercury;
-	struct ln_geocentric_position g_sol, g_mercury;
+	struct ln_helio_posn  h_mercury;
+	struct ln_geo_posn g_sol, g_mercury;
 	double x, y, z, au;
 	
 	/* get heliocentric position */
-	get_mercury_heliocentric_coordinates (JD, &h_mercury);
+	get_mercury_helioc_coords (JD, &h_mercury);
 	
 	/* get geocentric position */
-	get_geocentric_solar_coordinates (JD, &g_sol);
-	get_geocentric_from_heliocentric (&h_mercury, JD, &g_mercury);
+	get_geoc_solar_coords (JD, &g_sol);
+	get_geo_from_helio (&h_mercury, JD, &g_mercury);
 	
 	/* use pythag */
 	x = g_mercury.X - g_sol.X;
@@ -7454,8 +7454,8 @@ double get_mercury_magnitude (double JD)
 	double mag, delta, r, i, i2, i3;
 	
 	/* get distances */
-	r = get_venus_sun_distance (JD);
-	delta = get_venus_earth_distance (JD);
+	r = get_venus_sun_dist (JD);
+	delta = get_venus_earth_dist (JD);
 	
 	/* get phase */
 	i = get_venus_phase (JD);
@@ -7477,9 +7477,9 @@ double get_mercury_disk (double JD)
 	double k,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_distance (JD);
-	r = get_mercury_sun_distance (JD);
-	delta = get_mercury_earth_distance (JD);
+	R = get_earth_sun_dist (JD);
+	r = get_mercury_sun_dist (JD);
+	delta = get_mercury_earth_dist (JD);
 	
 	/* calc fraction angle */
 	k = (((r + delta) * (r + delta)) - R * R) / (4 * r * delta);
@@ -7497,9 +7497,9 @@ double get_mercury_phase (double JD)
 	double i,r,delta,R;	
 	
 	/* get distances */
-	R = get_earth_sun_distance (JD);
-	r = get_mercury_sun_distance (JD);
-	delta = get_mercury_earth_distance (JD);
+	R = get_earth_sun_dist (JD);
+	r = get_mercury_sun_dist (JD);
+	delta = get_mercury_earth_dist (JD);
 
 	/* calc phase */
 	i = (r * r + delta * delta - R * R) / (2 * r * delta);
