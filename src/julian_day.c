@@ -307,6 +307,7 @@ double get_julian_local_date(struct ln_date* date)
 	curtime = time (NULL);
 	loctime = localtime(&curtime);
 	JD += ((double)loctime->tm_gmtoff) / 24.0;
+	return JD;
 }
 
 /*! \fn void get_local_date (double JD, struct ln_date * date)
