@@ -26,7 +26,7 @@ digit required */
 #define KEPLER_STEPS	53
 
 /* the BASIC SGN() function  for doubles */
-static inline double sgn (double x)
+static double sgn (double x)
 {
 	if (x == 0.0)
 		return (x);

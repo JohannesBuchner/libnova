@@ -1,6 +1,14 @@
 ChangeLog
 
 20033008
+	-src/libnova.h
+	-src/rise_set.c
+	-src/elliptic_motion.c
+	
+	Removed inlines due to build problems on some compilers
+	
+	Pablo Martikian
+
 	-src/transform.c
 	
 	Removed unintentional debug from CVS

@@ -499,13 +499,13 @@ double get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b);
 * \brief radians to degrees
 * \ingroup conversion
 */
-inline double rad_to_deg (double radians);
+double rad_to_deg (double radians);
 
 /*! \fn double deg_to_rad (double radians)
 * \brief degrees to radians
 * \ingroup conversion
 */
-inline double deg_to_rad (double degrees);
+double deg_to_rad (double degrees);
 
 /*! \fn double hms_to_deg (struct ln_hms * hms)
 * \brief hours to degrees 
@@ -865,7 +865,7 @@ int get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double h
 * \brief Calculate the time of rise, set and transit for the Sun.
 * \ingroup solar
 */
-inline int get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 	
 
 /*! \fn void get_geom_solar_coords (double JD, struct ln_helio_posn * position);
