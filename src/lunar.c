@@ -82,6 +82,18 @@ Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 #define		DELNP	((-0.06424 / RAD) / W12)
 #define 	DELEP	(-0.12879 / RAD)
 
+/*     Precession matrix */
+#define		P1		0.10180391d-4
+#define		P2		0.47020439d-6
+#define		P3		-0.5417367d-9
+#define		P4		-0.2507948d-11
+#define		P5		0.463486d-14
+#define		Q1		-0.113469002d-3
+#define		Q2		0.12372674d-6
+#define		Q3		0.1265417d-8
+#define		Q4		-0.1371808d-11
+#define		Q5		-0.320334d-14
+
 /* constants with corrections for DE200 / LE200 */
 static const double W1[5] = 
 {
@@ -38252,7 +38264,7 @@ double sum_series_elp1 (double* t)
 				}
 			}
 			/* y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += x * sin (y);
 	}
 	}
@@ -38287,7 +38299,7 @@ double sum_series_elp2 (double* t)
 				}
 			}
 			/* y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += x * sin (y);
 		}
 	}
@@ -38323,7 +38335,7 @@ double sum_series_elp3 (double* t)
 			}
 			y += (M_PI_2);
 			/* y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += x * sin (y);
 		}
 	}
@@ -38353,7 +38365,7 @@ double sum_series_elp4 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += earth_pert_elp4[j].A * sin (y);
 		}
 	}
@@ -38382,7 +38394,7 @@ double sum_series_elp5 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += earth_pert_elp5[j].A * sin (y);
 		}
 	}
@@ -38412,7 +38424,7 @@ double sum_series_elp6 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += earth_pert_elp6[j].A * sin (y);
 		}
 	}
@@ -38442,7 +38454,7 @@ double sum_series_elp7 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
@@ -38472,7 +38484,7 @@ double sum_series_elp8 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
@@ -38502,18 +38514,845 @@ double sum_series_elp9 (double *t)
 				}
 			}
 			/* put y in correct quad */
-			y = range_radians (y);
+			y = range_radians2 (y);
 			result += A * sin (y);
 		}
 	}
 	return (result);
 }
 
+/* sum lunar elp10 series */
+double sum_series_elp10 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP10_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp10[j].O) > pre[0])
+		{
+			y = plan_pert_elp10[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp10[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp10[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp10[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp10[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp10[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp11 series */
+double sum_series_elp11 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP11_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp11[j].O) > pre[1])
+		{
+			y = plan_pert_elp11[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp11[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp11[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp11[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp11[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp11[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp12 series */
+double sum_series_elp12 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP12_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp12[j].O) > pre[2])
+		{
+			y = plan_pert_elp12[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp12[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp12[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp12[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp12[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp12[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp13 series */
+double sum_series_elp13 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP13_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp13[j].O) > pre[0])
+		{
+			y = plan_pert_elp13[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp13[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp13[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp13[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp13[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp13[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp14 series */
+double sum_series_elp14 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP14_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp14[j].O) > pre[1])
+		{
+			y = plan_pert_elp14[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp14[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp14[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp14[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp14[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp14[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+
+/* sum lunar elp15 series */
+double sum_series_elp15 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP15_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp15[j].O) > pre[2])
+		{
+			y = plan_pert_elp15[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += (plan_pert_elp15[j].ipla[8] * del[0][k] 
+				+ plan_pert_elp15[j].ipla[9] * del[2][k] 
+				+ plan_pert_elp15[j].ipla[10] * del [3][k]) * t[k];
+				for (i = 0; i < 8; i++) 
+				{
+					y += plan_pert_elp15[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp15[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp16 series */
+double sum_series_elp16 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP16_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp16[j].O) > pre[0])
+		{
+			y = plan_pert_elp16[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp16[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp16[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp16[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+double sum_series_elp17 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP17_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp17[j].O) > pre[1])
+		{
+			y = plan_pert_elp17[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp17[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp17[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp17[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+double sum_series_elp18 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP18_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp18[j].O) > pre[2])
+		{
+			y = plan_pert_elp18[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp18[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp18[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += plan_pert_elp18[j].O * sin (y);
+		}
+	}
+	return (result);
+}
+
+double sum_series_elp19 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP19_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp19[j].O) > pre[0])
+		{
+			y = plan_pert_elp19[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp19[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp19[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp19[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+double sum_series_elp20 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP20_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp20[j].O) > pre[1])
+		{
+			y = plan_pert_elp20[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp20[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp20[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp20[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+double sum_series_elp21 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y,x;
+	
+	for (j=0; j< ELP21_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_pert_elp21[j].O) > pre[2])
+		{
+			y = plan_pert_elp21[j].theta * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_pert_elp21[j].ipla[i + 7] * del[i][k] * t[k];
+				}
+				for (i = 0; i < 7; i++) 
+				{
+					y += plan_pert_elp21[j].ipla[i] * p[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			x = plan_pert_elp21[j].O * t[1];
+			result += x * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp22 series */
+double sum_series_elp22 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP22_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp22[j].A) > pre[0])
+		{
+			y = tidal_effects_elp22[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp22[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp22[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += tidal_effects_elp22[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp23 series */
+double sum_series_elp23 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP23_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp23[j].A) > pre[1])
+		{
+			y = tidal_effects_elp23[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp23[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp23[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += tidal_effects_elp23[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp24 series */
+double sum_series_elp24 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP24_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp24[j].A) > pre[2])
+		{
+			y = tidal_effects_elp24[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp24[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp24[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += tidal_effects_elp24[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp25 series */
+double sum_series_elp25 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP25_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp25[j].A) > pre[0])
+		{
+			A = tidal_effects_elp25[j].A * t[1];
+			y = tidal_effects_elp25[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp25[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp25[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp26 series */
+double sum_series_elp26 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP26_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp26[j].A) > pre[1])
+		{
+			A = tidal_effects_elp26[j].A * t[1];
+			y = tidal_effects_elp26[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp26[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp26[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp27 series */
+double sum_series_elp27 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP27_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(tidal_effects_elp27[j].A) > pre[2])
+		{
+			A = tidal_effects_elp27[j].A * t[1];
+			y = tidal_effects_elp27[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += tidal_effects_elp27[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += tidal_effects_elp27[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp28 series */
+double sum_series_elp28 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP28_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(moon_pert_elp28[j].A) > pre[0])
+		{
+			y = moon_pert_elp28[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += moon_pert_elp28[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += moon_pert_elp28[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += moon_pert_elp28[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp29 series */
+double sum_series_elp29 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP29_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(moon_pert_elp29[j].A) > pre[1])
+		{
+			y = moon_pert_elp29[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += moon_pert_elp29[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += moon_pert_elp29[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += moon_pert_elp29[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+
+/* sum lunar elp30 series */
+double sum_series_elp30 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP30_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(moon_pert_elp30[j].A) > pre[2])
+		{
+			y = moon_pert_elp30[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += moon_pert_elp30[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += moon_pert_elp30[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += moon_pert_elp30[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+
+/* sum lunar elp31 series */
+double sum_series_elp31 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP31_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(rel_pert_elp31[j].A) > pre[0])
+		{
+			y = rel_pert_elp31[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += rel_pert_elp31[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += rel_pert_elp31[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += rel_pert_elp31[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp32 series */
+double sum_series_elp32 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP32_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(rel_pert_elp32[j].A) > pre[1])
+		{
+			y = rel_pert_elp32[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += rel_pert_elp32[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += rel_pert_elp32[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += rel_pert_elp32[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp33 series */
+double sum_series_elp33 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y;
+	
+	for (j=0; j< ELP33_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(rel_pert_elp33[j].A) > pre[2])
+		{
+			y = rel_pert_elp33[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += rel_pert_elp33[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += rel_pert_elp33[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += rel_pert_elp33[j].A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp34 series */
+double sum_series_elp34 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP34_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_sol_pert_elp34[j].A) > pre[0])
+		{
+			A = plan_sol_pert_elp34[j].A * t[2];
+			y = plan_sol_pert_elp34[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += plan_sol_pert_elp34[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_sol_pert_elp34[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+/* sum lunar elp35 series */
+double sum_series_elp35 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP35_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_sol_pert_elp35[j].A) > pre[1])
+		{
+			A = plan_sol_pert_elp35[j].A * t[2];
+			y = plan_sol_pert_elp35[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += plan_sol_pert_elp35[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_sol_pert_elp35[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+
+/* sum lunar elp36 series */
+double sum_series_elp36 (double *t)
+{
+	double result = 0;
+	int i,j,k;
+	double y, A;
+	
+	for (j=0; j< ELP36_SIZE; j++)
+	{
+		/* do we need to calc this value */
+		if (fabs(plan_sol_pert_elp36[j].A) > pre[2])
+		{
+			A = plan_sol_pert_elp36[j].A * t[2];
+			y = plan_sol_pert_elp36[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += plan_sol_pert_elp36[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += plan_sol_pert_elp36[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians2 (y);
+			result += A * sin (y);
+		}
+	}
+	return (result);
+}
+
+
 void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 {
 	double t[5];
 	double elp[36];
 	int i;
+	double a,b,c;
+	double x,y,z;
+	double pw,qw, pwqw, pw2, qw2, ra;
+	double x1,y1,z1;
 	
 	/* calc julian centuries */
 	t[0] = 1.0;
@@ -38537,9 +39376,63 @@ void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
 	elp[6] = sum_series_elp7(t);
 	elp[7] = sum_series_elp8(t);
 	elp[8] = sum_series_elp9(t);
+	elp[9] = sum_series_elp10(t);
+	elp[10] = sum_series_elp11(t);
+	elp[11] = sum_series_elp12(t);
+	elp[12] = sum_series_elp13(t);
+	elp[13] = sum_series_elp14(t);
+	elp[14] = sum_series_elp15(t);
+	elp[15] = sum_series_elp16(t);
+	elp[16] = sum_series_elp17(t);
+	elp[17] = sum_series_elp18(t);
+	elp[18] = sum_series_elp19(t);
+	elp[19] = sum_series_elp20(t);
+	elp[20] = sum_series_elp21(t);
+	elp[21] = sum_series_elp22(t);
+	elp[22] = sum_series_elp23(t);
+	elp[23] = sum_series_elp24(t);
+	elp[24] = sum_series_elp25(t);
+	elp[25] = sum_series_elp26(t);
+	elp[26] = sum_series_elp27(t);
+	elp[27] = sum_series_elp28(t);
+	elp[28] = sum_series_elp29(t);
+	elp[29] = sum_series_elp30(t);
+	elp[30] = sum_series_elp31(t);
+	elp[31] = sum_series_elp32(t);
+	elp[32] = sum_series_elp33(t);
+	elp[33] = sum_series_elp34(t);
+	elp[34] = sum_series_elp35(t);
+	elp[35] = sum_series_elp36(t);
 	
-	for (i=0; i<36;i++)
-	{
-		printf("elp%d %f\n",i,elp[i]);
-	}
+	a = elp[0] + elp[3] + elp[6] + elp[9] + elp[12] +
+		elp[15] + elp[18] + elp[21] + elp[24] +
+		elp[27] + elp[30] + elp[33];
+	b = elp[1] + elp[4] + elp[7] + elp[10] + elp[13] +
+		elp[16] + elp[19] + elp[22] + elp[25] +
+		elp[28] + elp[31] + elp[34];
+	c = elp[2] + elp[5] + elp[8] + elp[11] + elp[14] +
+		elp[17] + elp[20] + elp[23] + elp[26] +
+		elp[29] + elp[32] + elp[35];
+		
+	a = a / RAD + W1[0] + W1[1] * t[1] + W1[2] * t[2] + W1[3] * t[3] + W1[4] * t[4];
+	b = b / RAD;
+	c = c * A0 / ATH;
+	
+	x1 = c * cos(b);
+	x2 = x1 * sin(a);
+	x1 = x1 * cos(a);
+	x3 = c * sin(b);
+	
+	pw = (p1 + p2 * t[1] + p3 * t[2] + p4 * t[3] + p5 * t[4]) * t[1];
+	qw = (q1 + q2 * t[1] + q3 * t[2] + q4 * t[3] + q5 * t[4]) * t[1];
+	ra = 2.0 * sqrt(1 - pw * pw - qw * qw);
+	pwqw = 2.0 * pw * qw;
+	pw2 = 1 - 2.0 * pw * pw;
+	qw2 = 1 - 2.0 * qw * qw;
+	pw = pw * ra;
+	qw = qw * ra;
+	a = pw2 * x1 + pwqw * x2 +pw * x3;
+	b = pwqw * x1 + qw2 * x2 - qw * x3;
+	c = -pw * x1 + qw * x2 + (pw2 + qw2 -1) * x3;
+	printf ("a %0.15f b %0.15f c %0.15f\n",a,b,c);
 }

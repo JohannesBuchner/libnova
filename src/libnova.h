@@ -469,6 +469,7 @@ double range_degrees (double angle);
 * \ingroup conversion 
 */
 double range_radians (double angle);
+double range_radians2 (double angle);
 
 /*! \defgroup transform Transformation of Coordinates using apparent positions 
 */

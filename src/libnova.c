@@ -231,6 +231,22 @@ double range_radians (double angle)
 	return (range);
 }
 
+/* puts a large angle in the correct range -2PI - 2PI radians */
+/* preserve sign */
+double range_radians2 (double angle)
+{
+    double temp;
+    double range;
+    
+    if (angle > (-2.0 * M_PI) && angle < (2.0 * M_PI))
+    	return(angle);
+    
+	temp = (int)(angle / (M_PI * 2.0));
+	temp *= (M_PI * 2.0);
+	range = angle - temp;
+
+	return (range);
+}
 
 
 /* add seconds to hms */
