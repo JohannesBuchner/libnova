@@ -20,6 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "julian_day.h"
 #include "libnova.h"
 #include <time.h>
+#include <string.h>
 
 /*! \fn double get_julian_day (struct ln_date * date)
 * \param date Date required.
@@ -35,18 +36,26 @@ double get_julian_day (struct ln_date * date)
     double JD;
     double days;
     int a,b;
-    
+	struct ln_date local_date;
+		
+	/* create local copy */
+    memcpy (&local_date, date, sizeof (struct ln_date));
+		
     /* check for month = January or February */
-    if (date->months < 3 )
+    if (local_date.months < 3 )
     {
-        date->years--;
-	    date->months += 12;
+        local_date.years--;
+	    local_date.months += 12;
 	}
 	
-	a = date->years / 100;
+	a = local_date.years / 100;
 	
 	/* check for Julian or Gregorian calendar (starts Oct 4th 1582) */
-	if (date->years > 1582 || (date->years == 1582 && (date->months > 10 || (date->months == 10 && date->days >= 4))))
+	if (local_date.years > 1582 || 
+		(local_date.years == 1582 && 
+		(local_date.months > 10 || 
+		(local_date.months == 10 &&
+		local_date.days >= 4))))
 	{
 	    /* Gregorian calendar */    
 	    b = 2 - a + (a / 4);
@@ -58,11 +67,11 @@ double get_julian_day (struct ln_date * date)
 	}
 	
 	/* add a fraction of hours, minutes and secs to days*/
-	days = date->days + (double)(date->hours / 24.0) + (double)(date->minutes / 1440.0) + (double)(date->seconds /  86400.0);
+	days = local_date.days + (double)(local_date.hours / 24.0) + (double)(local_date.minutes / 1440.0) + (double)(local_date.seconds /  86400.0);
 
 	/* now get the JD */
-	JD = (int)(365.25 * (date->years + 4716)) + 
-	    (int)(30.6001 * (date->months + 1)) + days + b - 1524.5;
+	JD = (int)(365.25 * (local_date.years + 4716)) + 
+	    (int)(30.6001 * (local_date.months + 1)) + days + b - 1524.5;
 	
 	return (JD);
 }

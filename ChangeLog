@@ -1,10 +1,16 @@
 ChangeLog
 
+20032703
+	-src/julian_day.c
+	Fixed bug stopping get_julian_day() cahnging parameter.
+	
+	Kimura Fuyuku, Liam Girdwood
+
 20032803
 	-src/libnova.h, libnova.c
 	Added sign member to struct ln_dms to represent small negative angles.
 	
-	John R. Thorstensen Liam Girdwood
+	John R. Thorstensen, Liam Girdwood
 
 
 **** Release 0.7.0 ****
