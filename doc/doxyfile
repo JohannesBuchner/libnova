@@ -3,7 +3,7 @@
 # General configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = libnova
-PROJECT_NUMBER         = "v 0.8.0"
+PROJECT_NUMBER         = "v 0.9.0"
 OUTPUT_DIRECTORY       = .
 OUTPUT_LANGUAGE        = English
 EXTRACT_ALL            = NO
