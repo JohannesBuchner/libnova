@@ -62,6 +62,8 @@ void get_rect_from_helio
 *
 * Transform an objects equatorial coordinates into horizontal coordinates
 * for the given julian day and observers position.
+* 
+* 0 deg azimuth = south, 90 deg = west.
 */
 /* Equ 12.1,12.2 pg 88 
 *
@@ -76,7 +78,7 @@ void get_hrz_from_equ
 	double JD, 
 	struct ln_hrz_posn * position)
 {
-	double H, ra, longitude, latitude, declination, A, h, sidereal;
+	double H, ra, longitude, latitude, declination, A, Ac, As, h, Z, Zs, sidereal;
 
 
 	/* get mean sidereal time in hours and change it to radians*/
@@ -88,23 +90,48 @@ void get_hrz_from_equ
 	longitude = deg_to_rad (observer->lng);
 	H = sidereal - longitude - ra;
 
-
 	/* hence formula 12.5 and 12.6 give */
 	/* convert to radians - hour angle, observers latitude, object declination */
-
 	latitude = deg_to_rad (observer->lat);
 	declination = deg_to_rad (object->dec);
 
-	/* formula 12.5 */
-	A = (sin (H)) / ((cos (H) * sin (latitude)) - (tan (declination) * cos (latitude)));
-	A = atan (A);
-	
-	/* formula 12.6 */
-	h = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
-	h = asin (h);
+	/* formula 12.6 *; missuse of A (you have been warned) */
+	A = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
+	h = asin (A);
 
 	/* covert back to degrees */
 	position->alt = rad_to_deg (h);   
+
+	/* zenith distance, Telescope Control 6.8a */
+	Z = acos (A);
+
+	/* is'n there better way to compute that? */
+	Zs = sin (Z);
+
+	/* sane check for zenit distance; don't try to divide by 0 */
+
+	if (Zs < 1e-5)
+	{
+		position->az = 0;
+		return;
+	}
+
+	/* formulas TC 6.8d Taff 1991, pp. 2 and 13 - vector transformations */
+	As = (cos (declination) * sin (H)) / Zs;
+	Ac = (sin (latitude) * cos (declination) * cos (H) - cos (latitude) * sin (declination)) / Zs;
+
+	// don't blom at atan2
+	if (fabs(As) < 1e-5)
+	{
+		position->az = 0;
+		return;
+	}
+	A = atan2 (As, Ac);
+
+	// normalize A
+	A = (A < 0) ? 2 * M_PI + A : A;
+
+	/* covert back to degrees */
 	position->az = rad_to_deg (A);
 }
 
