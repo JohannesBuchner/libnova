@@ -23,13 +23,31 @@ A simple example showing some lunar calculations.
 #include <stdio.h>
 #include "libnova.h"
 
+void print_date (char * title, struct ln_date* date)
+{
+	printf ("\n%s\n",title);
+	printf (" Year    : %d\n", date->years);
+	printf (" Month   : %d\n", date->months);
+	printf (" Day     : %d\n", date->days);
+	printf (" Hours   : %d\n", date->hours);
+	printf (" Minutes : %d\n", date->minutes);
+	printf (" Seconds : %f\n", date->seconds);
+}
+
 int main (int argc, char* argv[])
 {
 	double JD;
 	struct ln_rect_posn moon;
 	struct ln_equ_posn equ;
 	struct ln_lnlat_posn ecl;
-		
+	struct ln_lnlat_posn observer;
+	struct ln_rst_time rst;
+	struct ln_date rise, transit, set;
+	
+	/* observers location (Edinburgh), used to calc rst */
+	observer.lat = 55.92;
+	observer.lng = 3.18;
+	
 	/* get the julian day from the local system time */
 	JD = get_julian_from_sys();
 	printf ("JD %f\n",JD);
@@ -53,6 +71,18 @@ int main (int argc, char* argv[])
 	printf ("lunar disk %f\n", get_lunar_disk(JD));
 	printf ("lunar phase %f\n", get_lunar_phase(JD));
 	printf ("lunar bright limb %f\n", get_lunar_bright_limb(JD));
+	
+	/* rise, set and transit time */
+	if (get_lunar_rst (JD, &observer, &rst) == 1) 
+		printf ("Moon is circumpolar\n");
+	else {
+		get_local_date (rst.rise, &rise);
+		get_local_date (rst.transit, &transit);
+		get_local_date (rst.set, &set);
+		print_date ("Rise", &rise);
+		print_date ("Transit", &transit);
+		print_date ("Set", &set);
+	}
 	
 	return 0;
 }

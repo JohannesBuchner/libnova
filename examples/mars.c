@@ -23,17 +23,36 @@ A simple example showing some planetary calculations.
 #include <stdio.h>
 #include "libnova.h"
 
+void print_date (char * title, struct ln_date* date)
+{
+	printf ("\n%s\n",title);
+	printf (" Year    : %d\n", date->years);
+	printf (" Month   : %d\n", date->months);
+	printf (" Day     : %d\n", date->days);
+	printf (" Hours   : %d\n", date->hours);
+	printf (" Minutes : %d\n", date->minutes);
+	printf (" Seconds : %f\n", date->seconds);
+}
+
 int main (int argc, char * argv[])
 {
 	struct ln_helio_posn pos;
 	struct lnh_equ_posn hequ;
 	struct ln_equ_posn equ;
+	struct ln_rst_time rst;
+	struct ln_date rise, set, transit;
+	struct ln_lnlat_posn observer;
 	double JD;
 	double au;
 	
+	/* observers location (Edinburgh), used to calc rst */
+	observer.lat = 55.92;
+	observer.lng = 3.18;
+	
 	/* get Julian day from local time */
 	JD = get_julian_from_sys();	
-
+	printf ("JD %f\n", JD);
+	
 	/* longitude, latitude and radius vector */
 	get_mars_helio_coords(JD, &pos);	
 	printf("Mars L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -58,6 +77,18 @@ int main (int argc, char * argv[])
 	printf ("mars -> magnitude %f\n",au);
 	au = get_mars_phase (JD);
 	printf ("mars -> phase %f\n",au);
+	
+		/* rise, set and transit time */
+	if (get_mars_rst (JD, &observer, &rst) == 1) 
+		printf ("Moon is circumpolar\n");
+	else {
+		get_local_date (rst.rise, &rise);
+		get_local_date (rst.transit, &transit);
+		get_local_date (rst.set, &set);
+		print_date ("Rise", &rise);
+		print_date ("Transit", &transit);
+		print_date ("Set", &set);
+	}
 	
 	return 0;
 }
