@@ -1186,6 +1186,9 @@ double get_pluto_disk (double JD);
 /* Chapter 41 */
 double get_pluto_phase (double JD);
 
+/* temp */
+void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
+
 #ifdef __cplusplus
 };
 #endif

@@ -24,27 +24,16 @@ Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 /* used for elp1 - 3 */
 struct main_problem
 {
-	int i1;
-	int i2;
-	int i3;
-	int i4;
+	int ilu[4];
 	double A;
-	double B1;
-	double B2;
-	double B3;
-	double B4;
-	double B5;
-	double B6;
+	double B[6];
 };
 
 /* used for elp 4 - 9 */
 struct earth_pert
 {
-	int i1;
-	int i2;
-	int i3;
-	int i4;
-	int i5;
+	int iz;
+	int ilu[4];
 	double O;
 	double A;
 	double P;
@@ -53,17 +42,7 @@ struct earth_pert
 /* used for elp 10 - 21 */
 struct planet_pert
 {
-	int i1;
-	int i2;
-	int i3;
-	int i4;
-	int i5;
-	int i6;
-	int i7;
-	int i8;
-	int i9;
-	int i10;
-	int i11;
+	int ipla[11];
 	double theta;
 	double O;
 	double P;
@@ -76,17 +55,17 @@ typedef struct earth_pert plan_sol_pert;
  
 
 /* sum ELP series */
-double sum_series_elp1 ();
-double sum_series_elp2 ();
-double sum_series_elp3 ();
-double sum_series_elp4 (double t);
-double sum_series_elp5 (double t);
-double sum_series_elp6 (double t);
-double sum_series_elp7 (double t);
-double sum_series_elp8 (double t);
-double sum_series_elp9 (double t);
+double sum_series_elp1 (double *t);
+double sum_series_elp2 (double *t);
+double sum_series_elp3 (double *t);
+double sum_series_elp4 (double *t);
+double sum_series_elp5 (double *t);
+double sum_series_elp6 (double *t);
+double sum_series_elp7 (double *t);
+double sum_series_elp8 (double *t);
+double sum_series_elp9 (double *t);
 
 /* initialise lunar constants */
-void init_lunar_constants (double t);
+void init_lunar_constants ();
 
 #endif

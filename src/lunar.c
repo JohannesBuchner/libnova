@@ -60,7 +60,102 @@ Copyright (C) 2002 Liam Girdwood <liam@nova-ioe.org>
 #define ELP36_SIZE	19    		/* Planetary perturbations - solar eccentricity. Distance/t2 */
 
 
-struct main_problem main_elp1[ELP1_SIZE] = 
+/* Chapront theory lunar constants */
+#define 	RAD		(648000.0 / M_PI)
+#define		DEG		(M_PI / 180.0)
+#define		M_PI2 	(2.0 * M_PI)
+#define		PIS2	(M_PI / 2.0)
+#define 	ATH		384747.9806743165
+#define 	A0		384747.9806448954
+#define		AM	 	0.074801329518
+#define		ALPHA 	0.002571881335
+#define		DTASM	(2.0 * ALPHA / (3.0 * AM))
+#define		W12		(1732559343.73604 / RAD)
+#define		PRECES	(5029.0966 / RAD)
+#define		C1		60.0
+#define		C2		3600.0
+
+/* Corrections of the constants for DE200/LE200 */
+#define		DELNU	((0.55604 / RAD) / W12)
+#define		DELE	(0.01789 / RAD)
+#define		DELG	(-0.08066 / RAD)
+#define		DELNP	((-0.06424 / RAD) / W12)
+#define 	DELEP	(-0.12879 / RAD)
+
+/* constants with corrections for DE200 / LE200 */
+static const double W1[5] = 
+{
+	((218.0 + (18.0 / 60.0) + (59.95571 / 3600.0))) * DEG,
+	1732559343.73604 / RAD,
+	-5.8883 / RAD,
+	0.006604 / RAD,
+	-0.00003169 / RAD
+}; 
+
+static const double W2[5] = 
+{
+	((83.0 + (21.0 / 60.0) + (11.67475 / 3600.0))) * DEG,
+	14643420.2632 / RAD,
+	-38.2776 /  RAD,
+	-0.045047 / RAD,
+	0.00021301 / RAD
+};
+
+static const double W3[5] = 
+{
+	(125.0 + (2.0 / 60.0) + (40.39816 / 3600.0)) * DEG,
+	-6967919.3622 / RAD,
+	6.3622 / RAD,
+	0.007625 / RAD,
+	-0.00003586 / RAD
+};
+
+static const double earth[5] = 
+{
+	(100.0 + (27.0 / 60.0) + (59.22059 / 3600.0)) * DEG,
+	129597742.2758 / RAD,
+	-0.0202 / RAD,
+	0.000009 / RAD,
+	0.00000015 / RAD	
+};
+
+static const double peri[5] =
+{
+	(102.0 + (56.0 / 60.0) + (14.42753 / 3600.0)) * DEG,
+	1161.2283 / RAD,
+	0.5327 / RAD,
+	-0.000138 / RAD,
+	0
+};
+
+/* Delaunay's arguments.*/
+static double del[4][5];
+	
+static const double zeta[2] = 
+{
+	(218.0 + (18.0 / 60.0) + (59.95571 / 3600.0)) * DEG, 
+	((1732559343.73604 / RAD) + PRECES)
+};
+
+
+/* Planetary arguments */
+static const double p[8][2] = 
+{
+	{(252 + 15 / C1 + 3.25986 / C2 ) * DEG, 538101628.68898 / RAD },
+	{(181 + 58 / C1 + 47.28305 / C2) * DEG, 210664136.43355 / RAD },
+	{(100.0 + (27.0 / 60.0) + (59.22059 / 3600.0)) * DEG, 129597742.2758 / RAD},
+	{(355 + 25 / C1 + 59.78866 / C2) * DEG, 68905077.59284 / RAD },
+	{(34 + 21 / C1 + 5.34212 / C2) * DEG, 10925660.42861 / RAD },
+	{(50 + 4 / C1 + 38.89694 / C2) * DEG, 4399609.65932 / RAD },
+	{(314 + 3 / C1 + 18.01841 / C2) * DEG, 1542481.19393 / RAD },
+	{(304 + 20 / C1 + 55.19575 / C2) * DEG, 786550.32074 / RAD }
+};
+
+/* precision */
+static double pre[3];
+
+/* ELP 2000-82B Arguments */
+const struct main_problem main_elp1[ELP1_SIZE] = 
 {
 	{0, 0, 0, 2, -411.602870, 168.480000, -18433.810000, -121.620000, 0.400000, -0.180000},
 	{0, 0, 0, 4, 0.420340, -0.390000, 37.650000, 0.570000, 0.000000, 0.000000},
@@ -1087,7 +1182,7 @@ struct main_problem main_elp1[ELP1_SIZE] =
 	{10, 0, 0, 0, 0.000020, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000}
 };
 
-struct main_problem main_elp2[ELP2_SIZE] =
+const struct main_problem main_elp2[ELP2_SIZE] =
 {
 	{0, 0, 0, 1, 18461.400000, 0.000000, 412529.610000, 0.000000, 0.000000, 0.000000},
 	{0, 0, 0, 3, -6.296640, 7.680000, -422.650000, -13.210000, 0.020000, -0.020000},
@@ -2010,7 +2105,7 @@ struct main_problem main_elp2[ELP2_SIZE] =
 };
 
 
-struct main_problem main_elp3 [ELP3_SIZE] = 
+const struct main_problem main_elp3 [ELP3_SIZE] = 
 {
 	{0, 0, 0, 0, 385000.527190, -7992.630000, -11.060000, 21578.080000, -4.530000, 11.390000},
 	{0, 0, 0, 2, -3.148370, -204.480000, -138.940000, 159.640000, -0.390000, 0.120000},
@@ -2719,7 +2814,7 @@ struct main_problem main_elp3 [ELP3_SIZE] =
 };
 
 
-struct earth_pert earth_pert_elp4 [ELP4_SIZE] = 
+const struct earth_pert earth_pert_elp4 [ELP4_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 270.000000, 0.000030, 0.075000},
 	{0, 0, 0, 0, 2, 0.000000, 0.000370, 0.037000},
@@ -3070,7 +3165,7 @@ struct earth_pert earth_pert_elp4 [ELP4_SIZE] =
 	{2, 4, 0, -1, -2, 180.000000, 0.000010, 0.028000}
 };
 
-struct earth_pert earth_pert_elp5 [ELP5_SIZE] = 
+const struct earth_pert earth_pert_elp5 [ELP5_SIZE] = 
 {
 	{0, 0, 0, 0, 3, 0.000000, 0.000030, 0.025000},
 	{0, 0, 0, 1, -3, 180.000000, 0.000210, 0.037000},
@@ -3390,7 +3485,7 @@ struct earth_pert earth_pert_elp5 [ELP5_SIZE] =
 	{2, 4, 0, -1, -1, 0.000000, 0.000010, 0.020000}
 };
 
-struct earth_pert earth_pert_elp6 [ELP6_SIZE] = 
+const struct earth_pert earth_pert_elp6 [ELP6_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.043010, 99999.999000},
 	{0, 0, 0, 0, 1, 180.000000, 0.000030, 0.075000},
@@ -3631,7 +3726,7 @@ struct earth_pert earth_pert_elp6 [ELP6_SIZE] =
 	{2, 2, 0, 1, -2, 90.000000, 0.000050, 0.026000}
 };
 
-struct earth_pert earth_pert_elp7 [ELP7_SIZE] = 
+const struct earth_pert earth_pert_elp7 [ELP7_SIZE] = 
 {
 	{1, -2, 0, 0, -1, 180.000000, 0.000030, 0.040000},
 	{1, -2, 0, 0, 1, 180.000000, 0.000020, 0.487000},
@@ -3649,7 +3744,7 @@ struct earth_pert earth_pert_elp7 [ELP7_SIZE] =
 	{2, 0, 0, 0, -2, 0.000000, 0.000040, 9.307000}
 };
 
-struct earth_pert earth_pert_elp8 [ELP8_SIZE] = 
+const struct earth_pert earth_pert_elp8 [ELP8_SIZE] = 
 {
 	{1, -2, 0, 0, 0, 180.000000, 0.000120, 0.088000},
 	{1, -2, 0, 1, 0, 180.000000, 0.000030, 0.530000},
@@ -3664,7 +3759,7 @@ struct earth_pert earth_pert_elp8 [ELP8_SIZE] =
 	{2, 0, 0, 0, -1, 180.000000, 0.000090, 0.075000}
 };
 
-struct earth_pert earth_pert_elp9 [ELP9_SIZE] = 
+const struct earth_pert earth_pert_elp9 [ELP9_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 270.000000, 0.000040, 99999.999000},
 	{1, -2, 0, 0, -1, 270.000000, 0.000040, 0.040000},
@@ -3676,7 +3771,7 @@ struct earth_pert earth_pert_elp9 [ELP9_SIZE] =
 	{1, 2, 0, 0, -1, 90.000000, 0.000040, 0.041000}
 };
 
-struct planet_pert plan_pert_elp10 [ELP10_SIZE] = 
+const struct planet_pert plan_pert_elp10 [ELP10_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 359.998310, 0.000200, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 359.982540, 0.000070, 0.074000},
@@ -18008,7 +18103,7 @@ struct planet_pert plan_pert_elp10 [ELP10_SIZE] =
 	{17, 0, -22, 0, 0, 0, 0, 0, -5, 1, 0, 332.538240, 0.000020, 411.722000}
 };
 
-struct planet_pert plan_pert_elp11 [ELP11_SIZE] = 
+const struct planet_pert plan_pert_elp11 [ELP11_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 179.931970, 0.000680, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 359.928610, 0.000070, 5.997000},
@@ -23246,7 +23341,7 @@ struct planet_pert plan_pert_elp11 [ELP11_SIZE] =
 };
 
 
-struct planet_pert plan_pert_elp12 [ELP12_SIZE] = 
+const struct planet_pert plan_pert_elp12 [ELP12_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90.000000, 0.020450, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 270.015620, 0.000370, 0.037000},
@@ -29881,7 +29976,7 @@ struct planet_pert plan_pert_elp12 [ELP12_SIZE] =
 	{5, 0, -7, 0, 0, 0, 0, 0, 0, 0, 0, 52.907800, 0.000030, 0.073000}
 };
 
-struct planet_pert plan_pert_elp13 [ELP13_SIZE] = 
+const struct planet_pert plan_pert_elp13 [ELP13_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.000110, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 277.117190, 0.000020, 0.075000},
@@ -34269,7 +34364,7 @@ struct planet_pert plan_pert_elp13 [ELP13_SIZE] =
 	{13, 0, -16, 0, 0, 0, 0, 0, -2, -1, 0, 214.043790, 0.000010, 62.252000}
 };
 
-struct planet_pert plan_pert_elp14 [ELP14_SIZE] = 
+const struct planet_pert plan_pert_elp14 [ELP14_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 73.435780, 0.000100, 0.081000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 2, 0, -1, 277.117190, 0.000050, 0.088000},
@@ -35106,7 +35201,7 @@ struct planet_pert plan_pert_elp14 [ELP14_SIZE] =
 	{3, 0, -1, 0, 0, 0, 0, 0, -2, 1, 1, 218.714940, 0.000010, 0.075000}
 };
 
-struct planet_pert plan_pert_elp15 [ELP15_SIZE] = 
+const struct planet_pert plan_pert_elp15 [ELP15_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90.000000, 0.000030, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 2, -3, 0, 277.418350, 0.000020, 0.067000},
@@ -36825,7 +36920,7 @@ struct planet_pert plan_pert_elp15 [ELP15_SIZE] =
 	{3, 0, -1, 0, 0, 0, 0, 0, -2, 0, 0, 63.348720, 0.000050, 0.075000}
 };
 
-struct planet_pert plan_pert_elp16 [ELP16_SIZE] = 
+const struct planet_pert plan_pert_elp16 [ELP16_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 180.000310, 0.000020, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 359.999680, 0.000120, 0.074000},
@@ -37000,7 +37095,7 @@ struct planet_pert plan_pert_elp16 [ELP16_SIZE] =
 };
 
 
-struct planet_pert plan_pert_elp17 [ELP17_SIZE] = 
+const struct planet_pert plan_pert_elp17 [ELP17_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.000020, 0.000680, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 180.000000, 0.000410, 5.997000},
@@ -37155,7 +37250,7 @@ struct planet_pert plan_pert_elp17 [ELP17_SIZE] =
 };
 
 
-struct planet_pert plan_pert_elp18 [ELP18_SIZE] = 
+const struct planet_pert plan_pert_elp18 [ELP18_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.027020, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 270.000300, 0.000040, 0.037000},
@@ -37274,7 +37369,7 @@ struct planet_pert plan_pert_elp18 [ELP18_SIZE] =
 };
 
 
-struct planet_pert plan_pert_elp19 [ELP19_SIZE] = 
+const struct planet_pert plan_pert_elp19 [ELP19_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 180.000000, 0.000020, 0.037000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0.000000, 0.000110, 0.074000},
@@ -37504,7 +37599,7 @@ struct planet_pert plan_pert_elp19 [ELP19_SIZE] =
 	{0, 0, 1, 0, 0, 0, 0, 3, 0, 0, -1, 194.813110, 0.000050, 0.041000}
 };
 
-struct planet_pert plan_pert_elp20 [ELP20_SIZE] = 
+const struct planet_pert plan_pert_elp20 [ELP20_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.000000, 0.000070, 0.075000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0.000000, 0.000080, 5.997000},
@@ -37696,7 +37791,7 @@ struct planet_pert plan_pert_elp20 [ELP20_SIZE] =
 	{0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 14.813110, 0.000070, 0.026000}
 };
 
-struct planet_pert plan_pert_elp21 [ELP21_SIZE] = 
+const struct planet_pert plan_pert_elp21 [ELP21_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270.000000, 0.001490, 99999.999000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 90.000000, 0.000100, 0.074000},
@@ -37870,7 +37965,7 @@ struct planet_pert plan_pert_elp21 [ELP21_SIZE] =
 };
 
 
-tidal_effects tidal_effects_elp22 [ELP22_SIZE] = 
+const tidal_effects tidal_effects_elp22 [ELP22_SIZE] = 
 {
 	{0, 1, 1, -1, -1, 192.936650, 0.000040, 0.075000},
 	{0, 1, 1, 0, -1, 192.936650, 0.000820, 18.600000},
@@ -37878,19 +37973,19 @@ tidal_effects tidal_effects_elp22 [ELP22_SIZE] =
 };
 
 
-tidal_effects tidal_effects_elp23 [ELP23_SIZE] = 
+const tidal_effects tidal_effects_elp23 [ELP23_SIZE] = 
 {
 	{0, 1, 1, 0, -2, 192.936630, 0.000040, 0.074000},
 	{0, 1, 1, 0, 0, 192.936640, 0.000040, 0.075000}
 };
 
-tidal_effects tidal_effects_elp24 [ELP24_SIZE] = 
+const tidal_effects tidal_effects_elp24 [ELP24_SIZE] = 
 {
 	{0, 1, 1, -1, -1, 282.936650, 0.000040, 0.075000},
 	{0, 1, 1, 1, -1, 102.936650, 0.000040, 0.076000}
 };
 
-tidal_effects tidal_effects_elp25 [ELP25_SIZE] = 
+const tidal_effects tidal_effects_elp25 [ELP25_SIZE] = 
 {
 	{0, 0, 0, 1, 0, 0.000000, 0.000580, 0.075000},
 	{0, 0, 0, 2, 0, 0.000000, 0.000040, 0.038000},
@@ -37900,7 +37995,7 @@ tidal_effects tidal_effects_elp25 [ELP25_SIZE] =
 	{0, 2, 0, 1, 0, 0.000000, 0.000010, 0.026000}
 };
 
-tidal_effects tidal_effects_elp26 [ELP26_SIZE] = 
+const tidal_effects tidal_effects_elp26 [ELP26_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 180.000000, 0.000050, 0.075000},
 	{0, 0, 0, 1, -1, 0.000000, 0.000030, 5.997000},
@@ -37908,7 +38003,7 @@ tidal_effects tidal_effects_elp26 [ELP26_SIZE] =
 	{0, 2, 0, 0, -1, 0.000000, 0.000010, 0.088000}
 };
 
-tidal_effects tidal_effects_elp27 [ELP27_SIZE] = 
+const tidal_effects tidal_effects_elp27 [ELP27_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.003560, 99999.999000},
 	{0, 0, 0, 1, 0, 270.000000, 0.000720, 0.075000},
@@ -37917,7 +38012,7 @@ tidal_effects tidal_effects_elp27 [ELP27_SIZE] =
 	{0, 2, 0, 0, 0, 270.000000, 0.000130, 0.040000}
 };
 
-moon_pert moon_pert_elp28 [ELP28_SIZE] = 
+const moon_pert moon_pert_elp28 [ELP28_SIZE] = 
 {
 	{0, 0, 0, 0, 1, 303.961850, 0.000040, 0.075000},
 	{0, 0, 0, 1, -1, 259.883930, 0.000160, 5.997000},
@@ -37942,7 +38037,7 @@ moon_pert moon_pert_elp28 [ELP28_SIZE] =
 };
 
 
-moon_pert moon_pert_elp29 [ELP29_SIZE] = 
+const moon_pert moon_pert_elp29 [ELP29_SIZE] = 
 {
 	{0, 0, 0, 1, -1, 0.021990, 0.000030, 5.997000},
 	{0, 0, 0, 1, 0, 245.990670, 0.000010, 0.075000},
@@ -37958,7 +38053,7 @@ moon_pert moon_pert_elp29 [ELP29_SIZE] =
 	{0, 2, 0, 0, -1, 179.994780, 0.000050, 0.088000}
 };
 
-moon_pert moon_pert_elp30 [ELP30_SIZE] = 
+const moon_pert moon_pert_elp30 [ELP30_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 90.000000, 0.001300, 99999.999000},
 	{0, 0, 0, 0, 1, 213.957200, 0.000030, 0.075000},
@@ -37977,7 +38072,7 @@ moon_pert moon_pert_elp30 [ELP30_SIZE] =
 };
 
 
-rel_pert rel_pert_elp31 [ELP31_SIZE] = 
+const rel_pert rel_pert_elp31 [ELP31_SIZE] = 
 {
 	{0, 0, 1, -1, 0, 179.934730, 0.000060, 0.082000},
 	{0, 0, 1, 0, 0, 179.985320, 0.000810, 1.000000},
@@ -37992,7 +38087,7 @@ rel_pert rel_pert_elp31 [ELP31_SIZE] =
 	{0, 4, 0, -1, 0, 180.000350, 0.000010, 0.028000}
 };
 
-rel_pert rel_pert_elp32 [ELP32_SIZE] = 
+const rel_pert rel_pert_elp32 [ELP32_SIZE] = 
 {
 	{0, 0, 1, 0, -1, 179.998030, 0.000040, 0.081000},
 	{0, 0, 1, 0, 1, 179.997980, 0.000040, 0.069000},
@@ -38000,7 +38095,7 @@ rel_pert rel_pert_elp32 [ELP32_SIZE] =
 	{0, 2, 0, 0, 1, 180.000260, 0.000020, 0.026000}
 };
 
-rel_pert rel_pert_elp33 [ELP33_SIZE] = 
+const rel_pert rel_pert_elp33 [ELP33_SIZE] = 
 {
 	{0, 0, 0, 0, 0, 270.000000, 0.008280, 99999.999000},
 	{0, 0, 0, 1, 0, 89.999940, 0.000430, 0.075000},
@@ -38015,7 +38110,7 @@ rel_pert rel_pert_elp33 [ELP33_SIZE] =
 };
 
 
-plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] = 
+const plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] = 
 {
 	{0, 0, 1, -2, 0, 0.000000, 0.000070, 0.039000},
 	{0, 0, 1, -1, 0, 0.000000, 0.001080, 0.082000},
@@ -38047,7 +38142,7 @@ plan_sol_pert plan_sol_pert_elp34 [ELP34_SIZE] =
 	{0, 4, -1, 0, 0, 180.000000, 0.000010, 0.021000}
 };
 
-plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] = 
+const plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] = 
 {
 	{0, 0, 1, -1, -1, 0.000000, 0.000050, 0.039000},
 	{0, 0, 1, -1, 1, 0.000000, 0.000040, 0.857000},
@@ -38064,7 +38159,7 @@ plan_sol_pert plan_sol_pert_elp35 [ELP35_SIZE] =
 	{0, 2, 1, 0, -1, 0.000000, 0.000090, 0.081000}
 };
 
-plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] = 
+const plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] = 
 {
 	{0, 0, 1, -2, 0, 90.000000, 0.000050, 0.039000},
 	{0, 0, 1, -1, 0, 90.000000, 0.000950, 0.082000},
@@ -38087,12 +38182,8 @@ plan_sol_pert plan_sol_pert_elp36 [ELP36_SIZE] =
 	{0, 4, -1, -1, 0, 90.000000, 0.000030, 0.028000}
 };
 
-/* lunar constants */
-static double W1; 
-static double W2;
-static double W3;
-static double T;
-static double w;
+
+
 static double D; 
 static double ll; 
 static double l; 
@@ -38100,28 +38191,23 @@ static double F;
 
 
 /* initialise lunar constants */
-void init_lunar_constants (double t)
+void init_lunar_constants ()
 {
-	double t2, t3, t4;
-	t2 = t * t;
-	t3 = t2 * t;
-	t4 = t3 * t;
+	int i,k;
 	
-	/* constants with corrections for DE200 / LE200 */
-	W1 = 218.0 + (18.0 / 60.0) + (59.95571 / 3600.0);
-	W1 += 1732559343.73604 * t - 5.8883 * t2 + 0.006604 * t3 - 0.00003169 * t4;
+	/* Delaunay's arguments.*/
+	for (i=0;i<5;i++)
+	{
+		del[0][i] = W1[i] - earth[i];
+		del[3][i] = W1[i] - W3[i];
+		del[2][i] = W1[i] - W2[i];
+		del[1][i] = earth[i] - peri[i];
+	}
+
+	del[0][0] += M_PI;
+
 	
-	W2 = 83.0 + (21.0 / 60.0) + (11.67475 / 3600.0);
-	W2 += 14643420.2632 * t - 38.2776 * t2 -0.045047 * t3 + 0.00021301 * t4;
-	
-	W3 = 125.0 + (2.0 / 60.0) + (40.39816 / 3600.0);
-	W3 += -6967919.3622 * t + 6.3622 * t2 + 0.007625 * t3 - 0.00003586 * t4;
-	
-	T = 100.0 + (27.0 / 60.0) + (59.22059 / 3600.0);
-	T += 129597742.2758 * t - 0.0202 * t2 + 0.000009 * t3 + 0.00000015 * t4;
-	
-	w = 102.0 + (56.0 / 60.0) + (14.42753 / 3600.0);
-	w += 1161.2283 * t + 0.5327 * t2 - 0.000138 * t3;
+#if 0
 	
 	D = 297.0 + (51.0 / 60.0) + (0.73512 / 3600.0);
 	D += 1602961601.4603 * t - 58681 * t2 + 0.006595 * t3 - 0.00003184 * t4;
@@ -38134,166 +38220,326 @@ void init_lunar_constants (double t)
 	
 	F = 93.0 + (16.0 / 60.0) + (19.55755 / 3600.0);
 	F += 1739527263.0983 * t - 12.2505 * t2 - 0.001021 * t3 + 0.00000417 * t4;
+	
+#endif
 }
 
 /* sum lunar elp1 series */
-double sum_series_elp1 ()
+double sum_series_elp1 (double* t)
 {
 	double result = 0;
-	int i;
+	double x,y;
+	double tgv;
+	int i,j,k;
 	
-	for (i=0; i< ELP1_SIZE; i++)
+  	for (j=0; j< ELP1_SIZE; j++)
 	{
-		result += main_elp1[i].A * sin (main_elp1[i].i1 * D + main_elp1[i].i2 * ll + 
-										main_elp1[i].i3 * l + main_elp1[i].i4 * F);
+		/* do we need to calc this value */
+		if (fabs(main_elp1[j].A) > pre[0])
+		{
+			/* derivatives of A */
+			tgv = main_elp1[j].B[0] + DTASM * main_elp1[j].B[4];
+			x = main_elp1[j].A + tgv * (DELNP - AM * DELNU) + 
+				main_elp1[j].B[1] * DELG + main_elp1[j].B[2] * 
+				DELE + main_elp1[j].B[3] * DELEP;
+		
+			y = 0;
+			for (k = 0; k < 5; k++)
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += main_elp1[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* y in correct quad */
+			y = range_radians (y);
+			result += x * sin (y);
+	}
 	}
 	return (result);
 }
 
 /* sum lunar elp2 series */
-double sum_series_elp2 ()
+double sum_series_elp2 (double* t)
 {
 	double result = 0;
-	int i;
+	double x,y;
+	double tgv;
+	int i,j,k;
 	
-	for (i=0; i< ELP2_SIZE; i++)
+  	for (j=0; j< ELP2_SIZE; j++)
 	{
-		result += main_elp2[i].A * sin (main_elp2[i].i1 * D + main_elp2[i].i2 * ll + 
-										main_elp2[i].i3 * l + main_elp2[i].i4 * F);
+		/* do we need to calc this value */
+		if (fabs(main_elp2[j].A) > pre[1])
+		{
+			/* derivatives of A */
+			tgv = main_elp2[j].B[0] + DTASM * main_elp2[j].B[4];
+			x = main_elp2[j].A + tgv * (DELNP - AM * DELNU) + 
+				main_elp2[j].B[1] * DELG + main_elp2[j].B[2] * 
+				DELE + main_elp2[j].B[3] * DELEP;
+		
+			y = 0;
+			for (k = 0; k < 5; k++)
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += main_elp2[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* y in correct quad */
+			y = range_radians (y);
+			result += x * sin (y);
+		}
 	}
 	return (result);
 }
 
 /* sum lunar elp3 series */
-double sum_series_elp3 ()
+double sum_series_elp3 (double* t)
 {
 	double result = 0;
-	int i;
+	double x,y;
+	double tgv;
+	int i,j,k;
 	
-	for (i=0; i< ELP3_SIZE; i++)
+  	for (j=0; j< ELP3_SIZE; j++)
 	{
-		result += main_elp3[i].A * cos (main_elp3[i].i1 * D + main_elp3[i].i2 * ll + 
-										main_elp3[i].i3 * l + main_elp3[i].i4 * F);
+		/* do we need to calc this value */
+		if (fabs(main_elp3[j].A) > pre[2])
+		{
+			/* derivatives of A */
+			tgv = main_elp3[j].B[0] + DTASM * main_elp3[j].B[4];
+			x = main_elp3[j].A + tgv * (DELNP - AM * DELNU) + 
+				main_elp3[j].B[1] * DELG + main_elp3[j].B[2] * 
+				DELE + main_elp3[j].B[3] * DELEP;
+		
+			y = 0;
+			for (k = 0; k < 5; k++)
+			{
+				for (i = 0; i < 4; i++) 
+				{
+					y += main_elp3[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			y += (M_PI_2);
+			/* y in correct quad */
+			y = range_radians (y);
+			result += x * sin (y);
+		}
 	}
 	return (result);
 }
 
+
 /* sum lunar elp4 series */
-double sum_series_elp4 (double t)
+double sum_series_elp4 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y;
 	
-	for (i=0; i< ELP4_SIZE; i++)
+	for (j=0; j< ELP4_SIZE; j++)
 	{
-		result += earth_pert_elp4[i].A * sin (earth_pert_elp4[i].i1 * a + 
-											earth_pert_elp4[i].i2 * D + 
-											earth_pert_elp4[i].i3 * ll + 
-											earth_pert_elp4[i].i4 * l + 
-											earth_pert_elp4[i].i4 * F + 
-											earth_pert_elp4[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp4[j].A) > pre[0])
+		{
+			y = earth_pert_elp4[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp4[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp4[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += earth_pert_elp4[j].A * sin (y);
+		}
 	}
 	return (result);
 }
 
 /* sum lunar elp5 series */
-double sum_series_elp5 (double t)
+double sum_series_elp5 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y;
 	
-	for (i=0; i< ELP5_SIZE; i++)
+	for (j=0; j< ELP5_SIZE; j++)
 	{
-		result += earth_pert_elp5[i].A * sin (earth_pert_elp5[i].i1 * a + 
-											earth_pert_elp5[i].i2 * D + 
-											earth_pert_elp5[i].i3 * ll + 
-											earth_pert_elp5[i].i4 * l + 
-											earth_pert_elp5[i].i4 * F + 
-											earth_pert_elp5[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp5[j].A) > pre[1])
+		{
+			y = earth_pert_elp5[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp5[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp5[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += earth_pert_elp5[j].A * sin (y);
+		}
 	}
 	return (result);
 }
 
+
 /* sum lunar elp6 series */
-double sum_series_elp6 (double t)
+double sum_series_elp6 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y;
 	
-	for (i=0; i< ELP6_SIZE; i++)
+	for (j=0; j< ELP6_SIZE; j++)
 	{
-		result += earth_pert_elp6[i].A * sin (earth_pert_elp6[i].i1 * a + 
-											earth_pert_elp6[i].i2 * D + 
-											earth_pert_elp6[i].i3 * ll + 
-											earth_pert_elp6[i].i4 * l + 
-											earth_pert_elp6[i].i4 * F + 
-											earth_pert_elp6[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp6[j].A) > pre[2])
+		{
+			y = earth_pert_elp6[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp6[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp6[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += earth_pert_elp6[j].A * sin (y);
+		}
 	}
 	return (result);
 }
 
 /* sum lunar elp7 series */
-double sum_series_elp7 (double t)
+double sum_series_elp7 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y, A;
 	
-	for (i=0; i< ELP7_SIZE; i++)
+	for (j=0; j< ELP7_SIZE; j++)
 	{
-		result += earth_pert_elp7[i].A * sin (earth_pert_elp7[i].i1 * a + 
-											earth_pert_elp7[i].i2 * D + 
-											earth_pert_elp7[i].i3 * ll + 
-											earth_pert_elp7[i].i4 * l + 
-											earth_pert_elp7[i].i4 * F + 
-											earth_pert_elp7[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp7[j].A) > pre[0])
+		{
+			A = earth_pert_elp9[j].A * t[1];
+			y = earth_pert_elp7[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp7[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp7[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += A * sin (y);
+		}
 	}
 	return (result);
 }
 
 /* sum lunar elp8 series */
-double sum_series_elp8 (double t)
+double sum_series_elp8 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y, A;
 	
-	for (i=0; i< ELP8_SIZE; i++)
+	for (j=0; j< ELP8_SIZE; j++)
 	{
-		result += earth_pert_elp8[i].A * sin (earth_pert_elp8[i].i1 * a + 
-											earth_pert_elp8[i].i2 * D + 
-											earth_pert_elp8[i].i3 * ll + 
-											earth_pert_elp8[i].i4 * l + 
-											earth_pert_elp8[i].i4 * F + 
-											earth_pert_elp8[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp8[j].A) > pre[1])
+		{
+			y = earth_pert_elp8[j].O * DEG;
+			A = earth_pert_elp9[j].A * t[1];
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp8[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp8[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += A * sin (y);
+		}
 	}
 	return (result);
 }
 
 /* sum lunar elp9 series */
-double sum_series_elp9 (double t)
+double sum_series_elp9 (double *t)
 {
 	double result = 0;
-	int i;
-	double p = 5029.0966; /* J2000 precession constant */
-	double a = W1 + p * t;
+	int i,j,k;
+	double y, A;
 	
-	for (i=0; i< ELP9_SIZE; i++)
+	for (j=0; j< ELP9_SIZE; j++)
 	{
-		result += earth_pert_elp9[i].A * sin (earth_pert_elp9[i].i1 * a + 
-											earth_pert_elp9[i].i2 * D + 
-											earth_pert_elp9[i].i3 * ll + 
-											earth_pert_elp9[i].i4 * l + 
-											earth_pert_elp9[i].i4 * F + 
-											earth_pert_elp9[i].O);
+		/* do we need to calc this value */
+		if (fabs(earth_pert_elp9[j].A) > pre[2])
+		{
+			A = earth_pert_elp9[j].A * t[1];
+			y = earth_pert_elp9[j].O * DEG;
+			for (k = 0; k < 2; k++) 
+			{
+				y += earth_pert_elp9[j].iz * zeta[k] * t[k];
+				for (i = 0; i < 4; i++) 
+				{
+					y += earth_pert_elp9[j].ilu[i] * del[i][k] * t[k];
+				}
+			}
+			/* put y in correct quad */
+			y = range_radians (y);
+			result += A * sin (y);
+		}
 	}
 	return (result);
+}
+
+void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision)
+{
+	double t[5];
+	double elp[36];
+	int i;
+	
+	/* calc julian centuries */
+	t[0] = 1.0;
+	t[1] = (JD - 2451545.0) / 36525.0;
+	t[2] = t[1] * t[1];
+	t[3] = t[2] * t[1];
+	t[4] = t[3] * t[1];
+	
+	/* calc precision */
+	pre[0] = precision * RAD;
+	pre[1] = precision * RAD;
+	pre[2] = precision * ATH;
+	
+	init_lunar_constants ();
+	elp[0] = sum_series_elp1(t);
+	elp[1] = sum_series_elp2(t);
+	elp[2] = sum_series_elp3(t);
+	elp[3] = sum_series_elp4(t);
+	elp[4] = sum_series_elp5(t);
+	elp[5] = sum_series_elp6(t);
+	elp[6] = sum_series_elp7(t);
+	elp[7] = sum_series_elp8(t);
+	elp[8] = sum_series_elp9(t);
+	
+	for (i=0; i<36;i++)
+	{
+		printf("elp%d %f\n",i,elp[i]);
+	}
 }

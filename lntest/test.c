@@ -466,6 +466,16 @@ void vsop87_test(void)
 	printf ("pluto -> phase %f\n",au);
 }
 
+int lunar_test ()
+{
+	double JD = 2469000.5;
+	
+	struct ln_geo_posn moon;
+	/*JD=2448724.5;*/
+	get_lunar_geo_posn (JD, &moon, 0);
+	printf ("lunar x %f  y %f  z %f\n",moon.X, moon.Y, moon.Z);
+	return 0;
+}
 
 int main ()
 {
@@ -479,5 +489,6 @@ int main ()
 	precession_test();
 	apparent_position_test ();
 	vsop87_test();
+	lunar_test ();
 	return (0);
 }
