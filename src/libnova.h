@@ -44,7 +44,8 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest version of libnova is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
+* The latest released version of libnova is 0.4.0 and was released on the 2nd Sept 2002.
+* It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
 * The latest CVS version of libnova is available via CVS <A href="http://sf.net/cvs/?group_id=57697">here.</A>
