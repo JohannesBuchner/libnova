@@ -41,6 +41,7 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 
 LIBS="$LIBS -lm"
+CFLAGS=-Wall
 
 # Checks for header files.
 AC_HEADER_STDC
