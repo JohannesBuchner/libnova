@@ -26,9 +26,9 @@ Copyright (C) 2004 Liam Girdwood <liam@gnova.org>
 extern "C" {
 #endif
 
-/*! \defgroup hyperbolic  Parabolic Motion
+/*! \defgroup hyperbolic  Hyperbolic Motion
 *
-* Functions relating to the Parabolic motion of bodies.
+* Functions relating to the Hyperbolic motion of bodies.
 *
 * All angles are expressed in degrees.
 */
