@@ -127,11 +127,11 @@ int nutation_test (void)
 	JDE = get_jde (JD);
 
 	get_nutation (JD, &nutation);
-	failed += test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation.longitude, -0.00100558, 0.00000001);
+	failed += test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation.longitude, -0.00100561, 0.00000001);
 	
-	failed += test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation.obliquity, 0.00273287, 0.00000001);
+	failed += test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation.obliquity, 0.00273297, 0.00000001);
 	
-	failed += test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation.ecliptic, 23.44367926, 0.00000001);
+	failed += test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation.ecliptic, 23.44367936, 0.00000001);
 	return (failed);
 }
 
@@ -195,7 +195,7 @@ int transform_test(void)
 	
 	lnlat_to_hlnlat (&ecl, &hecl);
 	failed += test_result ("(Transforms) Equ to Ecl longitude ", ecl.lng, 113.21542105, 0.00000001);
-	failed += test_result ("(Transforms) Equ to Ecl latitude", ecl.lat, 6.68002735, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Ecl latitude", ecl.lat, 6.68002727, 0.00000001);
 
 	get_equ_from_ecl(&ecl, JD, &equ);
 	failed += test_result ("(Transforms) Ecl to Equ RA ", equ.ra, 116.32894167, 0.00000001);
@@ -354,8 +354,8 @@ int vsop87_test(void)
 #endif
 	
 	get_equ_solar_coords (JD, &equ);
-	failed += test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.32146896, 0.00000001);
-	failed += test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43026862, 0.00000001);
+	failed += test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.32146893, 0.00000001);
+	failed += test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43026873, 0.00000001);
 	
 	get_mercury_helio_coords(JD, &pos);
 	printf("Mercury L %f B %f R %f\n", pos.L, pos.B, pos.R);

@@ -1,5 +1,11 @@
 ChangeLog
 
+20031708
+	-lntest/lntest.c
+	Updated test's to use dynamical time diff in nutation.
+	
+	Liam Girdwood
+
 20031508
 	-src/lunar.*
 	
