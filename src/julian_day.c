@@ -387,3 +387,22 @@ int get_date_from_mpc (struct ln_date* date, char* mpc_date)
 	date->seconds = 0;
 	return 0;
 }
+
+/*! \fn double get_julian_from_mpc (char* mpc_date)
+* \param date Pointer to new calendar date.
+* \param mpc_date Pointer to string MPC date
+* \return Julian day.
+*
+* Calculate the julian day from the a MPC packed date.
+* See http://cfa-www.harvard.edu/iau/info/PackedDates.html for info.
+*/
+double get_julian_from_mpc (char* mpc_date)
+{
+	struct ln_date date;
+	double JD;
+	
+	get_date_from_mpc(&date, mpc_date);	
+	JD = get_julian_day(&date);
+	
+	return JD;
+}
