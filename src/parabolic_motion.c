@@ -318,7 +318,7 @@ double ln_get_par_body_elong (double JD, struct ln_par_orbit * orbit)
 * Note: this functions returns 1 if the body is circumpolar, that is it remains the whole
 * day either above or below the horizon.
 */
-int get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst)
+int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst)
 {
 	int jd;
 	double T, O, JD_UT, H0, H1;
