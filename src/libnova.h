@@ -95,6 +95,13 @@ extern "C" {
 #endif
 
 #include <time.h>	
+
+/* define some usefull constants if they are not already defined */	
+#ifndef M_PI_2
+#define M_PI_2          1.5707963267948966192313216916398
+#define M_PI_4          0.78539816339744830961566084581988
+#define M_PI            3.1415926535897932384626433832795
+#endif	
 	
 /*!
 ** Date
