@@ -1,5 +1,12 @@
 ChangeLog
 
+20031508
+	-src/lunar.*
+	
+	Removed build warnings
+	
+	Liam Girdwood
+
 20031308
 	-src/julian_day.c
 	

@@ -26,7 +26,7 @@ struct main_problem
 {
 	int ilu[4];
 	double A;
-	double B[6];
+	double B[5];
 };
 
 /* used for elp 4 - 9 */
