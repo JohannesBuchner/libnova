@@ -265,7 +265,7 @@ void get_timet_from_julian (double JD, time_t * in_time)
 	*in_time = mktime (&loctime);
 }
 
-/*! \fn double get_julian_ut_from_sys()
+/*! \fn double get_julian_from_sys()
 * \return Julian day 
 *
 * Calculate the julian day from the local system time

@@ -21,7 +21,7 @@ Copyright 2002-2003 Liam Girdwood
 #include "libnova.h"
 #include <math.h>
 
-/*! \fn double get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
+/*! \fn int get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
 * \param object Object position
@@ -127,11 +127,13 @@ get_object_next_rst (double JD, struct ln_lnlat_posn *observer,
   return ret;
 }
 
-/*! \fn double get_body_rst_horizont (double JD_UT, struct ln_lnlat_posn *
-* observer, struct ln_equ_posn * obj1, struct ln_equ_posn * obj2, struct
-* ln_equ_posn obj3, double horizont, struct ln_rst_time * rst); 
+/*! \fn int get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer,
+		       void (*get_equ_body_coords) (double,
+						    struct ln_equ_posn *),
+		       double horizont, struct ln_rst_time *rst); 
 * \param JD Julian day 
 * \param observer Observers position 
+* \param get_equ_body_coords Pointer to get_equ_body_coords() 
 * \param horizont Sun horizont use *_HORIZONT constants from libnova.h 
 * \param rst Pointer to store Rise, Set and Transit time in JD 
 * \return 0 for success, else 1 for circumpolar.

@@ -20,9 +20,8 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h"
 #include <math.h>
 
-/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_rect_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn * position); 
 * \param object Object heliocentric coordinates
-* \param JD Julian Day
 * \param position Pointer to store new position
 *
 * Transform an objects heliocentric ecliptical coordinates
