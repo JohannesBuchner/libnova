@@ -1,0 +1,55 @@
+# init autoconf (and check for presence of libnova.c)
+AC_INIT(src/libnova.c)
+
+# Save this value here, since automake will set cflags later
+cflags_set=${CFLAGS+set}
+
+# libtool versioning
+LIBNOVA_MAJOR_VERSION=0
+LIBNOVA_MINOR_VERSION=3
+LIBNOVA_MICRO_VERSION=1
+LIBNOVA_VERSION=$LIBNOVA_MAJOR_VERSION.$LIBNOVA_MINOR_VERSION.$LIBNOVA_MICRO_VERSION
+AC_SUBST(LIBNOVA_MAJOR_VERSION)
+AC_SUBST(LIBNOVA_MINOR_VERSION)
+AC_SUBST(LIBNOVA_MICRO_VERSION)
+AC_SUBST(LIBNOVA_VERSION)
+
+LT_VERSION=$LIBNOVA_MICRO_VERSION
+LT_RELEASE=$LIBNOVA_MAJOR_VERSION.$LIBNOVA_MINOR_VERSION
+AC_SUBST(LT_VERSION)
+AC_SUBST(LT_RELEASE)
+
+VERSION=$LIBNOVA_VERSION
+PACKAGE=libnova
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+# Specify a configuration file
+AM_CONFIG_HEADER(config.h)
+
+dnl Initialize libtool
+AM_PROG_LIBTOOL
+
+dnl Initialize maintainer mode
+AM_MAINTAINER_MODE
+
+AC_CANONICAL_HOST
+
+# Checks for programs.
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+
+LIBS="$LIBS -lm"
+
+# Checks for header files.
+AC_HEADER_STDC
+
+
+AC_OUTPUT([
+Makefile
+macros/Makefile
+src/Makefile
+lntest/Makefile
+doc/Makefile
+])

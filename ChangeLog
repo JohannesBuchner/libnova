@@ -1,0 +1,12 @@
+23 Oct 2001 - libnova-0.1.1
+
+	Liam Girdwood
+		Fixed bug in make doc
+		Added library config tool
+
+21 Oct 2001 - libnova-0.1.0
+
+	Liam Girdwood
+		Developer release
+		Added doxygen API docs
+
