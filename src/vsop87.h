@@ -28,6 +28,6 @@ struct vsop
 	double C;
 };
 
-double calc_series (struct vsop * data, int terms, double t);
+double calc_series (const struct vsop * data, int terms, double t);
 
 #endif

@@ -22,7 +22,7 @@ Copyright 2000 Liam Girdwood
 #include "libnova.h"
 #include <math.h>
 
-double calc_series (struct vsop * data, int terms, double t)
+double calc_series (const struct vsop * data, int terms, double t)
 {
 	double value = 0;
 	int i;

@@ -61,6 +61,12 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * Thanks to Jean Meeus for most of the algorithms used in this library.
 * From his book "Astronomical Algorithms".
 * 
+* Thanks to Michelle Chapront-Touze and Jean Chapront for publishing
+* the Lunar Solution ELP 2000-82B.
+*
+* Thanks to Messrs. Bretagnon and Francou for publishing planetary 
+* solution VSOP87.
+*
 * Also thanks to Sourceforge for hosting this project. <A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=57697&amp;type=5" width="210" height="62" border="0" alt="SourceForge Logo"></A> 
 */
 
@@ -897,7 +903,7 @@ void get_jupiter_helio_coords
 	(double JD, struct ln_helio_posn * position);
 
 /*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
-* \brief get Jupiter heliocentric coordinates
+* \brief get Jupiter equatorial coordinates coordinates
 * \ingroup jupiter
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */

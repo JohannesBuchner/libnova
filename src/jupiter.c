@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -47,7 +50,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop jupiter_longitude_l0[LONG_L0] = {
+static const struct vsop jupiter_longitude_l0[LONG_L0] = {
     {     0.59954691494,  0.00000000000,        0.00000000000}, 
     {     0.09695898719,  5.06191793158,      529.69096509460}, 
     {     0.00573610142,  1.44406205629,        7.11354700080}, 
@@ -911,7 +914,7 @@ static struct vsop jupiter_longitude_l0[LONG_L0] = {
 };
 
 
-static struct vsop jupiter_longitude_l1[LONG_L1] = {
+static const struct vsop jupiter_longitude_l1[LONG_L1] = {
     {   529.69096508814,  0.00000000000,        0.00000000000}, 
     {     0.00489503243,  4.22082939470,      529.69096509460}, 
     {     0.00228917222,  6.02646855621,        7.11354700080}, 
@@ -1341,7 +1344,7 @@ static struct vsop jupiter_longitude_l1[LONG_L1] = {
 };
 
 
-static struct vsop jupiter_longitude_l2[LONG_L2] = {
+static const struct vsop jupiter_longitude_l2[LONG_L2] = {
     {     0.00047233601,  4.32148536482,        7.11354700080}, 
     {     0.00030649436,  2.92977788700,      529.69096509460}, 
     {     0.00014837605,  3.14159265359,        0.00000000000}, 
@@ -1570,7 +1573,7 @@ static struct vsop jupiter_longitude_l2[LONG_L2] = {
 };
 
 
-static struct vsop jupiter_longitude_l3[LONG_L3] = {
+static const struct vsop jupiter_longitude_l3[LONG_L3] = {
     {     0.00006501673,  2.59862923650,        7.11354700080}, 
     {     0.00001355012,  1.34692775915,      529.69096509460}, 
     {     0.00000470691,  2.47502798748,       14.22709400160}, 
@@ -1694,7 +1697,7 @@ static struct vsop jupiter_longitude_l3[LONG_L3] = {
 };
 
 
-static struct vsop jupiter_longitude_l4[LONG_L4] = {
+static const struct vsop jupiter_longitude_l4[LONG_L4] = {
     {     0.00000669505,  0.85280378158,        7.11354700080}, 
     {     0.00000099965,  0.74243651986,       14.22709400160}, 
     {     0.00000050030,  1.65383477095,      536.80451209540}, 
@@ -1746,7 +1749,7 @@ static struct vsop jupiter_longitude_l4[LONG_L4] = {
 };
 
 
-static struct vsop jupiter_longitude_l5[LONG_L5] = {
+static const struct vsop jupiter_longitude_l5[LONG_L5] = {
     {     0.00000049639,  5.25769924770,        7.11354700080}, 
     {     0.00000015775,  5.24859620238,       14.22709400160}, 
     {     0.00000004326,  0.02660738929,      536.80451209540}, 
@@ -1761,7 +1764,7 @@ static struct vsop jupiter_longitude_l5[LONG_L5] = {
 };
 
 
-static struct vsop jupiter_latitude_b0[LAT_B0] = {
+static const struct vsop jupiter_latitude_b0[LAT_B0] = {
     {     0.02268615702,  3.55852606721,      529.69096509460}, 
     {     0.00109971634,  3.90809347197,     1059.38193018920}, 
     {     0.00110090358,  0.00000000000,        0.00000000000}, 
@@ -2014,7 +2017,7 @@ static struct vsop jupiter_latitude_b0[LAT_B0] = {
 };
 
 
-static struct vsop jupiter_latitude_b1[LAT_B1] = {
+static const struct vsop jupiter_latitude_b1[LAT_B1] = {
     {     0.00078203446,  1.52377859742,      529.69096509460}, 
     {     0.00007789905,  2.59734071843,     1059.38193018920}, 
     {     0.00002788602,  4.85622679819,      536.80451209540}, 
@@ -2138,7 +2141,7 @@ static struct vsop jupiter_latitude_b1[LAT_B1] = {
 };
 
 
-static struct vsop jupiter_latitude_b2[LAT_B2] = {
+static const struct vsop jupiter_latitude_b2[LAT_B2] = {
     {     0.00005498320,  3.01596270062,      529.69096509460}, 
     {     0.00000602076,  3.13358939436,      536.80451209540}, 
     {     0.00000502174,  2.05202111599,     1059.38193018920}, 
@@ -2224,7 +2227,7 @@ static struct vsop jupiter_latitude_b2[LAT_B2] = {
 };
 
 
-static struct vsop jupiter_latitude_b3[LAT_B3] = {
+static const struct vsop jupiter_latitude_b3[LAT_B3] = {
     {     0.00000185332,  4.79276761490,      529.69096509460}, 
     {     0.00000085668,  1.40023038638,      536.80451209540}, 
     {     0.00000056359,  2.81574766965,      522.57741809380}, 
@@ -2261,7 +2264,7 @@ static struct vsop jupiter_latitude_b3[LAT_B3] = {
 };
 
 
-static struct vsop jupiter_latitude_b4[LAT_B4] = {
+static const struct vsop jupiter_latitude_b4[LAT_B4] = {
     {     0.00000008963,  5.93887232380,      536.80451209540}, 
     {     0.00000005280,  4.80778878768,      522.57741809380}, 
     {     0.00000001161,  0.46295890438,     1066.49547719000}, 
@@ -2278,14 +2281,14 @@ static struct vsop jupiter_latitude_b4[LAT_B4] = {
 };
 
 
-static struct vsop jupiter_latitude_b5[LAT_B5] = {
+static const struct vsop jupiter_latitude_b5[LAT_B5] = {
     {     0.00000000662,  4.10413626462,      536.80451209540}, 
     {     0.00000000431,  0.82614663721,      522.57741809380}, 
     {     0.00000000208,  0.05498457769,      515.46387109300}, 
 };
 
 
-static struct vsop jupiter_radius_r0[RADIUS_R0] = {
+static const struct vsop jupiter_radius_r0[RADIUS_R0] = {
     {     5.20887429326,  0.00000000000,        0.00000000000}, 
     {     0.25209327119,  3.49108639871,      529.69096509460}, 
     {     0.00610599976,  3.84115365948,     1059.38193018920}, 
@@ -3016,7 +3019,7 @@ static struct vsop jupiter_radius_r0[RADIUS_R0] = {
 };
 
 
-static struct vsop jupiter_radius_r1[RADIUS_R1] = {
+static const struct vsop jupiter_radius_r1[RADIUS_R1] = {
     {     0.01271801520,  2.64937512894,      529.69096509460}, 
     {     0.00061661816,  3.00076460387,     1059.38193018920}, 
     {     0.00053443713,  3.89717383175,      522.57741809380}, 
@@ -3391,7 +3394,7 @@ static struct vsop jupiter_radius_r1[RADIUS_R1] = {
 };
 
 
-static struct vsop jupiter_radius_r2[RADIUS_R2] = {
+static const struct vsop jupiter_radius_r2[RADIUS_R2] = {
     {     0.00079644957,  1.35865949884,      529.69096509460}, 
     {     0.00008251645,  5.77774460400,      522.57741809380}, 
     {     0.00007029940,  3.27477392111,      536.80451209540}, 
@@ -3581,7 +3584,7 @@ static struct vsop jupiter_radius_r2[RADIUS_R2] = {
 };
 
 
-static struct vsop jupiter_radius_r3[RADIUS_R3] = {
+static const struct vsop jupiter_radius_r3[RADIUS_R3] = {
     {     0.00003519277,  6.05800355513,      529.69096509460}, 
     {     0.00001073281,  1.67319166156,      536.80451209540}, 
     {     0.00000915630,  1.41326157617,      522.57741809380}, 
@@ -3682,7 +3685,7 @@ static struct vsop jupiter_radius_r3[RADIUS_R3] = {
 };
 
 
-static struct vsop jupiter_radius_r4[RADIUS_R4] = {
+static const struct vsop jupiter_radius_r4[RADIUS_R4] = {
     {     0.00000128623,  0.08347608895,      536.80451209540}, 
     {     0.00000113458,  4.24818938180,      529.69096509460}, 
     {     0.00000082704,  3.29801136583,      522.57741809380}, 
@@ -3731,7 +3734,7 @@ static struct vsop jupiter_radius_r4[RADIUS_R4] = {
 };
 
 
-static struct vsop jupiter_radius_r5[RADIUS_R5] = {
+static const struct vsop jupiter_radius_r5[RADIUS_R5] = {
     {     0.00000011193,  4.74280611863,      536.80451209540}, 
     {     0.00000004288,  5.90497787277,      522.57741809380}, 
     {     0.00000002004,  3.65178377123,        7.11354700080}, 
@@ -3747,7 +3750,14 @@ static struct vsop jupiter_radius_r5[RADIUS_R5] = {
 * \param JD julian Day
 * \param position Pointer to store position
 *
-* Calculates jupiter's equatorial position for Julian Day JD.
+* Calculates Jupiter's equatorial position for given julian day.
+* This function includes calculations for planetary aberration and refers
+* to the FK5 reference frame.
+*
+* To get the complete equatorial coordinates, corrections for nutation
+* have to be applied.
+*
+* The position returned is accurate to within 0.1 arcsecs.
 */ 
 void get_jupiter_equ_coords 
 	(double JD,
@@ -3797,9 +3807,12 @@ void get_jupiter_equ_coords
 	
 /*! \fn void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param position Pointer to store new heliocentric position
+* \param Position pointer to store heliocentric position
 *
-* Calculate Jupiters heliocentric coordinates. 
+* Calculate Jupiters heliocentric (refered to the centre of the Sun) coordinates
+* in the FK5 reference frame for the given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+*
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position)
@@ -3870,10 +3883,11 @@ void get_jupiter_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 /*! \fn double get_jupiter_earth_dist (double JD);
-* \brief Calculate the distance between jupiter and the earth in AU
-* \return distance in AU
+* \param JD Julian day.
+* \brief Calculate the distance between Jupiter and the Earth in AU
+* \return Distance in AU.
 *
-* Calculates the distance in AU between the Earth and jupiter.
+* Calculates the distance in AU between the Earth and Jupiter for the given julian day.
 */
 double get_jupiter_earth_dist (double JD)
 {
@@ -3903,10 +3917,11 @@ double get_jupiter_earth_dist (double JD)
 }
 	
 /*! \fn double get_jupiter_sun_dist (double JD);
-* \brief Calculate the distance between jupiter and the sun in AU
-* \return distance in AU
+* \param JD Julian day.
+* \brief Calculate the distance between Jupiter and the Sun in AU
+* \return Distance in AU.
 *
-* Calculates the distance in AU between the Sun and jupiter.
+* Calculates the distance in AU between the Sun and Jupiter for the given julian day.
 */ 
 double get_jupiter_sun_dist (double JD)
 {
@@ -3934,10 +3949,11 @@ double get_jupiter_sun_dist (double JD)
 }
 	
 /*! \fn double get_jupiter_magnitude (double JD);
-* \brief Calculate the visible magnitude of jupiter
-* \return magnitude of jupiter
+* \param JD Julian day
+* \brief Calculate the visible magnitude of Jupiter
+* \return Visible magnitude of Jupiter
 *
-* Calculate the magnitude of jupiter.
+* Calculate the visible magnitude of jupiter for the given julian day.
 */ 
 double get_jupiter_magnitude (double JD)
 {
@@ -3956,8 +3972,12 @@ double get_jupiter_magnitude (double JD)
 }
 
 /*! \fn double get_jupiter_disk (double JD);
+* \param JD Julian day.
 * \brief Calculate the illuminated fraction of Jupiter's disk
-* \return illuminated fraction of jupiters disk
+* \return Illuminated fraction of Jupiters disk (Value between 0 and 1)
+*
+* Calculate the illuminated fraction of Jupiter's disk for the given Julian
+* day.
 */ 
 /* Chapter 41 */
 double get_jupiter_disk (double JD)
@@ -3976,8 +3996,12 @@ double get_jupiter_disk (double JD)
 }
 
 /*! \fn double get_jupiter_phase (double JD);
-* \brief Calculate the phase angle of jupiter (sun - jupiter - earth)
-* \return phase angle of jupiter (degrees)
+* \param JD Julian Day
+* \brief Calculate the phase angle of Jupiter (Sun - Jupiter - Earth)
+* \return Phase angle of Jupiter (degrees)
+*
+* Calculates the phase angle of Jupiter, that is, the angle Sun -
+* Jupiter - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
 double get_jupiter_phase (double JD)

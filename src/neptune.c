@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -41,7 +44,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop neptune_longitude_l0[LONG_L0] = {
+static const struct vsop neptune_longitude_l0[LONG_L0] = {
     {     5.31188633046,  0.00000000000,        0.00000000000}, 
     {     0.01798475530,  2.90101273890,       38.13303563780}, 
     {     0.01019727652,  0.48580922867,        1.48447270830}, 
@@ -584,7 +587,7 @@ static struct vsop neptune_longitude_l0[LONG_L0] = {
 };
 
 
-static struct vsop neptune_longitude_l1[LONG_L1] = {
+static const struct vsop neptune_longitude_l1[LONG_L1] = {
     {    38.13303563957,  0.00000000000,        0.00000000000}, 
     {     0.00016604172,  4.86323329249,        1.48447270830}, 
     {     0.00015744045,  2.27887427527,       38.13303563780}, 
@@ -812,7 +815,7 @@ static struct vsop neptune_longitude_l1[LONG_L1] = {
 };
 
 
-static struct vsop neptune_longitude_l2[LONG_L2] = {
+static const struct vsop neptune_longitude_l2[LONG_L2] = {
     {     0.00000286136,  1.18985661922,       38.13303563780}, 
     {     0.00000295650,  1.85520880574,        1.48447270830}, 
     {     0.00000102284,  0.00000000000,        0.00000000000}, 
@@ -875,7 +878,7 @@ static struct vsop neptune_longitude_l2[LONG_L2] = {
 };
 
 
-static struct vsop neptune_longitude_l3[LONG_L3] = {
+static const struct vsop neptune_longitude_l3[LONG_L3] = {
     {     0.00000012472,  6.04427218715,        1.48447270830}, 
     {     0.00000011257,  6.11436681584,       38.13303563780}, 
     {     0.00000004354,  3.14159265359,        0.00000000000}, 
@@ -897,7 +900,7 @@ static struct vsop neptune_longitude_l3[LONG_L3] = {
 };
 
 
-static struct vsop neptune_latitude_b0[LAT_B0] = {
+static const struct vsop neptune_latitude_b0[LAT_B0] = {
     {     0.03088622933,  1.44104372644,       38.13303563780}, 
     {     0.00027780087,  5.91271884599,       76.26607127560}, 
     {     0.00027623609,  0.00000000000,        0.00000000000}, 
@@ -1073,7 +1076,7 @@ static struct vsop neptune_latitude_b0[LAT_B0] = {
 };
 
 
-static struct vsop neptune_latitude_b1[LAT_B1] = {
+static const struct vsop neptune_latitude_b1[LAT_B1] = {
     {     0.00005150897,  2.14270496419,       38.13303563780}, 
     {     0.00000258298,  5.46539598920,       76.26607127560}, 
     {     0.00000251862,  4.40444268588,       36.64856292950}, 
@@ -1126,7 +1129,7 @@ static struct vsop neptune_latitude_b1[LAT_B1] = {
 };
 
 
-static struct vsop neptune_latitude_b2[LAT_B2] = {
+static const struct vsop neptune_latitude_b2[LAT_B2] = {
     {     0.00000042058,  1.91480759314,       38.13303563780}, 
     {     0.00000004359,  4.77459417163,       39.61750834610}, 
     {     0.00000004230,  1.12991232222,       36.64856292950}, 
@@ -1143,13 +1146,13 @@ static struct vsop neptune_latitude_b2[LAT_B2] = {
 };
 
 
-static struct vsop neptune_latitude_b3[LAT_B3] = {
+static const struct vsop neptune_latitude_b3[LAT_B3] = {
     {     0.00000004131,  3.06928911462,       38.13303563780}, 
     {     0.00000000143,  4.00453590187,       36.64856292950}, 
 };
 
 
-static struct vsop neptune_radius_r0[RADIUS_R0] = {
+static const struct vsop neptune_radius_r0[RADIUS_R0] = {
     {    30.07013205828,  0.00000000000,        0.00000000000}, 
     {     0.27062259632,  1.32999459377,       38.13303563780}, 
     {     0.01691764014,  3.25186135653,       36.64856292950}, 
@@ -1749,7 +1752,7 @@ static struct vsop neptune_radius_r0[RADIUS_R0] = {
 };
 
 
-static struct vsop neptune_radius_r1[RADIUS_R1] = {
+static const struct vsop neptune_radius_r1[RADIUS_R1] = {
     {     0.00236338618,  0.70497954792,       38.13303563780}, 
     {     0.00013220034,  3.32014387930,        1.48447270830}, 
     {     0.00008621779,  6.21626927537,       35.16409022120}, 
@@ -2004,7 +2007,7 @@ static struct vsop neptune_radius_r1[RADIUS_R1] = {
 };
 
 
-static struct vsop neptune_radius_r2[RADIUS_R2] = {
+static const struct vsop neptune_radius_r2[RADIUS_R2] = {
     {     0.00004247776,  5.89911844921,       38.13303563780}, 
     {     0.00000217404,  0.34589546713,        1.48447270830}, 
     {     0.00000163025,  2.23872947130,      168.05251279940}, 
@@ -2079,7 +2082,7 @@ static struct vsop neptune_radius_r2[RADIUS_R2] = {
 };
 
 
-static struct vsop neptune_radius_r3[RADIUS_R3] = {
+static const struct vsop neptune_radius_r3[RADIUS_R3] = {
     {     0.00000166556,  4.55393495836,       38.13303563780}, 
     {     0.00000022380,  3.94830879358,      168.05251279940}, 
     {     0.00000021348,  2.86296778794,      182.27960680100}, 
@@ -2106,7 +2109,7 @@ static struct vsop neptune_radius_r3[RADIUS_R3] = {
 };
 
 
-static struct vsop neptune_radius_r4[RADIUS_R4] = {
+static const struct vsop neptune_radius_r4[RADIUS_R4] = {
     {     0.00000004227,  2.40375758563,      477.33083545520}, 
     {     0.00000004333,  0.10459484545,      395.57870223900}, 
     {     0.00000003545,  4.78431259422,     1028.36244155220}, 
@@ -2119,9 +2122,16 @@ static struct vsop neptune_radius_r4[RADIUS_R4] = {
 
 /*! \fn void get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param position Pointer to store position
+* \param Position pointer to store position
 *
-* Calculates neptune's equatorial position for Julian Day JD.
+* Calculates Neptune's equatorial position for given julian day.
+* This function includes calculations for planetary aberration and refers
+* to the FK5 reference frame.
+*
+* To get the complete equatorial coordinates, corrections for nutation
+* have to be applied.
+*
+* The position returned is accurate to within 0.1 arcsecs.
 */ 
 void get_neptune_equ_coords 
 	(double JD,
@@ -2171,9 +2181,12 @@ void get_neptune_equ_coords
 
 /*! \fn void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param position Pointer to store new heliocentric position
+* \param Position pointer to store heliocentric position
 *
-* Calculate Neptunes heliocentric coordinates. 
+* Calculate Neptunes heliocentric (refered to the centre of the Sun) coordinates
+* in the FK5 reference frame for the given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+* 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
@@ -2241,10 +2254,12 @@ void get_neptune_helio_coords (double JD, struct ln_helio_posn * position)
 
 
 /*! \fn double get_neptune_earth_dist (double JD);
-* \brief Calculate the distance between neptune and the earth in AU
-* \return distance in AU
+* \brief Calculate the distance between Neptune and the Earth in AU
+* \param JD Julian day
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Earth and neptune.
+* Calculates the distance in AU between the Earth and Neptune for 
+* the given julian day.
 */
 double get_neptune_earth_dist (double JD)
 {
@@ -2274,10 +2289,12 @@ double get_neptune_earth_dist (double JD)
 }
 	
 /*! \fn double get_neptune_sun_dist (double JD);
-* \brief Calculate the distance between neptune and the sun in AU
+* \brief Calculate the distance between Neptune and the Sun in AU
+* \param JD Julian day
 * \return distance in AU
 *
-* Calculates the distance in AU between the Sun and neptune.
+* Calculates the distance in AU between the Sun and Neptune
+* for the given julian day.
 */ 
 double get_neptune_sun_dist (double JD)
 {
@@ -2305,10 +2322,11 @@ double get_neptune_sun_dist (double JD)
 }
 	
 /*! \fn double get_neptune_magnitude (double JD);
-* \brief Calculate the visible magnitude of neptune
-* \return magnitude of neptune
+* \brief Calculate the visible magnitude of Neptune
+* \param JD Julian day
+* \return Visible magnitude of neptune
 *
-* Calculate the magnitude of neptune.
+* Calculate the visible magnitude of Neptune for the given julian day.
 */ 
 double get_neptune_magnitude (double JD)
 {
@@ -2325,7 +2343,11 @@ double get_neptune_magnitude (double JD)
 
 /*! \fn double get_neptune_disk (double JD);
 * \brief Calculate the illuminated fraction of Neptune's disk
-* \return illuminated fraction of neptunes disk
+* \param JD Julian day
+* \return Illuminated fraction of Neptune's disk
+*
+* Calculate the illuminated fraction of Neptune's disk for the given Julian
+* day.
 */ 
 /* Chapter 41 */
 double get_neptune_disk (double JD)
@@ -2344,8 +2366,12 @@ double get_neptune_disk (double JD)
 }
 
 /*! \fn double get_neptune_phase (double JD);
-* \brief Calculate the phase angle of neptune (sun - neptune - earth)
-* \return phase angle of neptune (degrees)
+* \brief Calculate the phase angle of Neptune (Sun - Neptune - Earth)
+* \param Julian day
+* \return Phase angle of Neptune (degrees)
+*
+* Calculates the phase angle of Neptune, that is, the angle Sun -
+* Neptune - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
 double get_neptune_phase (double JD)

@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -44,7 +47,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop mercury_longitude_l0[LONG_L0] = {
+static const struct vsop mercury_longitude_l0[LONG_L0] = {
     {     4.40250710144,  0.00000000000,        0.00000000000}, 
     {     0.40989414977,  1.48302034195,    26087.90314157420}, 
     {     0.05046294200,  4.47785489551,    52175.80628314840}, 
@@ -1632,7 +1635,7 @@ static struct vsop mercury_longitude_l0[LONG_L0] = {
 
  
    
-static struct vsop mercury_longitude_l1[LONG_L1] = {
+static const struct vsop mercury_longitude_l1[LONG_L1] = {
     { 26087.90313685529,  0.00000000000,        0.00000000000}, 
     {     0.01131199811,  6.21874197797,    26087.90314157420}, 
     {     0.00292242298,  3.04449355541,    52175.80628314840}, 
@@ -2568,7 +2571,7 @@ static struct vsop mercury_longitude_l1[LONG_L1] = {
 
 
 
-static struct vsop mercury_longitude_l2[LONG_L2] = {
+static const struct vsop mercury_longitude_l2[LONG_L2] = {
     {     0.00016395129,  4.67759555504,    26087.90314157420}, 
     {     0.00008123865,  1.40305644134,    52175.80628314840}, 
     {     0.00003208170,  4.49577853102,    78263.70942472259}, 
@@ -3011,7 +3014,7 @@ static struct vsop mercury_longitude_l2[LONG_L2] = {
 
  
  
-static struct vsop mercury_longitude_l3[LONG_L3] = {
+static const struct vsop mercury_longitude_l3[LONG_L3] = {
     {     0.00000169496,  3.20221586818,    26087.90314157420}, 
     {     0.00000155725,  6.23814315369,    52175.80628314840}, 
     {     0.00000090555,  2.96712953186,    78263.70942472259}, 
@@ -3178,7 +3181,7 @@ static struct vsop mercury_longitude_l3[LONG_L3] = {
 
 
 
-static struct vsop mercury_longitude_l4[LONG_L4] = {
+static const struct vsop mercury_longitude_l4[LONG_L4] = {
     {     0.00000002671,  4.76418299344,    52175.80628314840}, 
     {     0.00000002079,  2.01782765964,    26087.90314157420}, 
     {     0.00000002071,  1.47603650163,    78263.70942472259}, 
@@ -3206,7 +3209,7 @@ static struct vsop mercury_longitude_l4[LONG_L4] = {
 
 
 
-static struct vsop mercury_longitude_l5[LONG_L5] = {
+static const struct vsop mercury_longitude_l5[LONG_L5] = {
     {     0.00000000039,  6.22596606829,    78263.70942472259}, 
     {     0.00000000035,  3.08442751462,    52175.80628314840}, 
     {     0.00000000036,  5.58268731752,    26087.90314157420}, 
@@ -3223,7 +3226,7 @@ static struct vsop mercury_longitude_l5[LONG_L5] = {
 
 
 
-static struct vsop mercury_latitude_b0[LAT_B0] = {
+static const struct vsop mercury_latitude_b0[LAT_B0] = {
     {     0.11737528961,  1.98357498767,    26087.90314157420}, 
     {     0.02388076996,  5.03738959686,    52175.80628314840}, 
     {     0.01222839532,  3.14159265359,        0.00000000000}, 
@@ -4045,7 +4048,7 @@ static struct vsop mercury_latitude_b0[LAT_B0] = {
 };
 
   
-static struct vsop mercury_latitude_b1[LAT_B1] = {
+static const struct vsop mercury_latitude_b1[LAT_B1] = {
     {     0.00274646065,  3.95008450011,    26087.90314157420}, 
     {     0.00099737713,  3.14159265359,        0.00000000000}, 
     {     0.00018772047,  0.05141288887,    78263.70942472259}, 
@@ -4542,7 +4545,7 @@ static struct vsop mercury_latitude_b1[LAT_B1] = {
 
  
    
-static struct vsop mercury_latitude_b2[LAT_B2] = {
+static const struct vsop mercury_latitude_b2[LAT_B2] = {
     {     0.00002747165,  5.24567337999,    26087.90314157420}, 
     {     0.00002047257,  0.00000000000,        0.00000000000}, 
     {     0.00000516030,  0.49321133154,    52175.80628314840}, 
@@ -4778,7 +4781,7 @@ static struct vsop mercury_latitude_b2[LAT_B2] = {
 
  
    
-static struct vsop mercury_latitude_b3[LAT_B3] = {
+static const struct vsop mercury_latitude_b3[LAT_B3] = {
     {     0.00000064680,  2.16518315874,    26087.90314157420}, 
     {     0.00000030733,  0.00000000000,        0.00000000000}, 
     {     0.00000018929,  5.40870348072,    52175.80628314840}, 
@@ -4822,7 +4825,7 @@ static struct vsop mercury_latitude_b3[LAT_B3] = {
 
  
    
-static struct vsop mercury_latitude_b4[LAT_B4] = {
+static const struct vsop mercury_latitude_b4[LAT_B4] = {
     {     0.00000001427,  4.97519726738,    26087.90314157420}, 
     {     0.00000000491,  3.14159265359,        0.00000000000}, 
     {     0.00000000336,  3.19691284098,    52175.80628314840}, 
@@ -4840,7 +4843,7 @@ static struct vsop mercury_latitude_b4[LAT_B4] = {
 
  
    
-static struct vsop mercury_latitude_b5[LAT_B5] = {
+static const struct vsop mercury_latitude_b5[LAT_B5] = {
     {     0.00000000009,  1.38311629808,    52175.80628314840}, 
     {     0.00000000008,  5.38548752147,    26087.90314157420}, 
     {     0.00000000006,  4.90804019263,    78263.70942472259}, 
@@ -4855,7 +4858,7 @@ static struct vsop mercury_latitude_b5[LAT_B5] = {
 
  
    
-static struct vsop mercury_radius_r0[RADIUS_R0] = {
+static const struct vsop mercury_radius_r0[RADIUS_R0] = {
     {     0.39528271651,  0.00000000000,        0.00000000000}, 
     {     0.07834131818,  6.19233722598,    26087.90314157420}, 
     {     0.00795525558,  2.95989690104,    52175.80628314840}, 
@@ -6069,7 +6072,7 @@ static struct vsop mercury_radius_r0[RADIUS_R0] = {
 
  
    
-static struct vsop mercury_radius_r1[RADIUS_R1] = {
+static const struct vsop mercury_radius_r1[RADIUS_R1] = {
     {     0.00217347740,  4.65617158665,    26087.90314157420}, 
     {     0.00044141826,  1.42385544001,    52175.80628314840}, 
     {     0.00010094479,  4.47466326327,    78263.70942472259}, 
@@ -6780,7 +6783,7 @@ static struct vsop mercury_radius_r1[RADIUS_R1] = {
 
  
    
-static struct vsop mercury_radius_r2[RADIUS_R2] = {
+static const struct vsop mercury_radius_r2[RADIUS_R2] = {
     {     0.00003117867,  3.08231840294,    26087.90314157420}, 
     {     0.00001245397,  6.15183316810,    52175.80628314840}, 
     {     0.00000424822,  2.92583350003,    78263.70942472259}, 
@@ -7103,7 +7106,7 @@ static struct vsop mercury_radius_r2[RADIUS_R2] = {
 
  
    
-static struct vsop mercury_radius_r3[RADIUS_R3] = {
+static const struct vsop mercury_radius_r3[RADIUS_R3] = {
     {     0.00000032676,  1.67971641967,    26087.90314157420}, 
     {     0.00000024166,  4.63403168878,    52175.80628314840}, 
     {     0.00000012133,  1.38983777816,    78263.70942472259}, 
@@ -7218,7 +7221,7 @@ static struct vsop mercury_radius_r3[RADIUS_R3] = {
 };
 
   
-static struct vsop mercury_radius_r4[RADIUS_R4] = {
+static const struct vsop mercury_radius_r4[RADIUS_R4] = {
     {     0.00000000394,  0.36736738836,    26087.90314157420}, 
     {     0.00000000387,  3.18568894140,    52175.80628314840}, 
     {     0.00000000270,  6.16979809593,    78263.70942472259}, 
@@ -7239,7 +7242,7 @@ static struct vsop mercury_radius_r4[RADIUS_R4] = {
 };
 
   
-static struct vsop mercury_radius_r5[RADIUS_R5] = {
+static const struct vsop mercury_radius_r5[RADIUS_R5] = {
     {     0.00000000006,  3.98812118954,    26087.90314157420}, 
     {     0.00000000006,  1.55172409309,    52175.80628314840}, 
     {     0.00000000005,  4.65488347662,    78263.70942472259}, 
@@ -7254,9 +7257,16 @@ static struct vsop mercury_radius_r5[RADIUS_R5] = {
 
 /*! \fn void get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param position Pointer to store position
+* \param Position pointer to store position 
 *
-* Calculates mercury's equatorial position for Julian Day JD.
+* Calculates Mercury's equatorial position for given julian day.
+* This function includes calculations for planetary aberration and refers
+* to the FK5 reference frame.
+*
+* To get the complete equatorial coordinates, corrections for nutation
+* have to be applied.
+*
+* The position returned is accurate to within 0.1 arcsecs.
 */ 
 void get_mercury_equ_coords 
 	(double JD,
@@ -7306,9 +7316,12 @@ void get_mercury_equ_coords
 
 /*! \fn void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param position Pointer to store new heliocentric position
+* \param Position pointer to store heliocentric position
 *
-* Calculate Mercurys heliocentric coordinates. 
+* Calculate Mercury heliocentric (refered to the centre of the Sun) coordinates
+* in the FK5 reference frame for the given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+*  
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
@@ -7380,10 +7393,12 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 
 
 /*! \fn double get_mercury_earth_dist (double JD);
-* \brief Calculate the distance between mercury and the earth in AU
-* \return distance in AU
+* \brief Calculate the distance between Mercury and the Earth in AU
+* \param JD Julian day
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Earth and mercury.
+* Calculates the distance in AU between the Earth and Mercury for
+* the given julian day.
 */
 double get_mercury_earth_dist (double JD)
 {
@@ -7413,10 +7428,12 @@ double get_mercury_earth_dist (double JD)
 }
 	
 /*! \fn double get_mercury_sun_dist (double JD);
-* \brief Calculate the distance between mercury and the sun in AU
-* \return distance in AU
+* \brief Calculate the distance between Mercury and the Sun in AU
+* \param JD Julian day
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Sun and mercury.
+* Calculates the distance in AU between the Sun and Mercury for
+* the given julian day.
 */ 
 double get_mercury_sun_dist (double JD)
 {
@@ -7444,10 +7461,12 @@ double get_mercury_sun_dist (double JD)
 }
 	
 /*! \fn double get_mercury_magnitude (double JD);
-* \brief Calculate the visible magnitude of mercury
-* \return magnitude of mercury
+* \brief Calculate the visible magnitude of Mercury
+* \param JD Julian day
+* \return Visisble magnitude of mercury
 *
-* Calculate the magnitude of mercury.
+* Calculate the visisble magnitude of Mercury for the given
+* julian day.
 */ 
 double get_mercury_magnitude (double JD)
 {
@@ -7469,7 +7488,11 @@ double get_mercury_magnitude (double JD)
 
 /*! \fn double get_mercury_disk (double JD);
 * \brief Calculate the illuminated fraction of Mercury's disk
-* \return illuminated fraction of mercurys disk
+* \param JD Julian day
+* \return Illuminated fraction of Mercury's disk
+*
+* Calculate the illuminated fraction of Mercury's disk for the given Julian
+* day.
 */ 
 /* Chapter 41 */
 double get_mercury_disk (double JD)
@@ -7488,8 +7511,12 @@ double get_mercury_disk (double JD)
 }
   
 /*! \fn double get_mercury_phase (double JD);
-* \brief Calculate the phase angle of mercury (sun - mercury - earth)
-* \return phase angle of mercury (degrees)
+* \brief Calculate the phase angle of Mercury (Sun - Mercury - Earth)
+* \param JD Julian day
+* \return Phase angle of Mercury (degrees)
+*
+* Calculates the phase angle of Mercury, that is, the angle Sun -
+* Mercury - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
 double get_mercury_phase (double JD)

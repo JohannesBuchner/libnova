@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -47,7 +50,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop earth_longitude_l0[LONG_L0] = {
+static const struct vsop earth_longitude_l0[LONG_L0] = {
     {     1.75347045673,  0.00000000000,        0.00000000000}, 
     {     0.03341656453,  4.66925680415,     6283.07584999140}, 
     {     0.00034894275,  4.62610242189,    12566.15169998280}, 
@@ -674,7 +677,7 @@ static struct vsop earth_longitude_l0[LONG_L0] = {
 };
 
 
-static struct vsop earth_longitude_l1[LONG_L1] = {
+static const struct vsop earth_longitude_l1[LONG_L1] = {
     {  6283.07584999140,  0.00000000000,        0.00000000000}, 
     {     0.00206058863,  2.67823455808,     6283.07584999140}, 
     {     0.00004303419,  2.63512233481,    12566.15169998280}, 
@@ -1057,7 +1060,7 @@ static struct vsop earth_longitude_l1[LONG_L1] = {
 };
 
 
-static struct vsop earth_longitude_l2[LONG_L2] = {
+static const struct vsop earth_longitude_l2[LONG_L2] = {
     {     0.00008721859,  1.07253635559,     6283.07584999140}, 
     {     0.00000990990,  3.14159265359,        0.00000000000}, 
     {     0.00000294833,  0.43717350256,    12566.15169998280}, 
@@ -1205,7 +1208,7 @@ static struct vsop earth_longitude_l2[LONG_L2] = {
 };
 
 
-static struct vsop earth_longitude_l3[LONG_L3] = {
+static const struct vsop earth_longitude_l3[LONG_L3] = {
     {     0.00000289058,  5.84173149732,     6283.07584999140}, 
     {     0.00000020712,  6.04983939020,    12566.15169998280}, 
     {     0.00000002962,  5.19560579570,      155.42039943420}, 
@@ -1232,7 +1235,7 @@ static struct vsop earth_longitude_l3[LONG_L3] = {
 };
 
 
-static struct vsop earth_longitude_l4[LONG_L4] = {
+static const struct vsop earth_longitude_l4[LONG_L4] = {
     {     0.00000007714,  4.14117321449,     6283.07584999140}, 
     {     0.00000001016,  3.27573644241,    12566.15169998280}, 
     {     0.00000000420,  0.41892851415,      155.42039943420}, 
@@ -1247,7 +1250,7 @@ static struct vsop earth_longitude_l4[LONG_L4] = {
 };
 
 
-static struct vsop earth_longitude_l5[LONG_L5] = {
+static const struct vsop earth_longitude_l5[LONG_L5] = {
     {     0.00000000172,  2.74854172392,     6283.07584999140}, 
     {     0.00000000050,  2.01352986713,      155.42039943420}, 
     {     0.00000000028,  2.93369985477,    12566.15169998280}, 
@@ -1255,7 +1258,7 @@ static struct vsop earth_longitude_l5[LONG_L5] = {
 };
 
 
-static struct vsop earth_latitude_b0[LAT_B0] = {
+static const struct vsop earth_latitude_b0[LAT_B0] = {
     {     0.00000279620,  3.19870156017,    84334.66158130829}, 
     {     0.00000101643,  5.42248619256,     5507.55323866740}, 
     {     0.00000080445,  3.88013204458,     5223.69391980220}, 
@@ -1443,7 +1446,7 @@ static struct vsop earth_latitude_b0[LAT_B0] = {
 };
 
 
-static struct vsop earth_latitude_b1[LAT_B1] = {
+static const struct vsop earth_latitude_b1[LAT_B1] = {
     {     0.00227777722,  3.41376620530,     6283.07584999140}, 
     {     0.00003805678,  3.37063423795,    12566.15169998280}, 
     {     0.00003619589,  0.00000000000,        0.00000000000}, 
@@ -1581,7 +1584,7 @@ static struct vsop earth_latitude_b1[LAT_B1] = {
 };
 
 
-static struct vsop earth_latitude_b2[LAT_B2] = {
+static const struct vsop earth_latitude_b2[LAT_B2] = {
     {     0.00009721424,  5.15192809920,     6283.07584999140}, 
     {     0.00000233002,  3.14159265359,        0.00000000000}, 
     {     0.00000134188,  0.64406212977,    12566.15169998280}, 
@@ -1647,7 +1650,7 @@ static struct vsop earth_latitude_b2[LAT_B2] = {
 };
 
 
-static struct vsop earth_latitude_b3[LAT_B3] = {
+static const struct vsop earth_latitude_b3[LAT_B3] = {
     {     0.00000275993,  0.59480097092,     6283.07584999140}, 
     {     0.00000017034,  3.14159265359,        0.00000000000}, 
     {     0.00000003617,  0.11750575325,    12566.15169998280}, 
@@ -1665,7 +1668,7 @@ static struct vsop earth_latitude_b3[LAT_B3] = {
 };
 
 
-static struct vsop earth_latitude_b4[LAT_B4] = {
+static const struct vsop earth_latitude_b4[LAT_B4] = {
     {     0.00000005745,  2.26734029843,     6283.07584999140}, 
     {     0.00000000870,  0.00000000000,        0.00000000000}, 
     {     0.00000000119,  4.26807972611,    12566.15169998280}, 
@@ -1675,13 +1678,13 @@ static struct vsop earth_latitude_b4[LAT_B4] = {
 };
 
 
-static struct vsop earth_latitude_b5[LAT_B5] = {
+static const struct vsop earth_latitude_b5[LAT_B5] = {
     {     0.00000000114,  4.31455980099,     6283.07584999140}, 
     {     0.00000000024,  0.00000000000,        0.00000000000}, 
 };
 
 
-static struct vsop earth_radius_r0[RADIUS_R0] = {
+static const struct vsop earth_radius_r0[RADIUS_R0] = {
     {     1.00013988784,  0.00000000000,        0.00000000000}, 
     {     0.01670699632,  3.09846350258,     6283.07584999140}, 
     {     0.00013956024,  3.05524609456,    12566.15169998280}, 
@@ -2208,7 +2211,7 @@ static struct vsop earth_radius_r0[RADIUS_R0] = {
 };
 
 
-static struct vsop earth_radius_r1[RADIUS_R1] = {
+static const struct vsop earth_radius_r1[RADIUS_R1] = {
     {     0.00103018607,  1.10748968172,     6283.07584999140}, 
     {     0.00001721238,  1.06442300386,    12566.15169998280}, 
     {     0.00000702217,  3.14159265359,        0.00000000000}, 
@@ -2502,7 +2505,7 @@ static struct vsop earth_radius_r1[RADIUS_R1] = {
 };
 
 
-static struct vsop earth_radius_r2[RADIUS_R2] = {
+static const struct vsop earth_radius_r2[RADIUS_R2] = {
     {     0.00004359385,  5.78455133808,     6283.07584999140}, 
     {     0.00000123633,  5.57935427994,    12566.15169998280}, 
     {     0.00000012342,  3.14159265359,        0.00000000000}, 
@@ -2640,7 +2643,7 @@ static struct vsop earth_radius_r2[RADIUS_R2] = {
 };
 
 
-static struct vsop earth_radius_r3[RADIUS_R3] = {
+static const struct vsop earth_radius_r3[RADIUS_R3] = {
     {     0.00000144595,  4.27319433901,     6283.07584999140}, 
     {     0.00000006729,  3.91706261708,    12566.15169998280}, 
     {     0.00000000774,  0.00000000000,        0.00000000000}, 
@@ -2664,7 +2667,7 @@ static struct vsop earth_radius_r3[RADIUS_R3] = {
 };
 
 
-static struct vsop earth_radius_r4[RADIUS_R4] = {
+static const struct vsop earth_radius_r4[RADIUS_R4] = {
     {     0.00000003858,  2.56389016346,     6283.07584999140}, 
     {     0.00000000306,  2.26911740541,    12566.15169998280}, 
     {     0.00000000053,  3.44031471924,     5573.14280143310}, 
@@ -2677,16 +2680,19 @@ static struct vsop earth_radius_r4[RADIUS_R4] = {
 };
 
 
-static struct vsop earth_radius_r5[RADIUS_R5] = {
+static const struct vsop earth_radius_r5[RADIUS_R5] = {
     {     0.00000000086,  1.21805304895,     6283.07584999140}, 
     {     0.00000000012,  0.65572878044,    12566.15169998280}, 
 };
 
 /*! \fn void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param position Pointer to store new heliocentric position
+* \param Position ointer to store heliocentric position
 *
-* Calculate Earths heliocentric coordinates. 
+* Calculate Earths heliocentric (refered to the centre of the Sun) coordinates 
+* for given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+* 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
@@ -2757,10 +2763,12 @@ void get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 }
 	
 /*! \fn double get_earth_sun_dist (double JD);
-* \brief Calculate the distance between earth and the sun in AU
+* \brief Calculate the distance between earth and the sun in AU.
+* \param JD Julian day.
 * \return distance in AU
 *
-* Calculates the distance in AU between the Sun and earth.
+* Calculates the distance in AU between the Sun and Earth for 
+* the given julian day.
 */ 
 double get_earth_sun_dist (double JD)
 {

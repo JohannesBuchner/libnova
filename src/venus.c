@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -45,7 +48,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop venus_longitude_l0[LONG_L0] = {
+static const struct vsop venus_longitude_l0[LONG_L0] = {
     {     3.17614666774,  0.00000000000,        0.00000000000}, 
     {     0.01353968419,  5.59313319619,    10213.28554621100}, 
     {     0.00089891645,  5.30650047764,    20426.57109242200}, 
@@ -465,7 +468,7 @@ static struct vsop venus_longitude_l0[LONG_L0] = {
 };
 
 
-static struct vsop venus_longitude_l1[LONG_L1] = {
+static const struct vsop venus_longitude_l1[LONG_L1] = {
     { 10213.28554621638,  0.00000000000,        0.00000000000}, 
     {     0.00095617813,  2.46406511110,    10213.28554621100}, 
     {     0.00007787201,  0.62478482220,    20426.57109242200}, 
@@ -704,7 +707,7 @@ static struct vsop venus_longitude_l1[LONG_L1] = {
 };
 
 
-static struct vsop venus_longitude_l2[LONG_L2] = {
+static const struct vsop venus_longitude_l2[LONG_L2] = {
     {     0.00003894209,  0.34823650721,    10213.28554621100}, 
     {     0.00000595403,  2.01456107998,    20426.57109242200}, 
     {     0.00000287868,  0.00000000000,        0.00000000000}, 
@@ -780,7 +783,7 @@ static struct vsop venus_longitude_l2[LONG_L2] = {
 };
 
 
-static struct vsop venus_longitude_l3[LONG_L3] = {
+static const struct vsop venus_longitude_l3[LONG_L3] = {
     {     0.00000136328,  4.79698723753,    10213.28554621100}, 
     {     0.00000030661,  3.71663788064,    20426.57109242200}, 
     {     0.00000003041,  3.14159265359,        0.00000000000}, 
@@ -791,7 +794,7 @@ static struct vsop venus_longitude_l3[LONG_L3] = {
 };
 
 
-static struct vsop venus_longitude_l4[LONG_L4] = {
+static const struct vsop venus_longitude_l4[LONG_L4] = {
     {     0.00000001636,  2.50540811485,    10213.28554621100}, 
     {     0.00000001080,  5.10106236574,    20426.57109242200}, 
     {     0.00000000018,  0.88315856739,    30639.85663863300}, 
@@ -799,13 +802,13 @@ static struct vsop venus_longitude_l4[LONG_L4] = {
 };
 
 
-static struct vsop venus_longitude_l5[LONG_L5] = {
+static const struct vsop venus_longitude_l5[LONG_L5] = {
     {     0.00000000122,  1.88711724630,    10213.28554621100}, 
     {     0.00000000043,  0.42125909290,    20426.57109242200}, 
 };
 
 
-static struct vsop venus_latitude_b0[LAT_B0] = {
+static const struct vsop venus_latitude_b0[LAT_B0] = {
     {     0.05923638472,  0.26702775812,    10213.28554621100}, 
     {     0.00040107978,  1.14737178112,    20426.57109242200}, 
     {     0.00032814918,  3.14159265359,        0.00000000000}, 
@@ -1019,7 +1022,7 @@ static struct vsop venus_latitude_b0[LAT_B0] = {
 };
 
 
-static struct vsop venus_latitude_b1[LAT_B1] = {
+static const struct vsop venus_latitude_b1[LAT_B1] = {
     {     0.00287821243,  1.88964962838,    10213.28554621100}, 
     {     0.00003499578,  3.71117560516,    20426.57109242200}, 
     {     0.00001257844,  0.00000000000,        0.00000000000}, 
@@ -1144,7 +1147,7 @@ static struct vsop venus_latitude_b1[LAT_B1] = {
 };
 
 
-static struct vsop venus_latitude_b2[LAT_B2] = {
+static const struct vsop venus_latitude_b2[LAT_B2] = {
     {     0.00012657745,  3.34796457029,    10213.28554621100}, 
     {     0.00000151225,  0.00000000000,        0.00000000000}, 
     {     0.00000037476,  5.34638962141,    20426.57109242200}, 
@@ -1199,7 +1202,7 @@ static struct vsop venus_latitude_b2[LAT_B2] = {
 };
 
 
-static struct vsop venus_latitude_b3[LAT_B3] = {
+static const struct vsop venus_latitude_b3[LAT_B3] = {
     {     0.00000376505,  4.87650249694,    10213.28554621100}, 
     {     0.00000012587,  3.14159265359,        0.00000000000}, 
     {     0.00000004809,  0.43423918018,    20426.57109242200}, 
@@ -1215,7 +1218,7 @@ static struct vsop venus_latitude_b3[LAT_B3] = {
 };
 
 
-static struct vsop venus_latitude_b4[LAT_B4] = {
+static const struct vsop venus_latitude_b4[LAT_B4] = {
     {     0.00000008558,  0.17181972054,    10213.28554621100}, 
     {     0.00000000114,  2.50366130090,    20426.57109242200}, 
     {     0.00000000115,  3.14159265359,        0.00000000000}, 
@@ -1223,7 +1226,7 @@ static struct vsop venus_latitude_b4[LAT_B4] = {
 };
 
 
-static struct vsop venus_latitude_b5[LAT_B5] = {
+static const struct vsop venus_latitude_b5[LAT_B5] = {
     {     0.00000000149,  1.67437168506,    10213.28554621100}, 
     {     0.00000000023,  0.00000000000,        0.00000000000}, 
     {     0.00000000008,  3.73924477319,    20426.57109242200}, 
@@ -1231,7 +1234,7 @@ static struct vsop venus_latitude_b5[LAT_B5] = {
 };
 
 
-static struct vsop venus_radius_r0[RADIUS_R0] = {
+static const struct vsop venus_radius_r0[RADIUS_R0] = {
     {     0.72334820891,  0.00000000000,        0.00000000000}, 
     {     0.00489824182,  4.02151831717,    10213.28554621100}, 
     {     0.00001658058,  4.90206728031,    20426.57109242200}, 
@@ -1558,7 +1561,7 @@ static struct vsop venus_radius_r0[RADIUS_R0] = {
 };
 
 
-static struct vsop venus_radius_r1[RADIUS_R1] = {
+static const struct vsop venus_radius_r1[RADIUS_R1] = {
     {     0.00034551041,  0.89198706276,    10213.28554621100}, 
     {     0.00000234203,  1.77224942363,    20426.57109242200}, 
     {     0.00000233998,  3.14159265359,        0.00000000000}, 
@@ -1736,7 +1739,7 @@ static struct vsop venus_radius_r1[RADIUS_R1] = {
 };
 
 
-static struct vsop venus_radius_r2[RADIUS_R2] = {
+static const struct vsop venus_radius_r2[RADIUS_R2] = {
     {     0.00001406587,  5.06366395112,    10213.28554621100}, 
     {     0.00000015529,  5.47321056992,    20426.57109242200}, 
     {     0.00000013059,  0.00000000000,        0.00000000000}, 
@@ -1802,7 +1805,7 @@ static struct vsop venus_radius_r2[RADIUS_R2] = {
 };
 
 
-static struct vsop venus_radius_r3[RADIUS_R3] = {
+static const struct vsop venus_radius_r3[RADIUS_R3] = {
     {     0.00000049582,  3.22264415899,    10213.28554621100}, 
     {     0.00000000831,  3.21255590531,    20426.57109242200}, 
     {     0.00000000112,  3.14159265359,        0.00000000000}, 
@@ -1814,23 +1817,30 @@ static struct vsop venus_radius_r3[RADIUS_R3] = {
 };
 
 
-static struct vsop venus_radius_r4[RADIUS_R4] = {
+static const struct vsop venus_radius_r4[RADIUS_R4] = {
     {     0.00000000573,  0.92253525592,    10213.28554621100}, 
     {     0.00000000039,  0.95696787303,    20426.57109242200}, 
     {     0.00000000006,  3.14159265359,        0.00000000000}, 
 };
 
 
-static struct vsop venus_radius_r5[RADIUS_R5] = {
+static const struct vsop venus_radius_r5[RADIUS_R5] = {
     {     0.00000000045,  0.30037014808,    10213.28554621100}, 
     {     0.00000000002,  5.33215705373,    20426.57109242200}, 
 };
 
 /*! \fn void get_venus_equ_coords (double JD, struct ln_equ_posn * position);
-* \param JD julian Day
+* \param JD Julian Day
 * \param position Pointer to store position
 *
-* Calculates venus's equatorial position for Julian Day JD.
+* Calculates Venus's equatorial position for given julian day.
+* This function includes calculations for planetary aberration and refers
+* to the FK5 reference frame.
+*
+* To get the complete equatorial coordinates, corrections for nutation
+* have to be applied.
+*
+* The position returned is accurate to within 0.1 arcsecs..
 */ 
 void get_venus_equ_coords 
 	(double JD,
@@ -1881,7 +1891,10 @@ void get_venus_equ_coords
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
-* Calculate Venus heliocentric coordinates. 
+* Calculate Venus heliocentric (refered to the centre of the Sun) coordinates
+* in the FK5 reference frame for the given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+* 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
@@ -1952,10 +1965,12 @@ void get_venus_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 /*! \fn double get_venus_earth_dist (double JD);
-* \brief Calculate the distance between venus and the earth in AU
-* \return distance in AU
+* \param JD Julian day
+* \brief Calculate the distance between Venus and the Earth in AU
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Earth and venus.
+* Calculates the distance in AU between the Earth and Venus for the
+* given julian day.
 */
 double get_venus_earth_dist (double JD)
 {
@@ -1985,10 +2000,12 @@ double get_venus_earth_dist (double JD)
 }
 
 /*! \fn double get_venus_sun_dist (double JD);
-* \brief Calculate the distance between venus and the sun in AU
-* \return distance in AU
+* \param JD Julian day
+* \brief Calculate the distance between Venus and the Sun in AU
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Sun and venus.
+* Calculates the distance in AU between the Sun and Venus for
+* the given julian day.
 */ 
 double get_venus_sun_dist (double JD)
 {
@@ -2016,10 +2033,12 @@ double get_venus_sun_dist (double JD)
 }
 	
 /*! \fn double get_venus_magnitude (double JD);
-* \brief Calculate the visible magnitude of venus
-* \return magnitude of venus
+* \param JD Julian day
+* \brief Calculate the visible magnitude of Venus
+* \return Visible magnitude of venus
 *
-* Calculate the magnitude of venus.
+* Calculate the visible magnitude of Venus for the 
+* given julian day.
 */ 
 double get_venus_magnitude (double JD)
 {
@@ -2040,8 +2059,12 @@ double get_venus_magnitude (double JD)
 }
 
 /*! \fn double get_venus_disk (double JD);
+* \param JD Julian day
 * \brief Calculate the illuminated fraction of Venus disk
-* \return illuminated fraction of venus disk
+* \return Illuminated fraction of venus disk
+*
+* Calculate the illuminated fraction of Venus's disk for the given Julian
+* day
 */ 
 /* Chapter 41 */
 double get_venus_disk (double JD)
@@ -2060,8 +2083,12 @@ double get_venus_disk (double JD)
 }
 
 /*! \fn double get_venus_phase (double JD);
-* \brief Calculate the phase angle of venus (sun - venus - earth)
-* \return phase angle of venus (degrees)
+* \param JD Julian day
+* \brief Calculate the phase angle of Venus (Sun - Venus - Earth)
+* \return Phase angle of Venus (degrees)
+*
+* Calculates the phase angle of Venus, that is, the angle Sun -
+* Venus - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
 double get_venus_phase (double JD)

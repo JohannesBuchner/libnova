@@ -14,6 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
+Some functions in this file use the VSOP87 solution by
+Messrs. Bretagnon and Francou.
+
 Copyright 2000 Liam Girdwood
  
 */
@@ -47,7 +50,7 @@ Copyright 2000 Liam Girdwood
 /* cache variables */
 static double cJD = 0, cL = 0, cB = 0, cR = 0;
 
-static struct vsop saturn_longitude_l0[LONG_L0] = {
+static const struct vsop saturn_longitude_l0[LONG_L0] = {
     {     0.87401354025,  0.00000000000,        0.00000000000}, 
     {     0.11107659762,  3.96205090159,      213.29909543800}, 
     {     0.01414150957,  4.58581516874,        7.11354700080}, 
@@ -1488,7 +1491,7 @@ static struct vsop saturn_longitude_l0[LONG_L0] = {
 };
 
 
-static struct vsop saturn_longitude_l1[LONG_L1] = {
+static const struct vsop saturn_longitude_l1[LONG_L1] = {
     {   213.29909521690,  0.00000000000,        0.00000000000}, 
     {     0.01297370862,  1.82834923978,      213.29909543800}, 
     {     0.00564345393,  2.88499717272,        7.11354700080}, 
@@ -2309,7 +2312,7 @@ static struct vsop saturn_longitude_l1[LONG_L1] = {
 };
 
 
-static struct vsop saturn_longitude_l2[LONG_L2] = {
+static const struct vsop saturn_longitude_l2[LONG_L2] = {
     {     0.00116441330,  1.17988132879,        7.11354700080}, 
     {     0.00091841837,  0.07325195840,      213.29909543800}, 
     {     0.00036661728,  0.00000000000,        0.00000000000}, 
@@ -2751,7 +2754,7 @@ static struct vsop saturn_longitude_l2[LONG_L2] = {
 };
 
 
-static struct vsop saturn_longitude_l3[LONG_L3] = {
+static const struct vsop saturn_longitude_l3[LONG_L3] = {
     {     0.00016038732,  5.73945573267,        7.11354700080}, 
     {     0.00004254737,  4.58877599687,      213.29909543800}, 
     {     0.00001906379,  4.76070843570,      220.41264243880}, 
@@ -2947,7 +2950,7 @@ static struct vsop saturn_longitude_l3[LONG_L3] = {
 };
 
 
-static struct vsop saturn_longitude_l4[LONG_L4] = {
+static const struct vsop saturn_longitude_l4[LONG_L4] = {
     {     0.00001661877,  3.99824447634,        7.11354700080}, 
     {     0.00000257094,  2.98422287887,      220.41264243880}, 
     {     0.00000236328,  3.90248844320,       14.22709400160}, 
@@ -3036,7 +3039,7 @@ static struct vsop saturn_longitude_l4[LONG_L4] = {
 };
 
 
-static struct vsop saturn_longitude_l5[LONG_L5] = {
+static const struct vsop saturn_longitude_l5[LONG_L5] = {
     {     0.00000123607,  2.25923420203,        7.11354700080}, 
     {     0.00000034176,  2.16278773143,       14.22709400160}, 
     {     0.00000027539,  1.19822164604,      220.41264243880}, 
@@ -3070,7 +3073,7 @@ static struct vsop saturn_longitude_l5[LONG_L5] = {
 };
 
 
-static struct vsop saturn_latitude_b0[LAT_B0] = {
+static const struct vsop saturn_latitude_b0[LAT_B0] = {
     {     0.04330678039,  3.60284428399,      213.29909543800}, 
     {     0.00240348302,  2.85238489373,      426.59819087600}, 
     {     0.00084745939,  0.00000000000,        0.00000000000}, 
@@ -3574,7 +3577,7 @@ static struct vsop saturn_latitude_b0[LAT_B0] = {
 };
 
 
-static struct vsop saturn_latitude_b1[LAT_B1] = {
+static const struct vsop saturn_latitude_b1[LAT_B1] = {
     {     0.00198927992,  4.93901017903,      213.29909543800}, 
     {     0.00036947916,  3.14159265359,        0.00000000000}, 
     {     0.00017966989,  0.51979431110,      426.59819087600}, 
@@ -3825,7 +3828,7 @@ static struct vsop saturn_latitude_b1[LAT_B1] = {
 };
 
 
-static struct vsop saturn_latitude_b2[LAT_B2] = {
+static const struct vsop saturn_latitude_b2[LAT_B2] = {
     {     0.00013884264,  0.08994998691,      213.29909543800}, 
     {     0.00003075713,  3.91610937620,      206.18554843720}, 
     {     0.00002081666,  0.09631968077,      220.41264243880}, 
@@ -3940,7 +3943,7 @@ static struct vsop saturn_latitude_b2[LAT_B2] = {
 };
 
 
-static struct vsop saturn_latitude_b3[LAT_B3] = {
+static const struct vsop saturn_latitude_b3[LAT_B3] = {
     {     0.00000463357,  1.69194209337,      213.29909543800}, 
     {     0.00000487242,  5.57827705588,      206.18554843720}, 
     {     0.00000270686,  4.65445792593,      220.41264243880}, 
@@ -3998,7 +4001,7 @@ static struct vsop saturn_latitude_b3[LAT_B3] = {
 };
 
 
-static struct vsop saturn_latitude_b4[LAT_B4] = {
+static const struct vsop saturn_latitude_b4[LAT_B4] = {
     {     0.00000058521,  0.96404269672,      206.18554843720}, 
     {     0.00000027023,  2.97511812746,      213.29909543800}, 
     {     0.00000027345,  2.90816987834,      220.41264243880}, 
@@ -4026,7 +4029,7 @@ static struct vsop saturn_latitude_b4[LAT_B4] = {
 };
 
 
-static struct vsop saturn_latitude_b5[LAT_B5] = {
+static const struct vsop saturn_latitude_b5[LAT_B5] = {
     {     0.00000005442,  2.61186488264,      206.18554843720}, 
     {     0.00000001966,  1.16969532852,      220.41264243880}, 
     {     0.00000000907,  0.10771558371,      433.71173787680}, 
@@ -4041,7 +4044,7 @@ static struct vsop saturn_latitude_b5[LAT_B5] = {
 };
 
 
-static struct vsop saturn_radius_r0[RADIUS_R0] = {
+static const struct vsop saturn_radius_r0[RADIUS_R0] = {
     {     9.55758135486,  0.00000000000,        0.00000000000}, 
     {     0.52921382865,  2.39226219573,      213.29909543800}, 
     {     0.01873679867,  5.23549604660,      206.18554843720}, 
@@ -5253,7 +5256,7 @@ static struct vsop saturn_radius_r0[RADIUS_R0] = {
 };
 
 
-static struct vsop saturn_radius_r1[RADIUS_R1] = {
+static const struct vsop saturn_radius_r1[RADIUS_R1] = {
     {     0.06182981340,  0.25843511480,      213.29909543800}, 
     {     0.00506577242,  0.71114625261,      206.18554843720}, 
     {     0.00341394029,  5.79635741658,      426.59819087600}, 
@@ -5884,7 +5887,7 @@ static struct vsop saturn_radius_r1[RADIUS_R1] = {
 };
 
 
-static struct vsop saturn_radius_r2[RADIUS_R2] = {
+static const struct vsop saturn_radius_r2[RADIUS_R2] = {
     {     0.00436902572,  4.78671677509,      213.29909543800}, 
     {     0.00071922498,  2.50070069930,      206.18554843720}, 
     {     0.00049766872,  4.97167777235,      220.41264243880}, 
@@ -6226,7 +6229,7 @@ static struct vsop saturn_radius_r2[RADIUS_R2] = {
 };
 
 
-static struct vsop saturn_radius_r3[RADIUS_R3] = {
+static const struct vsop saturn_radius_r3[RADIUS_R3] = {
     {     0.00020315239,  3.02186068237,      213.29909543800}, 
     {     0.00008923679,  3.19144467228,      220.41264243880}, 
     {     0.00006908768,  4.35175288182,      206.18554843720}, 
@@ -6384,7 +6387,7 @@ static struct vsop saturn_radius_r3[RADIUS_R3] = {
 };
 
 
-static struct vsop saturn_radius_r4[RADIUS_R4] = {
+static const struct vsop saturn_radius_r4[RADIUS_R4] = {
     {     0.00001202117,  1.41498340225,      220.41264243880}, 
     {     0.00000707794,  1.16151449537,      213.29909543800}, 
     {     0.00000516224,  6.24049105350,      206.18554843720}, 
@@ -6453,7 +6456,7 @@ static struct vsop saturn_radius_r4[RADIUS_R4] = {
 };
 
 
-static struct vsop saturn_radius_r5[RADIUS_R5] = {
+static const struct vsop saturn_radius_r5[RADIUS_R5] = {
     {     0.00000128668,  5.91279864289,      220.41264243880}, 
     {     0.00000032196,  0.69558284384,        7.11354700080}, 
     {     0.00000026737,  5.91270395039,      227.52618943960}, 
@@ -6485,9 +6488,16 @@ static struct vsop saturn_radius_r5[RADIUS_R5] = {
 
 /*! \fn void get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
-* \param position Pointer to store position
+* \param Position pointer to store position
 *
-* Calculates saturn's equatorial position for Julian Day JD.
+* Calculates Saturn's equatorial position for given julian day.
+* This function includes calculations for planetary aberration and refers
+* to the FK5 reference frame.
+*
+* To get the complete equatorial coordinates, corrections for nutation
+* have to be applied.
+*
+* The position returned is accurate to within 0.1 arcsecs..
 */ 
 void get_saturn_equ_coords 
 	(double JD,
@@ -6536,9 +6546,12 @@ void get_saturn_equ_coords
 	
 /*! \fn void get_saturn_helio_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian Day
-* \param position Pointer to store new heliocentric position
+* \param Position pointer to store heliocentric position
 *
-* Calculate Saturns heliocentric coordinates. 
+* Calculate Saturns heliocentric (refered to the centre of the Sun) coordinates
+* in the FK5 reference frame for the given julian day.
+* Longitude and Latitude are in degrees, whilst radius vector is in AU.
+* 
 * Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 
 */
 void get_saturn_helio_coords (double JD, struct ln_helio_posn * position)
@@ -6609,10 +6622,12 @@ void get_saturn_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 /*! \fn double get_saturn_earth_dist (double JD);
-* \brief Calculate the distance between saturn and the earth in AU
-* \return distance in AU
+* \param JD Julian day
+* \brief Calculate the distance between Saturn and the Earth in AU
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Earth and saturn.
+* Calculates the distance in AU between the Earth and Saturn for 
+* the given julian day.
 */
 double get_saturn_earth_dist (double JD)
 {
@@ -6642,10 +6657,12 @@ double get_saturn_earth_dist (double JD)
 }
 	
 /*! \fn double get_saturn_sun_dist (double JD);
-* \brief Calculate the distance between saturn and the sun in AU
-* \return distance in AU
+* \param JD Julian day
+* \brief Calculate the distance between Saturn and the Sun in AU
+* \return Distance in AU
 *
-* Calculates the distance in AU between the Sun and saturn.
+* Calculates the distance in AU between the Sun and Saturn for
+* the given julian day.
 */ 
 double get_saturn_sun_dist (double JD)
 {
@@ -6675,10 +6692,13 @@ double get_saturn_sun_dist (double JD)
 }
 	
 /*! \fn double get_saturn_magnitude (double JD);
-* \brief Calculate the visible magnitude of saturn
-* \return magnitude of saturn
-* \todo calculate rings brightness
-* Calculate the magnitude of saturn.
+* \param JD Julian day
+* \brief Calculate the visible magnitude of Saturn
+* \return Visisble magnitude of saturn
+* \todo Calculate rings brightness
+*
+* Calculate the visible magnitude of Saturn for the given
+* julian day.
 */ 
 double get_saturn_magnitude (double JD)
 {
@@ -6694,8 +6714,12 @@ double get_saturn_magnitude (double JD)
 }
 
 /*! \fn double get_saturn_disk (double JD);
+* \param JD Julian day
 * \brief Calculate the illuminated fraction of Saturn's disk
-* \return illuminated fraction of saturns disk
+* \return Illuminated fraction of Saturns disk. (Value between 0..1)
+*
+* Calculate the illuminated fraction of Saturn's disk for the given Julian
+* day.
 */ 
 /* Chapter 41 */
 double get_saturn_disk (double JD)
@@ -6714,8 +6738,11 @@ double get_saturn_disk (double JD)
 }
 
 /*! \fn double get_saturn_phase (double JD);
-* \brief Calculate the phase angle of saturn (sun - saturn - earth)
-* \return phase angle of saturn (degrees)
+* \brief Calculate the phase angle of Saturn (Sun - Saturn - Earth)
+* \return Phase angle of Saturn (degrees)
+*
+* Calculates the phase angle of Saturn, that is, the angle Sun -
+* Saturn - Earth for the given Julian day.
 */ 
 /* Chapter 41 */
 double get_saturn_phase (double JD)
