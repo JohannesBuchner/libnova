@@ -39305,7 +39305,7 @@ void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precis
 * Calculate the lunar RA and DEC for Julian day JD. 
 * Accuracy is better than 10 arcsecs in right ascension and 4 arcsecs in declination.
 */ 
-void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision)
+void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision)
 {
 	struct ln_lnlat_posn ecl;
 		
@@ -39313,9 +39313,9 @@ void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double p
 	ln_get_equ_from_ecl (&ecl, JD, position);
 }
 
-void ln_get_lunar_equ_coords_wo_precision (double JD, struct ln_equ_posn * position)
+void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position)
 {
-	ln_get_lunar_equ_coords (JD, position, 0);
+	ln_get_lunar_equ_coords_prec (JD, position, 0);
 }
 
 /*! \fn void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
@@ -39375,7 +39375,7 @@ double ln_get_lunar_phase (double JD)
 		
 	/* get lunar and solar long + lat */
 	ln_get_lunar_ecl_coords (JD, &moon, 0.0001);
-	ln_get_ecl_solar_coords (JD, &sun);
+	ln_get_solar_ecl_coords (JD, &sun);
 	
 	/* calc lunar geocentric elongation equ 48.2 */
 	lunar_elong = acos (cos (ln_deg_to_rad(moon.lat)) * cos (ln_deg_to_rad(sun.lng - moon.lng)));
@@ -39425,8 +39425,8 @@ double ln_get_lunar_bright_limb (double JD)
 	struct ln_equ_posn moon, sun;
 		
 	/* get lunar and solar long + lat */
-	ln_get_lunar_equ_coords (JD, &moon, 0.0001);
-	ln_get_equ_solar_coords (JD, &sun);
+	ln_get_lunar_equ_coords (JD, &moon);
+	ln_get_solar_equ_coords (JD, &sun);
 	
 	/* Equ 48.5 */
 	x = cos (ln_deg_to_rad(sun.dec)) * sin (ln_deg_to_rad(sun.ra - moon.ra));
@@ -39455,7 +39455,7 @@ double ln_get_lunar_bright_limb (double JD)
 */
 int ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return ln_get_body_rst_horizont (JD, observer, ln_get_lunar_equ_coords_wo_precision, LN_LUNAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizont (JD, observer, ln_get_lunar_equ_coords, LN_LUNAR_STANDART_HORIZONT, rst);
 }
 
 /*! \fn double ln_get_lunar_sdiam (double JD)

@@ -269,7 +269,7 @@ int solar_coord_test (void)
 	struct ln_helio_posn pos;
 	int failed = 0;
 	
-	ln_get_geom_solar_coords (2448908.5, &pos);
+	ln_get_solar_geom_coords (2448908.5, &pos);
 	failed += test_result ("(Solar Coords) longitude (deg) on JD 2448908.5  ", pos.L, 200.00810889, 0.00000001);
 	failed += test_result ("(Solar Coords) latitude (deg) on JD 2448908.5  ", pos.B, 0.00018690, 0.00000001);
 	failed += test_result ("(Solar Coords) radius vector (AU) on JD 2448908.5  ", pos.R, 0.99760852, 0.00000001);
@@ -392,7 +392,7 @@ int vsop87_test(void)
 	JD = ln_get_julian_from_sys();	
 #endif
 	
-	ln_get_equ_solar_coords (JD, &equ);
+	ln_get_solar_equ_coords (JD, &equ);
 	failed += test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.32146893, 0.00000001);
 	failed += test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43026873, 0.00000001);
 	
@@ -567,7 +567,7 @@ int lunar_test ()
 	printf ("lunar x %f  y %f  z %f\n",moon.X, moon.Y, moon.Z);
 	ln_get_lunar_ecl_coords (JD, &ecl, 0);
 	printf ("lunar long %f  lat %f\n",ecl.lng, ecl.lat);
-	ln_get_lunar_equ_coords (JD, &equ, 0);
+	ln_get_lunar_equ_coords_prec (JD, &equ, 0);
 	printf ("lunar RA %f  Dec %f\n",equ.ra, equ.dec);
 	printf ("lunar distance km %f\n", ln_get_lunar_earth_dist(JD));
 	printf ("lunar disk %f\n", ln_get_lunar_disk(JD));

@@ -7281,7 +7281,7 @@ void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position)
 	double ra, dec, delta, diff, last, t = 0;
 	
 	/* need typdef for solar heliocentric coords */
-	ln_get_geom_solar_coords (JD, &h_sol);
+	ln_get_solar_geom_coords (JD, &h_sol);
 	ln_get_rect_from_helio (&h_sol, &g_sol);
 	
 	do {

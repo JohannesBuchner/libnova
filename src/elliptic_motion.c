@@ -276,7 +276,7 @@ void ln_get_ell_body_equ_coords (double JD, struct ln_ell_orbit * orbit, struct 
 	
 	/* get solar and body rect coords */
 	ln_get_ell_helio_rect_posn (orbit, JD, &body_rect_posn);
-	ln_get_geo_solar_coords (JD, &sol_rect_posn);
+	ln_get_solar_geo_coords (JD, &sol_rect_posn);
 	
 	/* calc distance and light time */
 	dist = ln_get_rect_distance (&body_rect_posn, &sol_rect_posn);

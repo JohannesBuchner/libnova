@@ -50,25 +50,25 @@ int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_
 * \brief Calculate solar geometric coordinates. 
 * \ingroup solar 
 */
-void ln_get_geom_solar_coords (double JD, struct ln_helio_posn * position);
+void ln_get_solar_geom_coords (double JD, struct ln_helio_posn * position);
 
 /*! \fn void ln_get_equ_solar_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate apparent equatorial coordinates.
 * \ingroup solar
 */ 
-void ln_get_equ_solar_coords (double JD, struct ln_equ_posn * position);
+void ln_get_solar_equ_coords (double JD, struct ln_equ_posn * position);
 
 /*! \fn void ln_get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position);
 * \brief Calculate apparent ecliptical coordinates.
 * \ingroup solar
 */ 
-void ln_get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position);
+void ln_get_solar_ecl_coords (double JD, struct ln_lnlat_posn * position);
 
 /*! \fn void ln_get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
-void ln_get_geo_solar_coords (double JD, struct ln_rect_posn * position);
+void ln_get_solar_geo_coords (double JD, struct ln_rect_posn * position);
 	
 /*! \fn double ln_get_solar_sdiam (double JD)
 * \brief Calcaluate the semidiameter of the Sun in arc seconds.

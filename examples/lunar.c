@@ -64,7 +64,7 @@ int main (int argc, char* argv[])
 	printf ("lunar long %f  lat %f\n",ecl.lng, ecl.lat);
 	
 	/* RA, DEC */
-	ln_get_lunar_equ_coords (JD, &equ, 0);
+	ln_get_lunar_equ_coords (JD, &equ);
 	printf ("lunar RA %f  Dec %f\n",equ.ra, equ.dec);
 	
 	/* moon earth distance */

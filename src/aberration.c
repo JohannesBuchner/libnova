@@ -294,7 +294,7 @@ void ln_get_ecl_aber (struct ln_lnlat_posn * mean_position, double JD, struct ln
 	T2 = T * T;
 
 	/* suns longitude in radians */
-	ln_get_geom_solar_coords (JD, &sol_position);
+	ln_get_solar_geom_coords (JD, &sol_position);
 	true_longitude = ln_deg_to_rad (sol_position.B);
 
 	/* Earth orbit ecentricity */

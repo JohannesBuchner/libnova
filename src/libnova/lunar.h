@@ -59,7 +59,13 @@ void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precis
 * \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 
-void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
+
+/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+* \brief Calculate lunar equatorial coordinates.
+* \ingroup lunar
+*/ 
+void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
 
 /*! \fn void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
 * \brief Calculate lunar ecliptical coordinates.

@@ -55,13 +55,13 @@ int main (int argc, char * argv[])
 	printf ("JD %f\n", JD);
 	
 	/* geometric coordinates */
-	ln_get_geom_solar_coords (JD, &pos);
+	ln_get_solar_geom_coords (JD, &pos);
 	printf("Solar Coords longitude (deg) %f\n", pos.L);
 	printf("             latitude (deg) %f\n", pos.B);
 	printf("             radius vector (AU) %f\n", pos.R);
 	
 	/* ra, dec */
-	ln_get_equ_solar_coords (JD, &equ);
+	ln_get_solar_equ_coords (JD, &equ);
 	printf("Solar Position RA %f\n", equ.ra);
 	printf("               DEC %f\n", equ.dec);
 	
