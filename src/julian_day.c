@@ -248,5 +248,6 @@ void get_timet_from_julian (double JD, time_t * time)
 	loctime.tm_mday =date.days;
 	loctime.tm_mon = date.months -1;
 	loctime.tm_year = date.years - 1900;
+	loctime.tm_isdst = 0;
 	
 	*time = mktime (&loctime);}
