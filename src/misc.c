@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.5 2003-08-13 19:24:17 l_girdwood Exp $
+/* $Id: misc.c,v 1.6 2003-08-20 21:16:47 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -36,7 +36,6 @@
 
 /**/
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -44,6 +43,10 @@
 #include <math.h>
 #include <ctype.h>
 #include "libnova.h"
+
+#ifndef __APPLE__
+#include <malloc.h>
+#endif
 
 /* local types and macros */
 typedef int BOOL;

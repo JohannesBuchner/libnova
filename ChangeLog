@@ -1,6 +1,12 @@
 ChangeLog
 
 20032003
+	-src/misc.c
+	
+	Mac OSX does not have malloc.h as it's included in stdlib.h
+
+	Paul Ray
+
 	-examples/asteroid.c
 	-examples/Makefile.am
 	
