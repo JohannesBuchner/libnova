@@ -1,5 +1,5 @@
-# init autoconf (and check for presence of libnova.c)
-AC_INIT(src/libnova.c)
+# init autoconf (and check for presence of libnova.h)
+AC_INIT(src/libnova/libnova.h)
 
 # Save this value here, since automake will set cflags later
 cflags_set=${CFLAGS+set}
