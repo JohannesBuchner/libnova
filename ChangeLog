@@ -1,5 +1,14 @@
 ChangeLog
 
+20041004
+	-src/rise_set.c
+
+	Fixed bug with correct side of
+	angles passed to ln_interpolate3
+	in ln_get_body_rst_horizont
+
+	Petr Kubanek
+
 20041003
 	-src/aberration.c
 	-src/nutation.c
