@@ -23,6 +23,11 @@ Copyright 2000 Liam Girdwood
 
 #include <libnova/ln_types.h>
 
+#define LN_SOLAR_STANDART_HORIZONT              -0.8333
+#define LN_SOLAR_CIVIL_HORIZONT                 -6.0
+#define LN_SOLAR_NAUTIC_HORIZONT                -12.0 
+#define LN_SOLAR_ASTRONOMICAL_HORIZONT          -18.0
+
 #ifdef __cplusplus
 extern "C" {
 #endif
