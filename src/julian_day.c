@@ -163,7 +163,7 @@ void get_date (double JD, struct ln_date * date)
 /*! \fn double get_julian_from_sys ()
 * \return Julian day.
 *
-* Calculate julian day from system time.
+* Calculate local julian day from system time.
 */
 double get_julian_from_sys ()
 {
@@ -181,7 +181,7 @@ double get_julian_from_sys ()
 /*! \fn void get_ln_date_from_sys (struct ln_date * date)
 * \param date Pointer to store date.
 *
-* Calculate date from system date.
+* Calculate local date from system date.
 */
 void get_ln_date_from_sys (struct ln_date * date)
 {
@@ -193,7 +193,7 @@ void get_ln_date_from_sys (struct ln_date * date)
 
 	/* convert to local time representation */
 	loctime = localtime(&curtime);
-    
+	
 	/* fill in date struct */
 	date->seconds = loctime->tm_sec;
 	date->minutes = loctime->tm_min;
@@ -208,7 +208,7 @@ void get_ln_date_from_sys (struct ln_date * date)
 * \param time The time_t.
 * \return Julian day.
 *
-* Calculate julian day from time_t.
+* Calculate local julian day from time_t.
 */
 double get_julian_from_timet (time_t * in_time)
 {
@@ -236,7 +236,7 @@ double get_julian_from_timet (time_t * in_time)
 * \param JD Julian day
 * \param time Pointer to store time_t
 *
-* Calculate time_t from julian day
+* Calculate local time_t from julian day
 */
 void get_timet_from_julian (double JD, time_t * in_time)
 {
@@ -260,4 +260,46 @@ void get_timet_from_julian (double JD, time_t * in_time)
 	loctime.tm_isdst = 0;
 	
 	*in_time = mktime (&loctime);
+}
+
+/*! \fn double get_julian_ut_from_sys(void)
+* \return Julian day (UT)
+*
+* Calculate the UT julian day from system time
+*/
+double get_julian_ut_from_sys(void)
+{
+	double JD;
+	time_t curtime;
+	struct tm * loctime;
+	struct ln_date date;
+		
+	/* get sys date */
+	get_ln_date_from_sys (&date);
+	JD = get_julian_day (&date);
+	
+	/* add day light savings time and hour angle */
+	curtime = time (NULL);
+	loctime = localtime(&curtime);
+	JD += ((double)loctime->tm_gmtoff) / 24.0;
+}
+
+/*! \fn double get_julian_ut(struct ln_date* date, struct ln_lnlat_posn* observer)
+* \param date Local date
+* \return Julain day (UT)
+*
+* Calculate UT Julian day from local date
+*/
+double get_julian_ut(struct ln_date* date)
+{
+	double JD;
+	time_t curtime;
+	struct tm * loctime;
+		
+	JD = get_julian_day (date);
+	
+	/* add day light savings time and hour angle */
+	curtime = time (NULL);
+	loctime = localtime(&curtime);
+	JD += ((double)loctime->tm_gmtoff) / 24.0;
 }
