@@ -1837,6 +1837,12 @@ double interpolate5 (double n, double y1, double y2, double y3, double y4, doubl
 */
 int get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
+/*! \fn double get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+* \brief Calculate the time of next rise, set and transit for an object not orbiting the Sun.
+* E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
+* \ingroup rst
+*/
+int get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };
