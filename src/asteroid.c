@@ -80,7 +80,7 @@ double get_asteroid_sdiam_km (double H, double A)
 	return (d);
 }
 
-/*! \fn double get_asteroid_sdiam_arc (double H, double A)
+/*! \fn double get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A)
 * \param JD Julian day
 * \param orbit Orbital parameters
 * \param H Absolute magnitude of asteroid

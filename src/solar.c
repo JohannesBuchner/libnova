@@ -102,7 +102,7 @@ void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 	position->lat = sol.B;
 }
 
-/*! \fn void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
+/*! \fn void get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *

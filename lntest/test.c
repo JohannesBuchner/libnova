@@ -16,27 +16,31 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright 2000 Liam Girdwood  */
 
 
-/* libnova test suite -- pretty scrappy at the moment, needs some proper tests */
+/*
+ * libnova test suite -- pretty scrappy at the moment, needs some proper tests 
+ * We need tons of real data to test against. I've only tested against the examples
+ * in the Meeus book and some data from the MPC.
+ */
 
 #include "libnova.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-double compare_results (double calc, double expect)
+double compare_results (double calc, double expect, double tolerance)
 {
-	if (calc - expect > 0.00000001 || calc - expect < -0.00000001)
+	if (calc - expect > tolerance || calc - expect < (tolerance * -1.0))
 		return (calc - expect);
 	else
 		return (0);
 }
 
-int test_result (char * test, double calc, double expect)
+int test_result (char * test, double calc, double expect, double tolerance)
 {
 	double diff;
 	
 	printf ("TEST %s....", test);
 	
-	diff = compare_results (calc, expect);
+	diff = compare_results (calc, expect, tolerance);
 	if (diff)
 	{
 		printf ("[FAILED]\n");
@@ -52,10 +56,10 @@ int test_result (char * test, double calc, double expect)
 }
 
 /* test julian day calculations */
-void julian_test (void)
+int julian_test (void)
 { 
 	double JD;
-	int wday;
+	int wday, failed = 0;
 	struct ln_date date, pdate;
 
 	/* Get julian day for 04/10/1957 19:00:00 */
@@ -66,7 +70,7 @@ void julian_test (void)
 	date.minutes = 0;
 	date.seconds = 0;
 	JD = get_julian_day (&date);
-	test_result ("(Julian Day) JD for 4/10/1957 19:00:00", JD, 2436116.29166667);
+	failed += test_result ("(Julian Day) JD for 4/10/1957 19:00:00", JD, 2436116.29166667, 0.00001);
 
 	/* Get julian day for 27/01/333 12:00:00 */
 	date.years = 333;
@@ -74,7 +78,7 @@ void julian_test (void)
 	date.days = 27;
 	date.hours = 12;
 	JD = get_julian_day (&date);
-	test_result ("(Julian Day) JD for 27/01/333 12:00:00", JD, 1842713.0);
+	failed += test_result ("(Julian Day) JD for 27/01/333 12:00:00", JD, 1842713.0, 0.1);
 
 	/* Get julian day for 30/06/1954 00:00:00 */
 	date.years = 1954;
@@ -82,19 +86,22 @@ void julian_test (void)
 	date.days = 30;
 	date.hours = 0;
 	JD = get_julian_day (&date);
-	test_result ("(Julian Day) JD for 30/06/1954 00:00:00", JD, 2434923.5);
+	failed += test_result ("(Julian Day) JD for 30/06/1954 00:00:00", JD, 2434923.5, 0.1);
 	
 	wday = get_day_of_week(&date);
 	printf("TEST: (Julian Day) Weekday No is %d",wday);
 
 	get_date (JD, &pdate);
 	printf(" for %d/%d/%d  %d:%d:%f\n\n",pdate.days, pdate.months, pdate.years, pdate.hours, pdate.minutes, pdate.seconds);
+
+	return (failed);
 }
 
-void dynamical_test ()
+int dynamical_test ()
 {
 	struct ln_date date;
 	double TD,JD;
+	int failed = 0;
 
 	/* Dynamical Time test for 01/01/2000 00:00:00 */
 	date.years = 2000;
@@ -106,26 +113,29 @@ void dynamical_test ()
 
 	JD = get_julian_day (&date);
 	TD = get_jde (JD);
-	test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50065885);
+	failed += test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50065885, 0.000001);
+	return (failed);
 }
 
-void nutation_test (void)
+int nutation_test (void)
 {
 	double JDE, JD;
 	struct ln_nutation nutation;
+	int failed = 0;
 		
 	JD = 2446895.5;
 	JDE = get_jde (JD);
 
 	get_nutation (JD, &nutation);
-	test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation.longitude, -0.00100558);
+	failed += test_result ("(Nutation) longitude (deg) for JD 2446895.5", nutation.longitude, -0.00100558, 0.00000001);
 	
-	test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation.obliquity, 0.00273287);
+	failed += test_result ("(Nutation) obliquity (deg) for JD 2446895.5", nutation.obliquity, 0.00273287, 0.00000001);
 	
-	test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation.ecliptic, 23.44367926);
+	failed += test_result ("(Nutation) ecliptic (deg) for JD 2446895.5", nutation.ecliptic, 23.44367926, 0.00000001);
+	return (failed);
 }
 
-void transform_test(void)
+int transform_test(void)
 {
 	struct lnh_equ_posn hobject, hpollux;
 	struct lnh_lnlat_posn hobserver, hecl;
@@ -134,7 +144,8 @@ void transform_test(void)
 	struct ln_lnlat_posn observer, ecl;
 	double JD;
 	struct ln_date date;
-
+	int failed = 0;
+	
 	/* observers position */
 	hobserver.lng.degrees = 77;
 	hobserver.lng.minutes = 03;
@@ -164,12 +175,12 @@ void transform_test(void)
 	hlnlat_to_lnlat (&hobserver, &observer);
 	
 	get_hrz_from_equ (&object, &observer, JD, &hrz);
-	test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 15.12426264);
-	test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 68.03429264);
+	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 15.12426274, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 68.03429264, 0.00000001);
 
 	get_equ_from_hrz (&hrz, &observer, JD, &equ);
-	test_result ("(Transforms) Horiz to Equ RA ", equ.ra, -12.68072670);
-	test_result ("(Transforms) Horiz to Equ DEC", equ.dec, -6.71989167);
+	failed += test_result ("(Transforms) Horiz to Equ RA ", equ.ra, -12.68073248, 0.00000001);
+	failed += test_result ("(Transforms) Horiz to Equ DEC", equ.dec, -6.71989167, 0.00000001);
 	
 	/* Equ position of Pollux */
 	hpollux.ra.hours = 7;
@@ -183,20 +194,23 @@ void transform_test(void)
 	get_ecl_from_equ(&pollux, JD, &ecl);
 	
 	lnlat_to_hlnlat (&ecl, &hecl);
-	test_result ("(Transforms) Equ to Ecl longitude ", ecl.lng, 113.21542105);
-	test_result ("(Transforms) Equ to Ecl latitude", ecl.lat, 6.68002735);
+	failed += test_result ("(Transforms) Equ to Ecl longitude ", ecl.lng, 113.21542105, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Ecl latitude", ecl.lat, 6.68002735, 0.00000001);
 
 	get_equ_from_ecl(&ecl, JD, &equ);
-	test_result ("(Transforms) Ecl to Equ RA ", equ.ra, 116.32894167);
-	test_result ("(Transforms) Ecl to Equ DEC", equ.dec, 28.02618333);
+	failed += test_result ("(Transforms) Ecl to Equ RA ", equ.ra, 116.32894167, 0.00000001);
+	failed += test_result ("(Transforms) Ecl to Equ DEC", equ.dec, 28.02618333, 0.00000001);
+	
+	return (failed);
 }    
 
-void sidereal_test ()
+int sidereal_test ()
 {
 	struct ln_date date;
 	double sd;
 	double JD;
-
+	int failed = 0;
+	
 	/* 10/04/1987 19:21:00 */
 	date.years = 1987;
 	date.months = 4;
@@ -208,28 +222,32 @@ void sidereal_test ()
 	JD = get_julian_day (&date);
 	sd = get_mean_sidereal_time (JD);
 
-	test_result ("(Sidereal) mean hours on 10/04/1987 19:21:00 ", sd, 8.58252488);
+	failed += test_result ("(Sidereal) mean hours on 10/04/1987 19:21:00 ", sd, 8.58252488, 0.000001);
 	sd = get_apparent_sidereal_time (JD);
-	test_result ("(Sidereal) apparent hours on 10/04/1987 19:21:00 ", sd, 8.58252060);
+	failed += test_result ("(Sidereal) apparent hours on 10/04/1987 19:21:00 ", sd, 8.58252060, 0.000001);
+	return (failed);
 }
 
-void solar_coord_test (void)
+int solar_coord_test (void)
 {
 	struct ln_helio_posn pos;
-
+	int failed = 0;
+	
 	get_geom_solar_coords (2448908.5, &pos);
-	test_result ("(Solar Coords) longitude (deg) on JD 2448908.5  ", pos.L, 200.00669634);
-	test_result ("(Solar Coords) latitude (deg) on JD 2448908.5  ", pos.B, 0.00056436);
-	test_result ("(Solar Coords) radius vector (AU) on JD 2448908.5  ", pos.R, 0.99760852);
+	failed += test_result ("(Solar Coords) longitude (deg) on JD 2448908.5  ", pos.L, 200.00810889, 0.00000001);
+	failed += test_result ("(Solar Coords) latitude (deg) on JD 2448908.5  ", pos.B, 0.00018690, 0.00000001);
+	failed += test_result ("(Solar Coords) radius vector (AU) on JD 2448908.5  ", pos.R, 0.99760852, 0.00000001);
+	return (failed);
 }
 
-void aberration_test (void)
+int aberration_test (void)
 {
 	struct lnh_equ_posn hobject;
 	struct ln_equ_posn object, pos;
 	struct ln_date date;
 	double JD;
-
+	int failed = 0;
+	
 	/* object position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 46;
@@ -250,16 +268,18 @@ void aberration_test (void)
 
 	hequ_to_equ (&hobject, &object);
 	get_equ_aber (&object, JD, &pos);
-	test_result ("(Aberration) RA  ", pos.ra, 41.55557139);
-	test_result ("(Aberration) DEC  ", pos.dec, 49.35032196);
+	failed += test_result ("(Aberration) RA  ", pos.ra, 41.55557139, 0.00000001);
+	failed += test_result ("(Aberration) DEC  ", pos.dec, 49.35032196, 0.00000001);
+	return (failed);
 }
 
-void precession_test(void)
+int precession_test(void)
 {
 	double JD;
 	struct ln_equ_posn object, pos;
 	struct lnh_equ_posn hobject;
-
+	int failed = 0;
+	
 	/* object position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
@@ -271,16 +291,18 @@ void precession_test(void)
 	JD = 2462088.69;
 	hequ_to_equ (&hobject, &object);
 	get_equ_prec (&object, JD, &pos);
-	test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.54306131);
-	test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.34921505);
+	failed += test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.54306131, 0.00000001);
+	failed += test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.34921505, 0.00000001);
+	return (failed);
 }
 
-void apparent_position_test(void)
+int apparent_position_test(void)
 {
 	double JD;
 	struct lnh_equ_posn hobject, hpm;
 	struct ln_equ_posn object, pm, pos;	
-
+	int failed = 0;
+	
 	/* objects position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
@@ -302,20 +324,22 @@ void apparent_position_test(void)
 	hequ_to_equ (&hpm, &pm);
 	get_apparent_posn (&object, &pm, JD, &pos);
 	
-	test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55553862);
-	test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35034910);
+	failed += test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55553862, 0.00000001);
+	failed += test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35034910, 0.00000001);
+	return (failed);
 }
 
-void vsop87_test(void)
+int vsop87_test(void)
 {
 	struct ln_helio_posn pos;
 	struct lnh_equ_posn hequ;
 	struct ln_equ_posn equ;
 	double JD = 2448976.5;
 	double au;
-#if 1
+	int failed = 0;
+	
+#ifdef DATE
 	struct ln_date date, pdate;
-/*	JD = get_julian_from_sys();	*/
 	date.years = 2003;
 	date.months = 1;
 	date.days = 29; 
@@ -325,10 +349,13 @@ void vsop87_test(void)
 
 	JD = get_julian_day (&date);
 #endif
+#ifdef SYS_TIME
+	JD = get_julian_from_sys();	
+#endif
 	
 	get_equ_solar_coords (JD, &equ);
-	test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.31990965);
-	test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43182047);
+	failed += test_result ("(Solar Position) RA on JD 2448976.5  ", equ.ra, 268.32146896, 0.00000001);
+	failed += test_result ("(Solar Position) DEC on JD 2448976.5  ", equ.dec, -23.43026862, 0.00000001);
 	
 	get_mercury_helio_coords(JD, &pos);
 	printf("Mercury L %f B %f R %f\n", pos.L, pos.B, pos.R);
@@ -462,6 +489,8 @@ void vsop87_test(void)
 	printf ("pluto -> magnitude %f\n",au);
 	au = get_pluto_phase (JD);
 	printf ("pluto -> phase %f\n",au);
+	
+	return (failed);
 }
 
 int lunar_test ()
@@ -471,6 +500,8 @@ int lunar_test ()
 	struct ln_rect_posn moon;
 	struct ln_equ_posn equ;
 	struct ln_lnlat_posn ecl;
+	int failed = 0;
+	
 	/*	JD = get_julian_from_sys();*/
 	/*JD=2448724.5;*/
 	get_lunar_geo_posn (JD, &moon, 0);
@@ -483,7 +514,7 @@ int lunar_test ()
 	printf ("lunar disk %f\n", get_lunar_disk(JD));
 	printf ("lunar phase %f\n", get_lunar_phase(JD));
 	printf ("lunar bright limb %f\n", get_lunar_bright_limb(JD));
-	return 0;
+	return (failed);
 }
 
 int elliptic_motion_test ()
@@ -494,6 +525,7 @@ int elliptic_motion_test ()
 	struct ln_rect_posn posn;
 	struct ln_date epoch_date, obs_date;
 	struct ln_equ_posn equ_posn;
+	int failed = 0;
 		
 	obs_date.years = 1990;
 	obs_date.months = 10;
@@ -521,45 +553,46 @@ int elliptic_motion_test ()
 	orbit.n = 0;
 	
 	E = solve_kepler (0.1, 5.0);
-	test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320);
+	failed += test_result ("(Equation of kepler) E when e is 0.1 and M is 5.0   ", E, 5.554589253872320, 0.000000000001);
 	
 	v = get_ell_true_anomaly (0.1, E);
-	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152);
+	failed += test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152, 0.00000001);
 	
 	r = get_ell_radius_vector (0.5, 0.1, E);
-	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
+	failed += test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478, 0.00000001);
 	
 	get_ell_geo_rect_posn (&orbit, o_JD, &posn);
-	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
-	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
-	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
+	failed += test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.72549850, 0.00000001);
+	failed += test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, -0.28443537, 0.00000001);
+	failed += test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, -0.27031656, 0.00000001);
 	
 	get_ell_helio_rect_posn (&orbit, o_JD, &posn);
-	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
-	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
-	test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.13486450);
+	failed += test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473, 0.00000001);
+	failed += test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422, 0.00000001);
+	failed += test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517, 0.00000001);
 	
 	get_ell_body_equ_coords (o_JD, &orbit, &equ_posn);
-	test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653);
-	test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815);
+	failed += test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653, 0.00000001);
+	failed += test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815, 0.00000001);
 	
 	l = get_ell_orbit_len (&orbit);
-	test_result ("(Orbit Length) for comet Enkle in AU   ", l, 10.75710334);
+	failed += test_result ("(Orbit Length) for comet Enckle in AU   ", l, 10.75710334, 0.00000001);
 	
 	V = get_ell_orbit_pvel (&orbit);
-	test_result ("(Orbit Perihelion Vel) for comet Enkle in kms   ", V, 70.43130198);
+	failed += test_result ("(Orbit Perihelion Vel) for comet Enckle in kms   ", V, 70.43130198, 0.00000001);
 	
 	V = get_ell_orbit_avel (&orbit);
-	test_result ("(Orbit Aphelion Vel) for comet Enkle in kms   ", V, 5.70160892);
+	failed += test_result ("(Orbit Aphelion Vel) for comet Enckle in kms   ", V, 5.70160892, 0.00000001);
 	
 	V = get_ell_orbit_vel (o_JD, &orbit);
-	test_result ("(Orbit Vel JD) for comet Enkle in kms   ", V, 28.32770604);
+	failed += test_result ("(Orbit Vel JD) for comet Enckle in kms   ", V, 48.16148331, 0.00000001);
 	
 	dist = get_ell_body_solar_dist (o_JD, &orbit);
-	test_result ("(Body Solar Dist) for comet Enkle in AU   ", dist, 1.47359636);
+	failed += test_result ("(Body Solar Dist) for comet Enckle in AU   ", dist, 0.65203581, 0.00000001);
 	
 	dist = get_ell_body_earth_dist (o_JD, &orbit);
-	test_result ("(Body Earth Dist) for comet Enkle in AU   ", dist, 0.65203581);
+	failed += test_result ("(Body Earth Dist) for comet Enckle in AU   ", dist, 0.82481670, 0.00000001);
+	return (failed);
 }
 
 /* need a proper parabolic orbit to properly test */
@@ -571,84 +604,93 @@ int parabolic_motion_test ()
 	struct ln_rect_posn posn;
 	struct ln_date epoch_date, obs_date;
 	struct ln_equ_posn equ_posn;
+	int failed = 0;
 		
-	obs_date.years = 1998;
-	obs_date.months = 8;
-	obs_date.days = 5;
-	obs_date.hours = 12;
+	obs_date.years = 2003;
+	obs_date.months = 1;
+	obs_date.days = 11;
+	obs_date.hours = 0;
 	obs_date.minutes = 0;
 	obs_date.seconds = 0;
 		
-	epoch_date.years = 1998;
-	epoch_date.months = 4;
-	epoch_date.days = 14;
-	epoch_date.hours = 10;
-	epoch_date.minutes = 30;
-	epoch_date.seconds = 0;
+	epoch_date.years = 2003;
+	epoch_date.months = 1;
+	epoch_date.days = 29;
+	epoch_date.hours = 0;
+	epoch_date.minutes = 6;
+	epoch_date.seconds = 37.44;
 	
 	e_JD = get_julian_day (&epoch_date);
 	o_JD = get_julian_day (&obs_date);
 	
+	orbit.q = 0.190082; 
+	orbit.i = 94.1511;
+	orbit.w = 187.5613; 
+	orbit.omega = 119.0676; 
 	orbit.JD = e_JD;
-	orbit.q = 1.487469;
-	orbit.i = 11.94525;
-	orbit.omega = 334.75006;
-	orbit.w = 186.23352;
 	
 	v = get_par_true_anomaly (orbit.q, o_JD - e_JD);
-	test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 6.13976152);
+	failed += test_result ("(True Anomaly) v when e is 0.1 and E is 5.5545   ", v, 247.18968605, 0.00000001);
 	
 	r = get_par_radius_vector (orbit.q, o_JD - e_JD);
-	test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.45023478);
+	failed += test_result ("(Radius Vector) r when v is , e is 0.1 and E is 5.5545   ", r, 0.62085992, 0.00000001);
 	
-/*	get_par_geo_rect_posn (&orbit, o_JD, &posn);
-	test_result ("(Geocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
-	test_result ("(Geocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.48476422);
-	test_result ("(Geocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.35716517);
-*/	
+	get_par_geo_rect_posn (&orbit, o_JD, &posn);
+	failed += test_result ("(Geocentric Rect Coords X) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.X, 0.29972461, 0.00000001);
+	failed += test_result ("(Geocentric Rect Coords Y) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.Y, -0.93359772, 0.00000001);
+	failed += test_result ("(Geocentric Rect Coords Z) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.Z, 0.24639194, 0.00000001);
+	
 	get_par_helio_rect_posn (&orbit, o_JD, &posn);
-	test_result ("(Heliocentric Rect Coords X) for comet Enckle   ", posn.X, 0.25017473);
-	test_result ("(Heliocentric Rect Coords Y) for comet Enckle   ", posn.Y, 0.58683462);
-	test_result ("(Heliocentric Rect Coords Z) for comet Enckle   ", posn.Z, 0.13486450);
+	failed += test_result ("(Heliocentric Rect Coords X) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.X, -0.04143700, 0.00000001);
+	failed += test_result ("(Heliocentric Rect Coords Y) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.Y, -0.08736588, 0.00000001);
+	failed += test_result ("(Heliocentric Rect Coords Z) for comet C/2002 X5 (Kudo-Fujikawa)   ", posn.Z, 0.61328397, 0.00000001);
 	
 	get_par_body_equ_coords (o_JD, &orbit, &equ_posn);
-	test_result ("(RA) for comet Enckle   ", equ_posn.ra, 158.58242653);
-	test_result ("(Dec) for comet Enckle   ", equ_posn.dec, 19.13924815);
+	failed += test_result ("(RA) for comet C/2002 X5 (Kudo-Fujikawa)   ", equ_posn.ra, 287.79617309, 0.00000001);
+	failed += test_result ("(Dec) for comet C/2002 X5 (Kudo-Fujikawa)   ", equ_posn.dec, 14.11800859, 0.00000001);
 	
 	dist = get_par_body_solar_dist (o_JD, &orbit);
-	test_result ("(Body Solar Dist) for comet Enkle in AU   ", dist, 1.47359636);
+	failed += test_result ("(Body Solar Dist) for comet C/2002 X5 (Kudo-Fujikawa) in AU   ", dist, 0.62085992, 0.00001);
 	
 	dist = get_par_body_earth_dist (o_JD, &orbit);
-	test_result ("(Body Earth Dist) for comet Enkle in AU   ", dist, 0.65203581);
+	failed += test_result ("(Body Earth Dist) for comet C/2002 X5 (Kudo-Fujikawa) in AU   ", dist, 1.01101362, 0.00001);
+	return (failed);
 }
 
 int rst_test ()
 {
 	struct ln_lnlat_posn observer;
 	struct ln_rst_time time;
+	int failed = 0;
 	double JD = get_julian_from_sys ();
 	
 	observer.lng = 3;
 	observer.lat = 51;
 	
 	get_solar_rst (JD, &observer, &time);
+	return (failed);
 }
 
 int main ()
 {
-	julian_test();
-	dynamical_test();
-	sidereal_test();
-	nutation_test();
-	transform_test();
-	solar_coord_test ();
-	aberration_test();
-	precession_test();
-	apparent_position_test ();
-	vsop87_test();
-	lunar_test ();
-	elliptic_motion_test();
-	parabolic_motion_test ();
-	rst_test ();
+	int failed = 0;
+	
+	failed += julian_test();
+	failed += dynamical_test();
+	failed += sidereal_test();
+	failed += nutation_test();
+	failed += transform_test();
+	failed += solar_coord_test ();
+	failed += aberration_test();
+	failed += precession_test();
+	failed += apparent_position_test ();
+	failed += vsop87_test();
+	failed += lunar_test ();
+	failed += elliptic_motion_test();
+	failed += parabolic_motion_test ();
+	failed += rst_test ();
+	
+	printf ("Test completed: %d errors.\n",failed);
+		
 	return (0);
 }

@@ -1,5 +1,24 @@
 ChangeLog
 
+20030126
+	-src/parabolic_motion.c, src/elliptic_motion.c
+	Put true anomaly in correct quadrant.
+	
+	-* Various
+	Doxygen documentation updates.
+	
+	-src/mercury - pluto.c
+	Added Heliocentrcic rectangular coords.
+	
+	Liam Girdwood
+
+20030123
+	-ln_test/test.c
+	Fixed parabolic tests
+	Added test results
+	
+	Liam Girdwood
+
 20030118
 	-src/mercury .. pluto.c, lunar.c, parabolic_motion.c, elliptic_motion.c
 	Fixed error in calculation of JD_UT for rise,transit, set times.

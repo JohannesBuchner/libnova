@@ -55,7 +55,7 @@ double get_ell_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, doub
 }
 
 /*!
-* \fn double get_par_comet_mag (double JD, struct ln_ell_orbit * orbit, double g, double k)
+* \fn double get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, double k)
 * \param JD Julian day.
 * \param orbit Orbital parameters
 * \param g Absolute magnitude

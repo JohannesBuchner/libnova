@@ -39320,7 +39320,7 @@ double sum_series_elp36 (double *t)
 	return (result);
 }
 
-/*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * pos, double precision);
+/*! \fn void get_lunar_geo_posn (double JD, struct ln_rect_posn * pos, double precision);
 * \param JD Julian day.
 * \param pos Pointer to a geocentric position structure to held result.
 * \param precision The truncation level of the series in radians for longitude 

@@ -15,10 +15,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 */
 
-/*! \mainpage libnova Astronomical Calculation Library
+/*! \mainpage libnova 
+* Celestial Mechanics and Astronomical Calculation Library
 * 
 * \section intro Introduction
-* libnova is a general purpose, double precision, astronomical calculation library.
+* libnova is a general purpose, double precision, celestial mechanics and astronomical calculation library.
 *
 * The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects or celestial mechanics.
 * libnova is the calculation engine used by the <A href="http://nova.sf.net">Nova</A> project and most importantly, is free software.
@@ -41,7 +42,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Lunar Position (using ELP82), phase angle.
 * - Elliptic Motion of bodies (Asteroid + Comet positional and orbit data)
 * - Asteroid + Comet magnitudes
-* - Parabolic Motion of bodies
+* - Parabolic Motion of bodies (Comet positional data)
 * - Orbit velocities and lengths
 * - Atmospheric refraction
 * - Rise, Set and Transit times.
@@ -51,7 +52,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.6.0 and was released on the xxth Jan 2003.
+* The latest released version of libnova is 0.6.0 and was released on the 26th Jan 2003.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
@@ -66,7 +67,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Documentation. (Not just API reference, but also astronomy info for novice users)
 * - Programming (in C) astronomical solutions or algorithms.
 * - Algorithms and Solutions.
-* - Website.
+* - Website and logo.
 *
 * \section contact Contact
 * If you would like further information, then please contact me <A href="mailto:liam@nova-ioe.org">here</A>
@@ -174,8 +175,8 @@ struct lnh_hrz_posn
 struct lnh_lnlat_posn
 {
     struct ln_dms lng; /*!< longitude. Object longitude.
-			 Negative East of Greenwinch, 
-			 positive West of Greenwinch */
+			 Negative East of Greenwich, 
+			 positive West of Greenwich */
     struct ln_dms lat; /*!< latitude. Object latitude */
 };
 
@@ -630,7 +631,7 @@ void get_equ_from_hrz
 	double JD,
 	struct ln_equ_posn * position); 
 
-/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_rect_posn * position); 
 * \brief Calculate geocentric coordinates from heliocentric coordinates  
 * \ingroup transform
 */
@@ -826,7 +827,7 @@ void get_ecl_solar_coords
 	(double JD,
 	struct ln_lnlat_posn * position);
 
-/*! \fn void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
+/*! \fn void get_geo_solar_coords (double JD, struct ln_rect_posn * position)
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
@@ -917,6 +918,13 @@ double get_mercury_disk (double JD);
 /* Chapter 41 */
 double get_mercury_phase (double JD);
 
+
+/*! \fn void get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup mercury
+* \brief Calculate Mercurys rectangular heliocentric coordinates.
+*/
+void get_mercury_rect_helio (double JD, struct ln_rect_posn * position);
+
 /*! \defgroup venus Venus
 *
 * Functions relating to the planet Venus.
@@ -995,6 +1003,13 @@ double get_venus_disk (double JD);
 /* Chapter 41 */
 double get_venus_phase (double JD);
 
+/*! \fn void get_venus_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup venus
+* \brief Calculate Venus rectangular heliocentric coordinates.
+*/
+void get_venus_rect_helio (double JD, struct ln_rect_posn * position);
+
+
 /*
 ** Earth
 */
@@ -1015,6 +1030,13 @@ void get_earth_helio_coords
 */ 
 /* Chapter ?? */
 double get_earth_sun_dist (double JD);
+	
+/*! \fn void get_earth_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup earth
+* \brief Calculate the Earths rectangular heliocentric coordinates.
+*/
+void get_earth_rect_helio (double JD, struct ln_rect_posn * position);
+
 
 /*! \defgroup mars Mars
 *
@@ -1092,6 +1114,13 @@ double get_mars_disk (double JD);
 */ 
 /* Chapter 41 */
 double get_mars_phase (double JD);
+
+/*! \fn void get_mars_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup mars
+* \brief Calculate Mars rectangular heliocentric coordinates.
+*/
+void get_mars_rect_helio (double JD, struct ln_rect_posn * position);
+
 
 /*! \defgroup jupiter Jupiter
 *
@@ -1174,6 +1203,13 @@ double get_jupiter_disk (double JD);
 */ 
 /* Chapter 41 */
 double get_jupiter_phase (double JD);
+
+/*! \fn void get_jupiter_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup jupiter
+* \brief Calculate Jupiters rectangular heliocentric coordinates.
+*/
+void get_jupiter_rect_helio (double JD, struct ln_rect_posn * position);
+
 
 /*! \defgroup saturn Saturn
 *
@@ -1258,6 +1294,13 @@ double get_saturn_disk (double JD);
 /* Chapter 41 */
 double get_saturn_phase (double JD);
 
+/*! \fn void get_saturn_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup saturns
+* \brief Calculate Saturns rectangular heliocentric coordinates.
+*/
+void get_saturn_rect_helio (double JD, struct ln_rect_posn * position);
+
+
 /*! \defgroup uranus Uranus
 *
 * Functions relating to the planet Uranus.
@@ -1333,6 +1376,13 @@ double get_uranus_disk (double JD);
 */ 
 /* Chapter 41 */
 double get_uranus_phase (double JD);
+
+/*! \fn void get_uranus_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup uranus
+* \brief Calculate Uranus rectangular heliocentric coordinates.
+*/
+void get_uranus_rect_helio (double JD, struct ln_rect_posn * position);
+
 
 /*! \defgroup neptune Neptune
 *
@@ -1411,6 +1461,13 @@ double get_neptune_disk (double JD);
 /* Chapter 41 */
 double get_neptune_phase (double JD);
 
+/*! \fn void get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup neptune
+* \brief Calculate Neptunes rectangular heliocentric coordinates.
+*/
+void get_neptune_rect_helio (double JD, struct ln_rect_posn * position);
+
+
 /*! \defgroup pluto Pluto
 *
 * Functions relating to the planet Pluto.
@@ -1487,6 +1544,13 @@ double get_pluto_disk (double JD);
 /* Chapter 41 */
 double get_pluto_phase (double JD);
 
+/*! \fn void get_pluto_rect_helio (double JD, struct ln_rect_posn * position)
+* \ingroup pluto
+* \brief Calculate Plutos rectangular heliocentric coordinates.
+*/
+void get_pluto_rect_helio (double JD, struct ln_rect_posn * position);
+
+
 /*! \defgroup lunar Lunar
 *
 * Functions relating to the Moon.
@@ -1506,7 +1570,7 @@ double get_lunar_sdiam (double JD);
 */
 int get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
-/*! \fn void get_lunar_geo_posn (double JD, struct ln_geo_posn * moon, double precision);
+/*! \fn void get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
 * \brief Calculate the rectangular geocentric lunar cordinates.
 * \ingroup lunar
 */ 
@@ -1572,7 +1636,7 @@ double solve_kepler (double e, double M);
 */
 double get_ell_mean_anomaly (double n, double delta_JD);
 
-/*! \fn double get_ell_true_anomaly (double n, double delta_JD);
+/*! \fn double get_ell_true_anomaly (double e, double E);
 * \brief Calculate the true anomaly.
 * \ingroup elliptic 
 */
@@ -1703,7 +1767,7 @@ double get_par_true_anomaly (double q, double t);
 */
 double get_par_radius_vector (double q, double t);
 
-/*! \fn void get_par_geo_rect_posn (struct ln_orbit* orbit, double JD, struct ln_rect_posn* posn);
+/*! \fn void get_par_geo_rect_posn (struct ln_par_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \ingroup parabolic
 * \brief Calculate an objects rectangular geocentric position.
 */

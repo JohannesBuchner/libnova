@@ -20,7 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h"
 #include <math.h>
 
-/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_geo_posn * position); 
+/*! \fn void get_rect_from_helio (struct ln_helio_posn *object, double JD, struct ln_rect_posn * position); 
 * \param object Object heliocentric coordinates
 * \param JD Julian Day
 * \param position Pointer to store new position
@@ -108,7 +108,7 @@ void get_hrz_from_equ
 	/* is'n there better way to compute that? */
 	Zs = sin (Z);
 
-	/* sane check for zenit distance; don't try to divide by 0 */
+	/* sane check for zenith distance; don't try to divide by 0 */
 
 	if (Zs < 1e-5)
 	{
