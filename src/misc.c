@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.4 2003-08-12 20:17:37 l_girdwood Exp $
+/* $Id: misc.c,v 1.5 2003-08-13 19:24:17 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -278,11 +278,12 @@ double interpolate5 (double n, double y1, double y2, double y3, double y4, doubl
 	J = G - F;
 	K = J - H;
 	
-	y = y * y * y;
+	y = 0.0;
 	n2 = n* n;
 	n3 = n2 * n;
 	n4 = n3 * n;
 	
+	y += y3;
 	y += n * ((B + C ) / 2.0 - (H + J) / 12.0);
 	y += n2 * (F / 2.0 - K / 24.0);
 	y += n3 * ((H + J) / 12.0);

@@ -1,6 +1,11 @@
 ChangeLog
 
 20031308
+	-src/misc.c
+	Fixed uninitialised variable in interpolate5
+	
+	Pablo Martikian, Liam Girdwood
+
 	-src/nutation.c
 	Removed build warnings.
 	Uses JD + delta T Chap 22, equ 22.1
