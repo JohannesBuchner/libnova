@@ -1,6 +1,18 @@
 ChangeLog
 
 
+20033007
+	-src/julian_day.c
+	FreeBSD does not have variable timezone.
+	
+	Kirill Ponomarew, Liam Girdwood
+	
+20032907
+	-src/julian_day.c
+	Fixed return at line 320
+	
+	Petr Kubanek
+
 **** Release 0.8.0 ****
 
 20032807

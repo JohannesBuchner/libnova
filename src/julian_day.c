@@ -318,8 +318,15 @@ double get_julian_local_date(struct ln_date* date)
 */
 void get_local_date (double JD, struct ln_date * date)
 {
+	time_t curtime;
+	struct tm * loctime;
+		
+	/* add day light savings time and hour angle */
+	curtime = time (NULL);
+	loctime = localtime(&curtime);
+	
 	/* add timezone to JD */
-	JD += (double)timezone / (24 * 60 * 60);
+	JD += ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
 	
 	get_date (JD, date);
 }
