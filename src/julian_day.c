@@ -46,7 +46,7 @@ double get_julian_day (struct ln_date * date)
 	a = date->years / 100;
 	
 	/* check for Julian or Gregorian calendar (starts Oct 4th 1582) */
-	if (date->years > 1582 || (date->years == 1582 && date->months >= 10 && date->days >= 4))
+	if (date->years > 1582 || (date->years == 1582 && (date->months > 10 || (date->months == 10 && date->days >= 4))))
 	{
 	    /* Gregorian calendar */    
 	    b = 2 - a + (a / 4);
