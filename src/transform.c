@@ -92,33 +92,25 @@ void get_hrz_from_equ_sidereal_time
 {
 	double H, ra, latitude, declination, A, Ac, As, h, Z, Zs;
 
-	/* change sidereal_time from hours to degrees */
-	sidereal *= 15.0;
+	/* change sidereal_time from hours to radians*/
+	sidereal *= 2.0 * M_PI / 24.0;
 
 	/* calculate hour angle of object at observers position */
-//	ra = deg_to_rad (object->ra);
-	H = sidereal - observer->lng - object->ra;
-	printf("H %f sid %f lng %f ra %f\n",H,sidereal,observer->lng,object->ra);
-	//H = range_radians(deg_to_rad (H));
-	H = deg_to_rad(H);
-	printf("Hrad %f\n",H);
+	ra = deg_to_rad (object->ra);
+	H = sidereal - deg_to_rad (observer->lng) - ra;
+
 	/* hence formula 12.5 and 12.6 give */
 	/* convert to radians - hour angle, observers latitude, object declination */
 	latitude = deg_to_rad (observer->lat);
 	declination = deg_to_rad (object->dec);
 
 	/* formula 12.6 *; missuse of A (you have been warned) */
-//	A = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
-//	h = asin (A);
-	A = cos(H) * sin(latitude) - tan(declination) * cos (latitude);
-	A = atan2(sin(H),A);
-	
-	h = sin (latitude) * sin (declination) + cos(latitude) * cos (declination) * cos(H);
-	h = asin(h);
+	A = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
+	h = asin (A);
 
 	/* covert back to degrees */
 	position->alt = rad_to_deg (h);   
-#if 0
+
 	/* zenith distance, Telescope Control 6.8a */
 	Z = acos (A);
 
@@ -150,7 +142,7 @@ void get_hrz_from_equ_sidereal_time
 
 	// normalize A
 	A = (A < 0) ? 2 * M_PI + A : A;
-#endif
+
 	/* covert back to degrees */
 	position->az = range_degrees(rad_to_deg (A));
 }

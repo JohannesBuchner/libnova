@@ -1,5 +1,12 @@
 ChangeLog
 
+20033008
+	-src/transform.c
+	
+	Removed unintentional debug from CVS
+	
+	Liam Girdwood
+
 20032508
 	-src/*.c *.h
 	
