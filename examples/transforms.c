@@ -43,7 +43,7 @@ int main (int argc, char * argv[])
 	 * Lat for Leon = Lat 42d35m40 N 	
 	 */
 	hobserver.lng.degrees = 354;
-	hobserver.lng.minutes = 24;
+	hobserver.lng.minutes = 23;
 	hobserver.lng.seconds = 30;
 	hobserver.lat.neg = 0;
 	hobserver.lat.degrees = 42;
