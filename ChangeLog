@@ -1,5 +1,13 @@
 ChangeLog
 
+20030224
+	-macros/libnova-check.m4
+	fixed compilation problem with gcc 3.2
+	
+	-macros/Makefile.am
+	Added install rule for libnova-check.m4
+	Removed unused macros
+
 20030126
 	-src/parabolic_motion.c, src/elliptic_motion.c
 	Put true anomaly in correct quadrant.
