@@ -3743,7 +3743,7 @@ static struct vsop jupiter_radius_r5[RADIUS_R5] = {
     {     0.00000001033,  4.50671820436,      529.69096509460}, 
 };
 
-/*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_position * position);
+/*! \fn void get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
 * \param JD julian Day
 * \param position Pointer to store position
 *

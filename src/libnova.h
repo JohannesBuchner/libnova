@@ -20,6 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * \section intro Introduction
 * libnova is a general purpose, double precision, astronomical calculation library.
 *
+* The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects.
 * libnova is the calculation engine used by the <A href="http://nova.sf.net">Nova</A> project and most importantly, is free software.
 *
 * \section features Features
@@ -39,6 +40,9 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 * - Planetary Magnitude, illuminated disk and phase angle.
 * - Lunar Position, phase.
 *
+* \section docs Documentation
+* API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
+*
 * \section download Download
 * The latest version of libnova is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
@@ -47,6 +51,11 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 *
 * \section licence Licence
 * libnova is released under the <A href="http://www.gnu.org">GNU</A> LGPL.
+*
+* \section contact Contact
+* If you would like further information, then please contact me <A href="mailto:liam@nova-ioe.org">here</A>
+*
+*	Liam Girdwood
 *
 * \section thanks Thanks
 * Thanks to Jean Meeus for most of the algorithms used in this library.
@@ -413,25 +422,25 @@ void hequ_to_equ (struct lnh_equ_posn * hpos, struct ln_equ_posn * pos);
 */
 void equ_to_hequ (struct ln_equ_posn * pos, struct lnh_equ_posn * hpos);
 	
-/*! \fn void hhoriz_to_horiz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos)
+/*! \fn void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos)
 * \brief human readable horizontal position to double horizontal position
 * \ingroup conversion
 */
 void hhrz_to_hrz (struct lnh_hrz_posn * hpos, struct ln_hrz_posn * pos);
 	
-/*! \fn void horiz_to_hhoriz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
+/*! \fn void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 * \brief double horizontal position to human readable horizontal position
 * \ingroup conversion
 */
 void hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos);
 	
-/*! \fn void hlong_lat_to_lng_lat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
+/*! \fn void hlnglat_to_lnglat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos)
 * \brief human readable long/lat position to double long/lat position
 * \ingroup conversion
 */
 void hlnglat_to_lnglat (struct lnh_lnlat_posn * hpos, struct ln_lnlat_posn * pos);
 	
-/*! \fn void long_lat_to_hlong_lat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
+/*! \fn void lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpos)
 * \brief double long/lat position to human readable long/lat position
 * \ingroup conversion
 */
@@ -638,7 +647,7 @@ void get_ecl_aber
 * Accuracy 0.01 arc second error - uses VSOP87. 
 */
 
-/*! \fn void get_geom_solar_coords (double JD, struct ln_solar_position * position);
+/*! \fn void get_geom_solar_coords (double JD, struct ln_helio_posn * position);
 * \brief geometric longitude, latitude and radius vector 
 * \ingroup solar 
 */
@@ -662,7 +671,7 @@ void get_ecl_solar_coords
 	(double JD,
 	struct ln_lnlat_posn * position);
 
-/*! \fn void get_geo_solar_coords (double JD, struct ln_solar_position * position)
+/*! \fn void get_geo_solar_coords (double JD, struct ln_geo_posn * position)
 * \brief Calculate geocentric coordinates (rectangular)
 * \ingroup solar
 */
@@ -806,7 +815,7 @@ void get_earth_helio_coords
 	(double JD,
 	struct ln_helio_posn * position);
 
-/*! \fn void get_earth_sun_distance (double JD);
+/*! \fn void get_earth_sun_dist (double JD);
 * \brief Calculate the distance between earth and the sun in AU
 * \ingroup earth
 * \return distance in AU

@@ -7379,7 +7379,7 @@ void get_mercury_helio_coords (double JD, struct ln_helio_posn * position)
 }
 
 
-/*! \fn double get_mercury_earth_dit (double JD);
+/*! \fn double get_mercury_earth_dist (double JD);
 * \brief Calculate the distance between mercury and the earth in AU
 * \return distance in AU
 *

@@ -155,7 +155,6 @@ void get_equ_from_hrz
 
 /*! \fn void get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_equ_posn * position)
 * \param object Object coordinates.
-* \param observer Observer cordinates.
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
@@ -202,7 +201,6 @@ void get_equ_from_ecl
 
 /*! \fn void get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
 * \param object Object coordinates.
-* \param observer Observer cordinates.
 * \param JD Julian day
 * \param position Pointer to store new position.
 *

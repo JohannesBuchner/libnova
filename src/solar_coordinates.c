@@ -23,7 +23,7 @@ Copyright 2000 Liam Girdwood
 #include <math.h>
 
 
-/*! \fn void get_geom_solar_coords (double JD, struct ln_solar_posn * position)
+/*! \fn void get_geom_solar_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
@@ -76,7 +76,7 @@ void get_equ_solar_coords (double JD, struct ln_equ_posn * position)
 	get_equ_from_ecl (&LB, JD, position);
 }
 
-/*! \fn void get_ecl_solar_coords (double JD, struct ln_lnlat_position * position)
+/*! \fn void get_ecl_solar_coords (double JD, struct ln_lnlat_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
 *
