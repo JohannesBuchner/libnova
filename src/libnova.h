@@ -411,6 +411,12 @@ void get_timet_from_julian (double JD, time_t * in_time);
 * \ingroup calendar
 */
 double get_julian_local_date(struct ln_date* date);
+	
+/*! \fn int get_date_from_mpc (struct ln_date* date, char* mpc_date)
+* \brief Calculate the local date from the a MPC packed date.
+* \ingroup calendar
+*/
+int get_date_from_mpc (struct ln_date* date, char* mpc_date);
 
 /*! \defgroup misc Misc Functions
 */

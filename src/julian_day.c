@@ -21,6 +21,7 @@ Copyright (C) 2000 Liam Girdwood <liam@nova-ioe.org>
 #include "libnova.h"
 #include <time.h>
 #include <string.h>
+#include <stdlib.h>
 
 /*! \fn double get_julian_day (struct ln_date * date)
 * \param date Date required.
@@ -329,4 +330,60 @@ void get_local_date (double JD, struct ln_date * date)
 	JD += ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
 	
 	get_date (JD, date);
+}
+
+/*! \fn int get_date_from_mpc (struct ln_date* date, char* mpc_date)
+* \param date Pointer to new calendar date.
+* \param mpc_date Pointer to string MPC date
+* \return 0 for valid date
+*
+* Calculate the local date from the a MPC packed date.
+* See http://cfa-www.harvard.edu/iau/info/PackedDates.html for info.
+*/
+int get_date_from_mpc (struct ln_date* date, char* mpc_date)
+{
+	char year[3];
+	char month[2];
+	char day[2];
+	
+	/* is mpc_date correct length */
+	if (strlen(mpc_date) !=5)
+		return -1;
+	
+	/* get the century */
+	switch (*mpc_date) {
+		case 'I':
+			date->years = 1800;
+		break;
+		case 'J':
+			date->years = 1900;
+		break;
+		case 'K':
+			date->years = 2000;
+		break;
+		default:
+			return -1;
+	}
+	
+	/* get the year */
+	year[0] = *(mpc_date + 1);
+	year[1] = *(mpc_date + 2);
+	year[3] = 0;
+	date->years += strtol (year,0,10);
+	
+	/* month */
+	month[0] = *(mpc_date + 3);
+	month[1] = 0;
+	date->months = strtol (month, 0, 16);
+	
+	/* day */
+	day[0] = *(mpc_date + 4);
+	day[1] = 0;
+	date->days = strtol (day, 0, 31);
+	
+	/* reset hours,min,secs to 0 */
+	date->hours = 0;
+	date->minutes = 0;
+	date->seconds = 0;
+	return 0;
 }

@@ -1,5 +1,13 @@
 ChangeLog
 
+20031808
+	-src/libnova.h
+	-src/julian_day.c
+	
+	Added MPC date format to ln_date conversion.
+	
+	Liam Girdwood
+
 20031708
 	-src/rise_set.c
 	-src/julian_day.c
