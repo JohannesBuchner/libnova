@@ -44,12 +44,6 @@ extern "C" {
 * \brief Calculate the time of rise, set and transit for the Sun.
 * \ingroup solar
 */
-int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time * rst);
-
-/*! \fn double ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
-* \brief Calculate the time of rise, set and transit for the Sun.
-* \ingroup solar
-*/
 int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 	
 /*! \fn void ln_get_geom_solar_coords (double JD, struct ln_helio_posn * position);

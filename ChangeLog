@@ -1,4 +1,12 @@
 ChangeLog
+
+20040906
+	-src/libnova/solar.h
+	
+	Removed private function from header
+
+	Liam Girdwood
+
 20040906
 	- src/julian_day.c
 	
