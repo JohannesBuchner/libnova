@@ -24,8 +24,8 @@ Copyright 2000 Liam Girdwood  */
 
 double compare_results (double calc, double expect)
 {
-	if (calc != expect)
-		return ( 1.0 / (expect / (calc - expect)));
+	if (calc - expect > 0.00000001 || calc - expect < -0.00000001)
+		return (calc - expect);
 	else
 		return (0);
 }
@@ -40,7 +40,7 @@ int test_result (char * test, double calc, double expect)
 	if (diff)
 	{
 		printf ("[FAILED]\n");
-		printf ("	Expected %8.8f but calculated %8.8f %f %% error.\n\n", expect, calc, diff);
+		printf ("	Expected %8.8f but calculated %8.8f %0.12f error.\n\n", expect, calc, diff);
 		return 1;
 	}
 	else
@@ -52,7 +52,7 @@ int test_result (char * test, double calc, double expect)
 }
 
 /* test julian day calculations */
-int julian_test (void)
+void julian_test (void)
 { 
 	double JD;
 	int wday;
@@ -88,7 +88,7 @@ int julian_test (void)
 	printf("TEST: (Julian Day) Weekday No is %d",wday);
 
 	get_date (JD, &pdate);
-	printf(" for %d/%d/%d  %d:%d:%f\n",pdate.days, pdate.months, pdate.years, pdate.hours, pdate.minutes, pdate.seconds);
+	printf(" for %d/%d/%d  %d:%d:%f\n\n",pdate.days, pdate.months, pdate.years, pdate.hours, pdate.minutes, pdate.seconds);
 }
 
 void dynamical_test ()
@@ -128,8 +128,7 @@ void nutation_test (void)
 
 void transform_test(void)
 {
-	struct lnh_equ_posn hobject, hpollux, hequ;
-	struct lnh_hrz_posn hhrz;
+	struct lnh_equ_posn hobject, hpollux;
 	struct lnh_lnlat_posn hobserver, hecl;
 	struct ln_equ_posn object, pollux, equ;
 	struct ln_hrz_posn hrz;
@@ -227,13 +226,12 @@ void solar_coord_test (void)
 
 void aberration_test (void)
 {
-	struct lnh_equ_posn hobject, hpos;
+	struct lnh_equ_posn hobject;
 	struct ln_equ_posn object, pos;
 	struct ln_date date;
 	double JD;
 
-	printf("\n\nAberration Test....\n");
-
+	/* object position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 46;
 	hobject.ra.seconds = 11.331;
@@ -241,6 +239,7 @@ void aberration_test (void)
 	hobject.dec.minutes = 20;
 	hobject.dec.seconds = 54.54;
 
+	/* date */
 	date.years = 2028;
 	date.months = 11;
 	date.days = 13;
@@ -252,18 +251,17 @@ void aberration_test (void)
 
 	hequ_to_equ (&hobject, &object);
 	get_equ_aber (&object, JD, &pos);
-	equ_to_hequ(&pos, &hpos);
-	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);
+	test_result ("(Aberration) RA  ", pos.ra, 41.55557139);
+	test_result ("(Aberration) DEC  ", pos.dec, 49.35032196);
 }
 
 void precession_test(void)
 {
 	double JD;
 	struct ln_equ_posn object, pos;
-	struct lnh_equ_posn hobject, hpos;
+	struct lnh_equ_posn hobject;
 
-	printf("\n\nPrecession test\n");
-
+	/* object position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 11.986;
@@ -274,18 +272,17 @@ void precession_test(void)
 	JD = 2462088.69;
 
 	get_equ_prec (&object, JD, &pos);
-	equ_to_hequ (&pos, &hpos);
-	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);	
+	test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 0.37058589);
+	test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 54.70071733);
 }
 
 void apparent_position_test(void)
 {
 	double JD;
-	struct lnh_equ_posn hobject, hpm, hpos;
+	struct lnh_equ_posn hobject, hpm;
 	struct ln_equ_posn object, pm, pos;	
 
-	printf("\n\nApparent Position test\n");
-
+	/* objects position */
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 11.986;
@@ -293,6 +290,7 @@ void apparent_position_test(void)
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 42.48;
 
+	/* proper motion of object */
 	hpm.ra.hours = 0;
 	hpm.ra.minutes = 0;
 	hpm.ra.seconds = 0.03425;
@@ -304,8 +302,9 @@ void apparent_position_test(void)
 	hequ_to_equ (&hobject, &object);
 	hequ_to_equ (&hpm, &pm);
 	get_apparent_posn (&object, &pm, JD, &pos);
-	equ_to_hequ (&pos, &hpos);
-	printf("Ra %d:%d:%f\nDec %d:%d:%f\n",hpos.ra.hours, hpos.ra.minutes, hpos.ra.seconds, hpos.dec.degrees, hpos.dec.minutes, hpos.dec.seconds);
+	
+	test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55553862);
+	test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35034910);
 }
 
 void vsop87_test(void)
@@ -315,9 +314,9 @@ void vsop87_test(void)
 	struct ln_equ_posn equ;
 	double JD = 2448976.5;
 	double au;
+#if 0
 	struct ln_date date, pdate;
 /*	JD = get_julian_from_sys();	*/
-#if 0
 	date.years = 1992;
 	date.months = 12;
 	date.days = 20; 
