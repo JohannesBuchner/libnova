@@ -38,7 +38,7 @@ const char * get_ln_version (void)
 
 
 /* convert radians to degrees */
-inline double rad_to_deg (double radians)
+double rad_to_deg (double radians)
 {
     double degrees;
     
@@ -47,7 +47,7 @@ inline double rad_to_deg (double radians)
 }    
 
 /* convert degrees to radians */
-inline double deg_to_rad (double degrees)
+double deg_to_rad (double degrees)
 {
     double radians;
     
