@@ -61,7 +61,7 @@ int test_result (char * test, double calc, double expect, double tolerance)
 /* test julian day calculations */
 int julian_test (void)
 { 
-	double JD;
+	double JD, JD2;
 	int wday, failed = 0;
 	struct ln_date date, pdate;
 
@@ -92,10 +92,26 @@ int julian_test (void)
 	failed += test_result ("(Julian Day) JD for 30/06/1954 00:00:00", JD, 2434923.5, 0.1);
 	
 	wday = ln_get_day_of_week(&date);
-	printf("TEST: (Julian Day) Weekday No is %d",wday);
+	failed += test_result ("(Julian Day) Weekday No", wday, 3, 0.1);
 
 	ln_get_date (JD, &pdate);
-	printf(" for %d/%d/%d  %d:%d:%f\n\n",pdate.days, pdate.months, pdate.years, pdate.hours, pdate.minutes, pdate.seconds);
+	failed += test_result ("(Julian Day) Day from JD for 30/06/1954 00:00:00", pdate.days, 30, 0.1);
+
+	failed += test_result ("(Julian Day) Month from JD for 30/06/1954 00:00:00", pdate.months, 6, 0.1);
+
+	failed += test_result ("(Julian Day) Year from JD for 30/06/1954 00:00:00", pdate.years, 1954, 0.1);
+
+	failed += test_result ("(Julian Day) Hour from JD for 30/06/1954 00:00:00", pdate.hours, 0, 0.1);
+
+	failed += test_result ("(Julian Day) Minute from JD for 30/06/1954 00:00:00", pdate.minutes, 0, 0.1);
+
+	failed += test_result ("(Julian Day) Second from JD for 30/06/1954 00:00:00", pdate.seconds, 0, 0.001);
+
+	JD = ln_get_julian_from_sys ();
+
+	JD2 = ln_get_julian_from_sys ();
+
+	failed += test_result ("(Julian Day) Diferrence between two sucessive ln_get_julian_from_sys () calls (blame your CPU if difference is small enough..it shall never be zero)", JD2 - JD, 1e-1, .99e-1);
 
 	return failed;
 }

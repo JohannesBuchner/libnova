@@ -20,6 +20,7 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <libnova/julian_day.h>
 
 /*! \fn double ln_get_julian_day (struct ln_date * date)
@@ -150,17 +151,18 @@ void ln_get_date (double JD, struct ln_date * date)
 */
 void ln_get_date_from_sys (struct ln_date * date)
 {
-	time_t curtime;
 	struct tm * loctime;
+        struct timeval tv;
+        struct timezone tz;
 		
-	/* get current time */
-	curtime = time (NULL);
+	/* get current time with microseconds precission*/
+	gettimeofday (&tv, &tz);
 
 	/* convert to local time representation */
-	loctime = localtime(&curtime);
-	
+	loctime = localtime(&tv.tv_sec);
+    	
 	/* fill in date struct */
-	date->seconds = loctime->tm_sec;
+	date->seconds = loctime->tm_sec + tv.tv_usec;
 	date->minutes = loctime->tm_min;
 	date->hours = loctime->tm_hour;
 	date->days = loctime->tm_mday;
