@@ -107,6 +107,9 @@ int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln
   double t_JD = JD;
   int ret;
   ret = ln_get_object_rst (JD, observer, object, &rst_p0);
+  if (ret)
+    // circumpolar
+    return ret;
 #define get_next_rst(val) \
 	while (1) \
 	{ \
