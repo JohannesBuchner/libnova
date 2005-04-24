@@ -51,7 +51,7 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_
   /* convert local sidereal time into degrees
      for 0h of UT on day JD */
   jd = (int) JD;
-  if (JD - jd > 0.5)
+  if (JD - jd >= 0.5)
     JD_UT = jd + 0.5 + (T / (24 * 60 * 60));
   else
     JD_UT = jd - 0.5 + (T / (24 * 60 * 60));
@@ -164,7 +164,7 @@ int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*
   /* convert local sidereal time into degrees
      for 0h of UT on day JD */
   jd = (int) JD;
-  if (JD - jd > 0.5)
+  if (JD - jd >= 0.5)
     JD_UT = jd + 0.5 + (T / 86400.0);
   else
     JD_UT = jd - 0.5 + (T / 86400.0);
