@@ -28,7 +28,7 @@ A simple example showing the asteroid Pallas.
 #include <libnova/elliptic_motion.h>
 
 /* just prints the date */
-void print_date (char * title, struct ln_date* date)
+void print_date (char * title, struct ln_zonedate* date)
 {
 	printf ("\n%s\n",title);
 	printf (" Year    : %d\n", date->years);
@@ -42,7 +42,7 @@ void print_date (char * title, struct ln_date* date)
 int main (int argc, char * argv[])
 {
 	struct ln_rst_time rst;
-	struct ln_date rise, set, transit;
+	struct ln_zonedate rise, set, transit;
 	struct ln_lnlat_posn observer;
 	struct ln_hrz_posn hrz;
 	struct ln_ell_orbit orbit;

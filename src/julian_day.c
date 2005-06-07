@@ -151,23 +151,23 @@ void ln_get_date (double JD, struct ln_date * date)
 */
 void ln_get_date_from_sys (struct ln_date * date)
 {
-	struct tm * loctime;
+	struct tm * gmt;
         struct timeval tv;
         struct timezone tz;
 		
 	/* get current time with microseconds precission*/
 	gettimeofday (&tv, &tz);
 
-	/* convert to local time representation */
-	loctime = localtime(&tv.tv_sec);
+	/* convert to UTC time representation */
+	gmt = gmtime(&tv.tv_sec);
     	
 	/* fill in date struct */
-	date->seconds = loctime->tm_sec + ((double)tv.tv_usec / 1000000);
-	date->minutes = loctime->tm_min;
-	date->hours = loctime->tm_hour;
-	date->days = loctime->tm_mday;
-	date->months = loctime->tm_mon + 1;
-	date->years = loctime->tm_year + 1900;
+	date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
+	date->minutes = gmt->tm_min;
+	date->hours = gmt->tm_hour;
+	date->days = gmt->tm_mday;
+	date->months = gmt->tm_mon + 1;
+	date->years = gmt->tm_year + 1900;
 }
 
 
@@ -179,24 +179,8 @@ void ln_get_date_from_sys (struct ln_date * date)
 */
 double ln_get_julian_from_timet (time_t * in_time)
 {
-	struct tm * loctime;
-	struct ln_date date;
-	double JD;
-	
-	/* convert to local time representation */
-	loctime = localtime(in_time);
-    
-	/* fill in date struct */
-	date.seconds = loctime->tm_sec;
-	date.minutes = loctime->tm_min;
-	date.hours = loctime->tm_hour;
-	date.days = loctime->tm_mday;
-	date.months = loctime->tm_mon + 1;
-	date.years = loctime->tm_year + 1900;
-	
-	JD = ln_get_julian_day (&date);
-	
-	return JD;
+	// 1.1.1970 = JD 2440587.5
+	return (double) 2440587.5 + (double) *in_time / (double) 86400.0;
 }
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
@@ -206,27 +190,8 @@ double ln_get_julian_from_timet (time_t * in_time)
 * Calculate time_t from julian day
 */
 void ln_get_timet_from_julian (double JD, time_t * in_time)
-{
-	struct tm loctime;
-	struct ln_date date;
-		
-	ln_get_date (JD, &date);
-	
-	/* fill in date struct */
-	if (date.years < 1900) {
-		*in_time = 0;
-		return;
-	}
-	
-	loctime.tm_sec = date.seconds;
-	loctime.tm_min = date.minutes;
-	loctime.tm_hour = date.hours;
-	loctime.tm_mday =date.days;
-	loctime.tm_mon = date.months -1;
-	loctime.tm_year = date.years - 1900;
-	loctime.tm_isdst = 0;
-	
-	*in_time = mktime (&loctime);
+{	
+	*in_time = (JD - (double) 2440587.5) * (double) 86400.0;
 }
 
 /*! \fn double ln_get_julian_from_sys()
@@ -237,82 +202,64 @@ void ln_get_timet_from_julian (double JD, time_t * in_time)
 double ln_get_julian_from_sys()
 {
 	double JD;
-	time_t curtime;
-	struct tm * loctime;
 	struct ln_date date;
 		
 	/* get sys date */
 	ln_get_date_from_sys (&date);
 	JD = ln_get_julian_day (&date);
-	
-	/* add day light savings time and hour angle */
-#ifdef __WIN32__
-	tzset();
-	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
-	if (_daylight)
-		JD += 1.0 / (24.0 * 60.0 * 60.0);
-#else	
-	curtime = time (NULL);
-	loctime = localtime(&curtime);
-	JD -= ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
-#endif
+
 	return JD;
 }
 
-/*! \fn double ln_get_julian_local_date(struct ln_date* date)
+/*! \fn double ln_get_julian_local_date(struct ln_zonedate* date)
 * \param date Local date
 * \return Julian day (UT)
 *
-* Calculate Julian day (UT) from local date
+* Calculate Julian day (UT) from zone date
 */
-double ln_get_julian_local_date(struct ln_date* date)
+double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 {
-	double JD;
-	time_t curtime;
-	struct tm * loctime;
-		
-	JD = ln_get_julian_day (date);
+	struct ln_date date;
 	
-	/* add day light savings time and hour angle */
-#ifdef __WIN32__
-	tzset();
-	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
-	if (_daylight)
-		JD += 1.0 / (24.0 * 60.0 * 60.0);
-#else	
-	curtime = time (NULL);
-	loctime = localtime(&curtime);
-	JD -= ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
-#endif
-	return JD;
+	ln_zonedate_to_date (zonedate, &date);
+
+	return ln_get_julian_day (&date);
 }
 
 /*! \fn void ln_get_local_date (double JD, struct ln_date * date)
 * \param JD Julian day
 * \param date Pointer to new calendar date.
 *
-* Calculate the local date from the Julian day (UT) 
+* Calculate the zone date from the Julian day (UT). Get zone info from 
+* system using either _timezone or tm_gmtoff fields.
 */
-void ln_get_local_date (double JD, struct ln_date * date)
+void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 {
+	struct ln_date date;
+#ifndef __WIN32__
 	time_t curtime;
-	struct tm * loctime;
-
-#ifdef __WIN32__
-	tzset();
-	JD += (double)_timezone / (24.0 * 60.0 * 60.0);
-	if (_daylight)
-		JD += 1.0 / (24.0 * 60.0 * 60.0);
-#else		
-	/* add day light savings time and hour angle */
-	curtime = time (NULL);
-	loctime = localtime(&curtime);
-	
-	/* add timezone to JD */
-	JD += ((double)loctime->tm_gmtoff) / (24.0 * 60.0 * 60.0);
+	struct tm *loctime;
+	long gmtoff;
 #endif
 	
-	ln_get_date (JD, date);
+	ln_get_date (JD, &date);
+
+	/* add day light savings time and hour angle */
+#ifdef __WIN32__
+ 	tzset();
+ 	gmtoff = _timezone;
+ 	if (_daylight)
+ 		gmtoff += 3600;
+#else
+#ifdef _BSD_SOURCE
+ 	curtime = time (NULL);
+ 	loctime = localtime(&curtime);
+ 	gmtoff += loctime->tm_gmtoff;
+	// otherwise there is no reasonable way how to get that:(
+	// tm_gmtoff already included DST
+#endif
+#endif
+	ln_date_to_zonedate (&date, zonedate, gmtoff);
 }
 
 /*! \fn int ln_get_date_from_mpc (struct ln_date* date, char* mpc_date)
@@ -387,4 +334,48 @@ double ln_get_julian_from_mpc (char* mpc_date)
 	JD = ln_get_julian_day(&date);
 	
 	return JD;
+}
+
+/*! \fn void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate)
+* \brief convert ln_date to ln_zonedate, zero zone info
+* \ingroup conversion
+*/
+void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff)
+{
+	double jd;
+	struct ln_date dat;
+
+	jd = ln_get_julian_day (date);
+	jd += gmtoff / 86400.0;
+	ln_get_date (jd, &dat);
+
+	zonedate->years   = dat.years;
+	zonedate->months  = dat.months;
+	zonedate->days    = dat.days;
+	zonedate->hours   = dat.hours;
+	zonedate->minutes = dat.minutes;
+	zonedate->seconds = dat.seconds;
+
+	zonedate->gmtoff  = gmtoff;
+}
+
+/*! \fn void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
+* \brief convert ln_zonedate to ln_date
+* \ingroup conversion
+*/
+void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
+{
+	double jd;
+	struct ln_date dat;
+
+	dat.years   = zonedate->years;
+	dat.months  = zonedate->months;
+	dat.days    = zonedate->days;
+	dat.hours   = zonedate->hours;
+	dat.minutes = zonedate->minutes;
+	dat.seconds = zonedate->seconds;
+
+	jd = ln_get_julian_day (&dat);
+	jd -= zonedate->gmtoff / 86400.0;
+	ln_get_date (jd, &dat);
 }

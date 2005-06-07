@@ -49,7 +49,7 @@ if test "x${prefix}" = "xNONE"; then
   LIBNOVA_MACRO_DIR=${ac_default_prefix}/share/aclocal
   AC_SUBST(LIBNOVA_MACRO_DIR)
 else
-  LIBNOVA_MACRO_DIR=${prefix}/share/aclocal
+  LIBNOVA_MACRO_DIR=\${prefix}/share/aclocal
   AC_SUBST(LIBNOVA_MACRO_DIR)
 fi
 

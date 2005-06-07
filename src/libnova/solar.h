@@ -40,7 +40,13 @@ extern "C" {
 * All angles are expressed in degrees.
 */
 
-/*! \fn double ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+/*! \fn int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time *rst);
+* \brief Return solar rise/set time over local horizont (specified in degrees).
+*  \ingroup solar
+*/
+int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time * rst);
+
+/*! \fn int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for the Sun.
 * \ingroup solar
 */

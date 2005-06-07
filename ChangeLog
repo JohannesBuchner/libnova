@@ -1,5 +1,29 @@
 ChangeLog
 
+20050607
+	- src/libnova/ln_types.h
+	- src/libnova/julian_day.c
+	- src/julian_day.c
+	- examples/lunar.c
+	- examples/sun.c
+	- examples/mars.c
+	- examples/asteroid.c
+	- lntest/test.c
+
+	Added ln_zonedate & supporting functions, change examples,
+	added test to lntest.
+
+	- lntest/test.c
+
+	Call usleep between sucessive calls to get_jd (so ./test
+	should pass on fast CPU as well).
+
+	- debian/*
+
+	Added Debian build directory.
+
+	Petr Kubanek
+
 20050506
 	- src/refraction.c
 	

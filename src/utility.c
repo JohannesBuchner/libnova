@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.7 2005-03-20 20:58:16 l_girdwood Exp $
+/* $Id: utility.c,v 1.8 2005-06-07 16:36:35 pkubanek Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -194,20 +194,19 @@ void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 {
     double dtemp;
     
-	dms->degrees = (int)degrees;
-	
-	if (degrees >= 0)
-		dtemp = degrees - dms->degrees;
-	else
-		dtemp = dms->degrees - degrees;
+    dms->degrees = (int)degrees;
 
-	/* divide remainder by 60 to get minutes */
+    if (degrees >= 0)
+	dtemp = degrees - dms->degrees;
+    else 
+ 	dtemp = dms->degrees - degrees;
+
+    /* divide remainder by 60 to get minutes */
     dms->minutes = dtemp = dtemp * 60;
     dtemp -= dms->minutes;
     
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
-printf("deg %d\n", dms->degrees);
 }
 
 /* convert radians to dms */

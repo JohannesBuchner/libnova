@@ -26,7 +26,7 @@ A simple example showing some lunar calculations.
 #include <libnova/rise_set.h>
 #include <libnova/transform.h>
 
-void print_date (char * title, struct ln_date* date)
+void print_date (char * title, struct ln_zonedate* date)
 {
 	printf ("\n%s\n",title);
 	printf (" Year    : %d\n", date->years);
@@ -45,7 +45,7 @@ int main (int argc, char* argv[])
 	struct ln_lnlat_posn ecl;
 	struct ln_lnlat_posn observer;
 	struct ln_rst_time rst;
-	struct ln_date rise, transit, set;
+	struct ln_zonedate rise, transit, set;
 	
 	/* observers location (Edinburgh), used to calc rst */
 	observer.lat = 55.92;

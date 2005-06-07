@@ -42,11 +42,11 @@ double ln_get_julian_day (struct ln_date * date);
 */
 void ln_get_date (double JD, struct ln_date * date);
 
-/*! \fn void ln_get_local_date (double JD, struct ln_date * date)
+/*! \fn void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 * \ingroup calender
-* \brief Calculate the local date from the Julian day  
+* \brief Calculate the zone date from the Julian day  
 */
-void ln_get_local_date (double JD, struct ln_date * date);
+void ln_get_local_date (double JD, struct ln_zonedate * zonedate);
 
 /*! \fn unsigned int ln_get_day_of_week (struct ln_date * date)
 * \ingroup calendar
@@ -79,11 +79,11 @@ double ln_get_julian_from_timet (time_t * in_time);
 */
 void ln_get_timet_from_julian (double JD, time_t * in_time);
 
-/*! \fn double ln_get_julian_local_date(struct ln_date* date)
+/*! \fn double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 * \brief Calculate Julian day from local date
 * \ingroup calendar
 */
-double ln_get_julian_local_date(struct ln_date* date);
+double ln_get_julian_local_date(struct ln_zonedate* zonedate);
 	
 /*! \fn int ln_get_date_from_mpc (struct ln_date* date, char* mpc_date)
 * \brief Calculate the local date from the a MPC packed date.
@@ -96,6 +96,18 @@ int ln_get_date_from_mpc (struct ln_date* date, char* mpc_date);
 * \ingroup calendar
 */
 double ln_get_julian_from_mpc (char* mpc_date);
+
+/*! \fn void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff)
+* \brief convert ln_date to ln_zonedate, zero zone info
+* \ingroup conversion
+*/
+void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff);
+
+/*! \fn void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
+* \brief convert ln_zonedate to ln_date
+* \ingroup conversion
+*/
+void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date);
 
 #ifdef __cplusplus
 };

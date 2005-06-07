@@ -27,7 +27,7 @@ A simple example showing some planetary calculations.
 #include <libnova/transform.h>
 #include <libnova/utility.h>
 
-void print_date (char * title, struct ln_date* date)
+void print_date (char * title, struct ln_zonedate* date)
 {
 	printf ("\n%s\n",title);
 	printf (" Year    : %d\n", date->years);
@@ -44,7 +44,7 @@ int main (int argc, char * argv[])
 	struct lnh_equ_posn hequ;
 	struct ln_equ_posn equ;
 	struct ln_rst_time rst;
-	struct ln_date rise, set, transit;
+	struct ln_zonedate rise, set, transit;
 	struct ln_lnlat_posn observer;
 	double JD;
 	double au;

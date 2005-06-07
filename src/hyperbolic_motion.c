@@ -19,6 +19,8 @@ Copyright 2004 Petr Kubanek
  
 */
 
+#define _GNU_SOURCE
+
 #include <math.h>
 #include <stdlib.h>
 #include <libnova/parabolic_motion.h>

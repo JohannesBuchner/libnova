@@ -22,9 +22,12 @@ Copyright 2000 Liam Girdwood  */
  * in the Meeus book and some data from the MPC.
  */
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <libnova/libnova.h>
+#include <unistd.h>
 
 /*
  * Define DATE or SYS_DATE for testing VSOP87 theory with other JD
@@ -64,6 +67,9 @@ int julian_test (void)
 	double JD, JD2;
 	int wday, failed = 0;
 	struct ln_date date, pdate;
+
+	time_t now;
+	time_t now_jd;
 
 	/* Get julian day for 04/10/1957 19:00:00 */
 	date.years = 1957;
@@ -109,9 +115,21 @@ int julian_test (void)
 
 	JD = ln_get_julian_from_sys ();
 
+	usleep (10000);
+
 	JD2 = ln_get_julian_from_sys ();
 
-	failed += test_result ("(Julian Day) Diferrence between two sucessive ln_get_julian_from_sys () calls (blame your CPU if difference is small enough..it shall never be zero)", JD2 - JD, 1e-1, .99e-1);
+	failed += test_result ("(Julian Day) Diferrence between two sucessive ln_get_julian_from_sys () calls (it shall never be zero)", JD2 - JD, 1e-2/86400.0, .99e-1);
+
+	/* Test that we get from JD same value as is in time_t
+	 * struct..was problem before introduction of ln_zonedate (on
+	 * machines which doesn't run in UTC).
+	 */
+
+	time (&now);
+	ln_get_timet_from_julian (ln_get_julian_from_timet (&now), &now_jd);
+
+	failed += test_result ("(Julian Day) Diferrence between time_t from system and from JD", now - now_jd, 0, 0);
 
 	return failed;
 }
