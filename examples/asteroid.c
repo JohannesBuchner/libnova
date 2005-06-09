@@ -56,7 +56,7 @@ int main (int argc, char * argv[])
 	
 	/* observers location (Edinburgh), used to calc rst */
 	observer.lat = 55.92;
-	observer.lng = 3.18;
+	observer.lng = -3.18;
 	
 	/* get Julian day from local time */
 	JD = ln_get_julian_from_sys();	

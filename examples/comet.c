@@ -29,7 +29,7 @@ Comet Enckle
 #include <libnova/transform.h>
 #include <libnova/elliptic_motion.h>
 
-void print_date (char * title, struct ln_date* date)
+void print_date (char * title, struct ln_zonedate* date)
 {
 	printf ("\n%s\n",title);
 	printf (" Year    : %d\n", date->years);
@@ -38,13 +38,15 @@ void print_date (char * title, struct ln_date* date)
 	printf (" Hours   : %d\n", date->hours);
 	printf (" Minutes : %d\n", date->minutes);
 	printf (" Seconds : %f\n", date->seconds);
+	printf("gmtoff %ld\n", date->gmtoff);
 }
 
 int main (int argc, char * argv[])
 {
 	struct ln_equ_posn equ;
 	struct ln_rst_time rst;
-	struct ln_date rise, set, transit, epoch_date;
+	struct ln_zonedate rise, set, transit;
+	struct ln_date epoch_date;
 	struct ln_lnlat_posn observer;
 	struct ln_ell_orbit orbit;
 	struct ln_rect_posn posn;
@@ -53,7 +55,7 @@ int main (int argc, char * argv[])
 	
 	/* observers location (Edinburgh), used to calc rst */
 	observer.lat = 55.92;
-	observer.lng = 3.18;
+	observer.lng = -3.18;
 	
 	/* get Julian day from local time */
 	JD = ln_get_julian_from_sys();	
