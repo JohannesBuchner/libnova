@@ -35,12 +35,19 @@ extern "C" {
 */
 
 /*! \fn void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
-* \brief Calculate the proper motion of a star.
+* \brief Calculate a stars equatorial position wrt proper motion (J2000).
 * \ingroup motion
 */
 /* Equ 20.2, 20.3, 20.4 pg 126 */
 void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
 
+
+/*! \fn void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
+* \brief Calculate a stars equatorial position wrt proper motion and epoch.
+*/
+/* Equ 20.2, 20.3, 20.4 pg 126 
+*/
+void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position);
 #ifdef __cplusplus
 };
 #endif

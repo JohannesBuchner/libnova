@@ -1,5 +1,13 @@
 ChangeLog
 
+20050609
+
+	- src/libnova/proper_motion.h
+	- src/proper_motion.c
+
+	Added variable epoch proper motion func and added units to documentation. 
+
+
 20050607
 	- src/libnova/ln_types.h
 	- src/libnova/julian_day.c

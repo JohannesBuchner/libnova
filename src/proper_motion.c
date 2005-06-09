@@ -27,12 +27,12 @@ Copyright 2000 Liam Girdwood
 
 /*! \fn void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 * \param mean_position Mean position of object.
-* \param proper_motion Proper motion of object.
+* \param proper_motion Annual Proper motion of object.
 * \param JD Julian Day.
 * \param position Pointer to store new object position.
 *
-* Calculate a stars equatorial coordinates from it's mean coordinates with the
-* effects of proper motion for a given Julian Day. 
+* Calculate a stars equatorial coordinates from it's mean coordinates (J2000.0)
+* with the effects of proper motion for a given Julian Day. 
 */ 
 /* Equ 20.2, 20.3, 20.4 pg 126 
 */
@@ -41,6 +41,37 @@ void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * pro
 	long double mean_ra, mean_dec, T;
 	
 	T = (JD - 2451545.0) / 365.25;
+	
+	/* change original ra and dec to radians */
+	mean_ra = ln_deg_to_rad(mean_position->ra);
+	mean_dec = ln_deg_to_rad(mean_position->dec);
+
+	/* calc proper motion */
+	mean_ra += T * ln_deg_to_rad(proper_motion->ra);
+	mean_dec += T * ln_deg_to_rad(proper_motion->dec);
+	
+	/* change to degrees */
+	position->ra = ln_rad_to_deg (mean_ra);
+	position->dec = ln_rad_to_deg (mean_dec);
+}
+
+/*! \fn void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
+* \param mean_position Mean position of object.
+* \param proper_motion Annual Proper motion of object.
+* \param JD Julian Day.
+* \param JD_epoch Mean position epoch in JD
+* \param position Pointer to store new object position.
+*
+* Calculate a stars equatorial coordinates from it's mean coordinates and epoch
+* with the effects of proper motion for a given Julian Day. 
+*/ 
+/* Equ 20.2, 20.3, 20.4 pg 126 
+*/
+void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
+{
+	long double mean_ra, mean_dec, T;
+	
+	T = (JD - epoch_JD) / 365.25;
 	
 	/* change original ra and dec to radians */
 	mean_ra = ln_deg_to_rad(mean_position->ra);
