@@ -2,6 +2,14 @@ ChangeLog
 
 20050609
 
+	- src/julian_day.c
+	- lntest/test.c
+
+	Bug fix ln_date_to_zonedate, added tests for
+	ln_date_to_zonedate.
+	
+20050609
+
 	-src/libnova/ln_types.h
 	-src/utility.h
 	-ln_test/test.c

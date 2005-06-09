@@ -254,7 +254,7 @@ void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 #ifdef _BSD_SOURCE
  	curtime = time (NULL);
  	loctime = localtime(&curtime);
- 	gmtoff += loctime->tm_gmtoff;
+ 	gmtoff = loctime->tm_gmtoff;
 	// otherwise there is no reasonable way how to get that:(
 	// tm_gmtoff already included DST
 #endif

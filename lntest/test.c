@@ -67,6 +67,7 @@ int julian_test (void)
 	double JD, JD2;
 	int wday, failed = 0;
 	struct ln_date date, pdate;
+	struct ln_zonedate zonedate;
 
 	time_t now;
 	time_t now_jd;
@@ -96,9 +97,18 @@ int julian_test (void)
 	date.hours = 0;
 	JD = ln_get_julian_day (&date);
 	failed += test_result ("(Julian Day) JD for 30/06/1954 00:00:00", JD, 2434923.5, 0.1);
-	
+
 	wday = ln_get_day_of_week(&date);
 	failed += test_result ("(Julian Day) Weekday No", wday, 3, 0.1);
+
+	/* Test ln_date_to_zonedate and back */
+
+	ln_date_to_zonedate (&date, &zonedate, 7200);
+	ln_zonedate_to_date (&zonedate, &date);
+
+	JD = ln_get_julian_day (&date);
+
+	failed += test_result ("(Julian Day) ln_date_to_zonedate and ln_zonedate_to_date check - JD for 30/06/1954 00:00:00", JD, 2434923.5, 0.1);
 
 	ln_get_date (JD, &pdate);
 	failed += test_result ("(Julian Day) Day from JD for 30/06/1954 00:00:00", pdate.days, 30, 0.1);
