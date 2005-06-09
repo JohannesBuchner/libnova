@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.8 2005-06-07 16:36:35 pkubanek Exp $
+/* $Id: utility.c,v 1.9 2005-06-09 14:29:07 l_girdwood Exp $
 **
 * Copyright (C) 1999, 2000 Juan Carlos Remis
 * Copyright (C) 2002 Liam Girdwood
@@ -165,7 +165,7 @@ double ln_dms_to_deg (struct ln_dms *dms)
     degrees += fabs((double)dms->seconds / 3600);
 	
 	// negative ?
-	if (dms->degrees < 0)
+	if (dms->neg)
 		degrees *= -1.0;
 
     return degrees;
@@ -181,26 +181,26 @@ double ln_dms_to_rad (struct ln_dms *dms)
     radians += fabs((double)dms->seconds / 1296000.0 * 2.0 * M_PI);
 	
 	// negative ?
-	if (dms->degrees < 0)
+	if (dms->neg)
 		radians *= -1.0;
 	
     return radians;
 }
 
-
-
 /* convert degrees to dms */
 void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 {
     double dtemp;
-    
-    dms->degrees = (int)degrees;
 
-    if (degrees >= 0)
+    if (degrees >= 0) 
+		dms->neg = 0;
+	else
+		dms->neg = 1;
+
+	degrees = fabs(degrees);
+	dms->degrees = (int)degrees;
 	dtemp = degrees - dms->degrees;
-    else 
- 	dtemp = dms->degrees - degrees;
-
+	
     /* divide remainder by 60 to get minutes */
     dms->minutes = dtemp = dtemp * 60;
     dtemp -= dms->minutes;
@@ -216,17 +216,19 @@ void ln_rad_to_dms (double radians, struct ln_dms * dms)
     double degrees;
 	
     degrees = radians * 360.0 / (2.0 * M_PI);
-    
-    dms->degrees = (int)degrees;
-   	if (degrees >= 0)
-		dtemp = degrees - dms->degrees;
+    if (degrees >= 0) 
+		dms->neg = 0;
 	else
-		dtemp = dms->degrees - degrees;
-
+		dms->neg = 1;
+	
+    degrees = fabs(degrees);
+	dms->degrees = (int)degrees;
+	dtemp = degrees - dms->degrees;
+	
     /* divide remainder by 60 to get minutes */
     dms->minutes = dtemp = dtemp * 60;
     dtemp -= dms->minutes;
-
+    
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
 }

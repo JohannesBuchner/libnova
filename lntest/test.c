@@ -185,9 +185,11 @@ int transform_test(void)
 	int failed = 0;
 	
 	/* observers position */
+	hobserver.lng.neg = 0;
 	hobserver.lng.degrees = 282;
 	hobserver.lng.minutes = 56;
 	hobserver.lng.seconds = 4;
+	hobserver.lat.neg = 0;
 	hobserver.lat.degrees = 38;
 	hobserver.lat.minutes = 55;
 	hobserver.lat.seconds = 17;
@@ -196,7 +198,8 @@ int transform_test(void)
 	hobject.ra.hours = 23;
 	hobject.ra.minutes = 9;
 	hobject.ra.seconds = 16.641;
-	hobject.dec.degrees = -6;
+	hobject.dec.neg = 1;
+	hobject.dec.degrees = 6;
 	hobject.dec.minutes = 43;
 	hobject.dec.seconds = 11.61;
 
@@ -224,6 +227,7 @@ int transform_test(void)
 	hpollux.ra.hours = 7;
 	hpollux.ra.minutes = 45;
 	hpollux.ra.seconds = 18.946;
+	hpollux.dec.neg = 0;
 	hpollux.dec.degrees = 28;
 	hpollux.dec.minutes = 1;
 	hpollux.dec.seconds = 34.26;
@@ -303,6 +307,7 @@ int aberration_test (void)
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 12.9747;
+	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 39.896;
@@ -335,6 +340,7 @@ int precession_test(void)
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 11.986;
+	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 42.48;
@@ -358,7 +364,7 @@ int apparent_position_test(void)
 	hobject.ra.hours = 2;
 	hobject.ra.minutes = 44;
 	hobject.ra.seconds = 12.9747;
-	
+	hobject.dec.neg = 0;
 	hobject.dec.degrees = 49;
 	hobject.dec.minutes = 13;
 	hobject.dec.seconds = 39.896;
@@ -367,17 +373,18 @@ int apparent_position_test(void)
 	hpm.ra.hours = 0;
 	hpm.ra.minutes = 0;
 	hpm.ra.seconds = 0.03425;
+	hpm.dec.neg = 1;
 	hpm.dec.degrees = 0;
 	hpm.dec.minutes = 0;
-	hpm.dec.seconds = -0.0895;
+	hpm.dec.seconds = 0.0895;
     
 	JD = 2462088.69;
 	ln_hequ_to_equ (&hobject, &object);
 	ln_hequ_to_equ (&hpm, &pm);
 	ln_get_apparent_posn (&object, &pm, JD, &pos);
-	
-	failed += test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55967167, 0.00000001);
-	failed += test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.35105872, 0.00000001);
+
+	failed += test_result ("(Apparent Position) RA on JD 2462088.69  ", pos.ra, 41.55966517, 0.00000001);
+	failed += test_result ("(Apparent Position) DEC on JD 2462088.69  ", pos.dec, 49.34962340, 0.00000001);
 	return failed;
 }
 
@@ -840,12 +847,14 @@ int angular_test ()
 int utility_test()
 {
 	struct ln_dms dms;
-	double deg = -1.23, deg2 = 1.23;
+	double deg = -1.23, deg2 = 1.23, deg3 = -0.5;
 	
 	ln_deg_to_dms (deg, &dms);
-	printf("deg %d min %d sec %f\n", dms.degrees, dms.minutes, dms.seconds); 
+	printf("TEST deg %f ==> deg %c%d min %d sec %f\n", deg, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds); 
 	ln_deg_to_dms (deg2, &dms);
-	printf("deg %d min %d sec %f\n", dms.degrees, dms.minutes, dms.seconds); 
+	printf("TEST deg %f ==> deg %c%d min %d sec %f\n", deg2, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds); 
+	ln_deg_to_dms (deg3, &dms);
+	printf("TEST deg %f ==> deg %c%d min %d sec %f\n", deg3, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds);
 	return 0;
 }
 

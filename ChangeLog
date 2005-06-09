@@ -2,6 +2,15 @@ ChangeLog
 
 20050609
 
+	-src/libnova/ln_types.h
+	-src/utility.h
+	-ln_test/test.c
+	
+	Added neg bit in ln_dms for small > -1 neg angles. Not sure why
+	this had got back in ?
+
+20050609
+
 	- src/libnova/proper_motion.h
 	- src/proper_motion.c
 
