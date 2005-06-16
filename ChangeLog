@@ -1,5 +1,10 @@
 ChangeLog
 
+20050616
+	-src/julian_day.c
+	
+	Bug fix for rounding error in time_t to JD and vice versa. 
+
 20050609
 
 	- src/julian_day.c

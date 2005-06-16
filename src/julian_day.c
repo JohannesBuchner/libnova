@@ -21,7 +21,11 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 #include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <math.h>
 #include <libnova/julian_day.h>
+
+/* should be in math.h, but isn't on FC3 even with _GNU_SOURCE */
+double round (double __x); 
 
 /*! \fn double ln_get_julian_day (struct ln_date * date)
 * \param date Date required.
@@ -180,7 +184,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 double ln_get_julian_from_timet (time_t * in_time)
 {
 	// 1.1.1970 = JD 2440587.5
-	return (double) 2440587.5 + (double) *in_time / (double) 86400.0;
+	return (double)(2440587.5 + (double)(*in_time / (double) 86400.0));
 }
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
@@ -191,7 +195,7 @@ double ln_get_julian_from_timet (time_t * in_time)
 */
 void ln_get_timet_from_julian (double JD, time_t * in_time)
 {	
-	*in_time = (JD - (double) 2440587.5) * (double) 86400.0;
+	*in_time = (time_t)round((JD - (double) 2440587.5) * (double) 86400.0);
 }
 
 /*! \fn double ln_get_julian_from_sys()
