@@ -74,7 +74,7 @@ void ln_get_saturn_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_saturn_earth_dist (double JD);
 	
-/*! \fn double ln_get_saturn_sun_dist (double JD);
+/*! \fn double ln_get_saturn_solar_dist (double JD);
 * \brief Calculate the distance between Saturn and the Sun.
 * \ingroup saturn
 * \return Distance in AU

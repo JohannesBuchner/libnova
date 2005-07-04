@@ -3905,7 +3905,7 @@ double ln_get_jupiter_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 	
-/*! \fn double ln_get_jupiter_sun_dist (double JD);
+/*! \fn double ln_get_jupiter_solar_dist (double JD);
 * \param JD Julian day.
 * \brief Calculate the distance between Jupiter and the Sun in AU
 * \return Distance in AU.

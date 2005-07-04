@@ -75,7 +75,7 @@ void ln_get_jupiter_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_jupiter_earth_dist (double JD);
 	
-/*! \fn double ln_get_jupiter_sun_dist (double JD);
+/*! \fn double ln_get_jupiter_solar_dist (double JD);
 * \brief Calculate the distance between Jupiter and the Sun.
 * \ingroup jupiter
 * \return Distance in AU

@@ -87,5 +87,29 @@ int main (int argc, char* argv[])
 		print_date ("Set", &set);
 	}
 	
+	/* rise, set and transit time */
+	if (ln_get_lunar_rst (JD - 24, &observer, &rst) == 1) 
+		printf ("Moon is circumpolar\n");
+	else {
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
+		print_date ("Rise", &rise);
+		print_date ("Transit", &transit);
+		print_date ("Set", &set);
+	}
+	
+	/* rise, set and transit time */
+	if (ln_get_lunar_rst (JD - 25, &observer, &rst) == 1) 
+		printf ("Moon is circumpolar\n");
+	else {
+		ln_get_local_date (rst.rise, &rise);
+		ln_get_local_date (rst.transit, &transit);
+		ln_get_local_date (rst.set, &set);
+		print_date ("Rise", &rise);
+		print_date ("Transit", &transit);
+		print_date ("Set", &set);
+	}
+	
 	return 0;
 }

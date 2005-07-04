@@ -378,7 +378,7 @@ double ln_get_pluto_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 	
-/*! \fn double ln_get_pluto_sun_dist (double JD);
+/*! \fn double ln_get_pluto_solar_dist (double JD);
 * \param JD Julian day
 * \return Distance in AU
 *

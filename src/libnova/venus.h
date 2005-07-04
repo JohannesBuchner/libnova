@@ -68,7 +68,7 @@ void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_venus_earth_dist (double JD);
 	
-/*! \fn double ln_get_venus_sun_dist (double JD);
+/*! \fn double ln_get_venus_solar_dist (double JD);
 * \brief Calculate the distance between Venus and the Sun.
 * \ingroup venus
 * \return Distance in AU

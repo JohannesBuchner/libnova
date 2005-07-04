@@ -55,13 +55,13 @@ int ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_
 /* ELP 2000-82B theory */
 void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
 
-/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+/*! \fn void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
 * \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 
 void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
 
-/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 

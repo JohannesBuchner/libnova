@@ -76,3 +76,8 @@ double ln_get_par_comet_mag (double JD, struct ln_par_orbit * orbit, double g, d
 
 	return g + 5.0 * log10 (d) + k * log10 (r);
 }
+
+/*! \example comet.c
+ * 
+ * Examples of how to use comet functions. 
+ */

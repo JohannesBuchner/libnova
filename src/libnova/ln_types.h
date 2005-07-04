@@ -229,8 +229,8 @@ struct ln_rect_posn
 */
 struct ln_gal_posn
 {
-	double l;
-	double b;
+	double l;	/*!< Galactic longitude (degrees) */
+	double b;	/*!< Galactic latitude (degrees) */
 };
 
 /*!

@@ -323,3 +323,8 @@ void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
 	gal->l = ln_range_degrees (303 - ln_rad_to_deg (x));
 	gal->b = ln_rad_to_deg (asin (sin_dec * SIN_27_4 + cos_dec * COS_27_4 * cos_ra_192_25));
 }
+
+/*! \example transforms.c
+ * 
+ * Examples of how to use transformation functions. 
+ */

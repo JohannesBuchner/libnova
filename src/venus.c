@@ -1991,7 +1991,7 @@ double ln_get_venus_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 
-/*! \fn double ln_get_venus_sun_dist (double JD);
+/*! \fn double ln_get_venus_solar_dist (double JD);
 * \param JD Julian day
 * \brief Calculate the distance between Venus and the Sun in AU
 * \return Distance in AU

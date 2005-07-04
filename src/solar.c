@@ -163,3 +163,8 @@ double ln_get_solar_sdiam (double JD)
 	dist = ln_get_earth_solar_dist (JD);
 	return So / dist;
 }
+
+/*! \example sun.c
+ * 
+ * Examples of how to use solar functions. 
+ */

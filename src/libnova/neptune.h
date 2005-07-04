@@ -68,7 +68,7 @@ void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_neptune_earth_dist (double JD);
 	
-/*! \fn double ln_get_neptune_sun_dist (double JD);
+/*! \fn double ln_get_neptune_solar_dist (double JD);
 * \brief Calculate the distance between Neptune and the Sun.
 * \ingroup neptune
 * \return Distance in AU

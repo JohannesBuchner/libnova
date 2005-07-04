@@ -69,7 +69,7 @@ void ln_get_uranus_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_uranus_earth_dist (double JD);
 	
-/*! \fn double ln_get_uranus_sun_dist (double JD);
+/*! \fn double ln_get_uranus_solar_dist (double JD);
 * \brief Calculate the distance between Uranus and the Sun.
 * \ingroup uranus
 * \return Distance in AU

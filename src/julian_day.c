@@ -215,8 +215,8 @@ double ln_get_julian_from_sys()
 	return JD;
 }
 
-/*! \fn double ln_get_julian_local_date(struct ln_zonedate* date)
-* \param date Local date
+/*! \fn double ln_get_julian_local_date(struct ln_zonedate* zonedate)
+* \param zonedate Local date
 * \return Julian day (UT)
 *
 * Calculate Julian day (UT) from zone date
@@ -230,9 +230,9 @@ double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 	return ln_get_julian_day (&date);
 }
 
-/*! \fn void ln_get_local_date (double JD, struct ln_date * date)
+/*! \fn void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 * \param JD Julian day
-* \param date Pointer to new calendar date.
+* \param zonedate Pointer to new calendar date.
 *
 * Calculate the zone date from the Julian day (UT). Get zone info from 
 * system using either _timezone or tm_gmtoff fields.
@@ -340,9 +340,12 @@ double ln_get_julian_from_mpc (char* mpc_date)
 	return JD;
 }
 
-/*! \fn void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate)
-* \brief convert ln_date to ln_zonedate, zero zone info
-* \ingroup conversion
+/*! \fn void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff)
+* \param zonedate Ptr to zonedate
+* \param gmtoff Offset in hours from UT
+* \param date Ptr to date
+*
+* Converts a ln_date (UT) to a ln_zonedate (local time). 
 */
 void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff)
 {
@@ -364,8 +367,10 @@ void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, 
 }
 
 /*! \fn void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
-* \brief convert ln_zonedate to ln_date
-* \ingroup conversion
+* \param zonedate Ptr to zonedate
+* \param date Ptr to date
+*
+* Converts a ln_zonedate (local time) to a ln_date (UT). 
 */
 void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
 {
@@ -381,5 +386,5 @@ void ln_zonedate_to_date (struct ln_zonedate * zonedate, struct ln_date * date)
 
 	jd = ln_get_julian_day (&dat);
 	jd -= zonedate->gmtoff / 86400.0;
-	ln_get_date (jd, &dat);
+	ln_get_date (jd, date);
 }

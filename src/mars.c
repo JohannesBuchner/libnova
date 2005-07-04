@@ -6683,7 +6683,7 @@ double ln_get_mars_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 	
-/*! \fn double ln_get_mars_sun_dist (double JD);
+/*! \fn double ln_get_mars_solar_dist (double JD);
 * \brief Calculate the distance between Mars and the Sun in AU
 * \param JD Julian Day.
 * \return Distance in AU.
@@ -6816,3 +6816,8 @@ void ln_get_mars_rect_helio (double JD, struct ln_rect_posn * position)
 	ln_get_mars_helio_coords (JD, &mars);
 	ln_get_rect_from_helio (&mars, position);
 }
+
+/*! \example mars.c
+ * 
+ * Examples of how to use planetary functions. 
+ */

@@ -2279,7 +2279,7 @@ double ln_get_neptune_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 	
-/*! \fn double ln_get_neptune_sun_dist (double JD);
+/*! \fn double ln_get_neptune_solar_dist (double JD);
 * \brief Calculate the distance between Neptune and the Sun in AU
 * \param JD Julian day
 * \return distance in AU

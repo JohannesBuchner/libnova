@@ -17,10 +17,10 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 
 /*! \mainpage libnova
 * \image html libnova-logo.jpg
-* Celestial Mechanics and Astronomical Calculation Library
+* Celestial Mechanics, Astrometry and Astrodynamics Library
 * 
 * \section intro Introduction
-* libnova is a general purpose, double precision, celestial mechanics and astronomical calculation library.
+* libnova is a general purpose, double precision, Celestial Mechanics, Astrometry and Astrodynamics library.
 *
 * The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects or celestial mechanics.
 * libnova is the calculation engine used by the <A href="http://nova.sf.net">Nova</A> project and most importantly, is free software.
@@ -55,7 +55,7 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.10.1 and was released on the 9th June 2004.
+* The latest released version of libnova is 0.11 and was released on the 4th July 2005.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
@@ -70,13 +70,9 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 * - Documentation. (Not just API reference, but also astronomy info for novice users)
 * - Programming (in C) astronomical solutions or algorithms.
 * - Algorithms and Solutions.
-* - Website and logo.
 *
-* \section contact Contact
-* If you would like further information, then please contact me <A href="mailto:liam@gnova.org">here</A>
-* Note: Email address has recently changed.
-*
-*	Liam Girdwood
+* \section authors Authors
+* libnova is maintained by <A href="mailto:liam@gnova.org">Liam Girdwood</A> and <A href="mailto:petr@kubanek.net">Petr Kubanek</A>.
 *
 * \section thanks Thanks
 * Thanks to Jean Meeus for most of the algorithms used in this library.
@@ -87,6 +83,10 @@ Copyright (C) 2000 Liam Girdwood <liam@gnova.org>
 *
 * Thanks to Messrs. Bretagnon and Francou for publishing planetary 
 * solution VSOP87.
+*
+* Thanks to everyone who has submitted patches. NOTE: I sufferend a disk failure 
+* this year and lost a windows patch. I would be grateful if the author could
+* resubmit it.
 *
 * Also thanks to Sourceforge for hosting this project. <A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=57697&amp;type=5" width="210" height="62" border="0" alt="SourceForge Logo"></A> 
 */

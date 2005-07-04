@@ -67,7 +67,7 @@ void ln_get_pluto_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter 37 */
 double ln_get_pluto_earth_dist (double JD);
 	
-/*! \fn double ln_get_pluto_sun_dist (double JD);
+/*! \fn double ln_get_pluto_solar_dist (double JD);
 * \brief Calculate the distance between Pluto and the Sun.
 * \ingroup pluto
 * \return Distance in AU

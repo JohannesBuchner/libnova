@@ -7420,7 +7420,7 @@ double ln_get_mercury_earth_dist (double JD)
 	return sqrt (x + y + z);
 }
 	
-/*! \fn double ln_get_mercury_sun_dist (double JD);
+/*! \fn double ln_get_mercury_solar_dist (double JD);
 * \brief Calculate the distance between Mercury and the Sun in AU
 * \param JD Julian day
 * \return Distance in AU

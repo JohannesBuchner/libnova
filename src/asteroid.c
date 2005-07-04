@@ -98,3 +98,8 @@ double ln_get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double
 	d = 3.13 - 0.2 * H - (0.5 * log10 (A));
 	return 0.0013788 * d / dist;
 }
+
+/*! \example asteroid.c
+ * 
+ * Examples of how to use asteroid functions. 
+ */

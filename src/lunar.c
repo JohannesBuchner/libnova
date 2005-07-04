@@ -39295,7 +39295,7 @@ void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precis
 	c_Z = moon->Z = c;
 }
 
-/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position, double precision);
+/*! \fn void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
 * \param JD Julian Day
 * \param position Pointer to a struct ln_lnlat_posn to store result.
 * \param precision The truncation level of the series in radians for longitude 
@@ -39313,6 +39313,14 @@ void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, dou
 	ln_get_equ_from_ecl (&ecl, JD, position);
 }
 
+/*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
+* \param JD Julian Day
+* \param position Pointer to a struct ln_lnlat_posn to store result.
+* \ingroup lunar
+*
+* Calculate the lunar RA and DEC for Julian day JD. 
+* Accuracy is better than 10 arcsecs in right ascension and 4 arcsecs in declination.
+*/ 
 void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position)
 {
 	ln_get_lunar_equ_coords_prec (JD, position, 0);
@@ -39516,3 +39524,8 @@ double ln_get_lunar_long_perigee (double JD)
 	per += 4069.0137287 * T - 0.0103200 * T2 - T3 / 80053.0 + T4 / 18999000.0;
 	return per;
 }
+
+/*! \example lunar.c
+ * 
+ * Examples of how to use Lunar functions. 
+ */

@@ -2764,7 +2764,7 @@ void ln_get_earth_helio_coords (double JD, struct ln_helio_posn * position)
 	cR = position->R;
 }
 	
-/*! \fn double ln_get_earth_sun_dist (double JD);
+/*! \fn double ln_get_earth_solar_dist (double JD);
 * \param JD Julian day.
 * \return Distance in AU
 *

@@ -69,7 +69,7 @@ void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 /* Chapter ?? */
 double ln_get_mercury_earth_dist (double JD);
 	
-/*! \fn double ln_get_mercury_sun_dist (double JD);
+/*! \fn double ln_get_mercury_solar_dist (double JD);
 * \brief Calculate the distance between Mercury and the Sun in AU
 * \ingroup mercury
 * \return Distance in AU
