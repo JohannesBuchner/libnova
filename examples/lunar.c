@@ -48,8 +48,8 @@ int main (int argc, char* argv[])
 	struct ln_zonedate rise, transit, set;
 	
 	/* observers location (Edinburgh), used to calc rst */
-	observer.lat = 55.92;
-	observer.lng = -3.18;
+	observer.lat = 55.92; /* 55.92 N */
+	observer.lng = -3.18; /* 3.18 W */
 	
 	/* get the julian day from the local system time */
 	JD = ln_get_julian_from_sys();

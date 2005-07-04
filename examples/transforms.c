@@ -42,8 +42,8 @@ int main (int argc, char * argv[])
 	 * i.e. Long 5d36m30W (Leon, Spain) = 354d24m30
 	 * Lat for Leon = Lat 42d35m40 N 	
 	 */
-	hobserver.lng.degrees = 354;
-	hobserver.lng.minutes = 23;
+	hobserver.lng.degrees = -5;
+	hobserver.lng.minutes = 36;
 	hobserver.lng.seconds = 30;
 	hobserver.lat.degrees = 42;
 	hobserver.lat.minutes = 35;
@@ -53,7 +53,8 @@ int main (int argc, char * argv[])
 	hobject.ra.hours = 5;
 	hobject.ra.minutes = 36;
 	hobject.ra.seconds = 27;
-	hobject.dec.degrees = -1;
+	hobject.dec.neg = 1;
+	hobject.dec.degrees = 1;
 	hobject.dec.minutes = 12;
 	hobject.dec.seconds = 0;
 
