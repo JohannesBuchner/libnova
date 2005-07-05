@@ -1,5 +1,15 @@
 ChangeLog
 
+20050705
+	- *
+	
+	Updated copyright and LGPL.
+
+20050704
+	-src/julian_day.c
+	
+	Bug fix for ln_zonedate_to_date, not setting date ptr.
+
 20050616
 	-src/julian_day.c
 	
