@@ -56,7 +56,7 @@
 * API documentation for libnova is included in the source. It can also be found in this website and an offline tarball is available <A href="http://libnova.sf.net/libnovadocs.tar.gz">here</A>.
 *
 * \section download Download
-* The latest released version of libnova is 0.11 and was released on the 4th July 2005.
+* The latest released version of libnova is 0.11.
 * It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
 *
 * \section cvs CVS
