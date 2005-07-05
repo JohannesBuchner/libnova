@@ -70,7 +70,6 @@ fi
 
 AC_OUTPUT([
 Makefile
-macros/Makefile
 src/Makefile
 src/libnova/Makefile
 lntest/Makefile
