@@ -15,13 +15,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 Copyright 2000 Liam Girdwood  */
 
-
-/*
- * libnova test suite -- pretty scrappy at the moment, needs some proper tests 
- * We need tons of real data to test against. I've only tested against the examples
- * in the Meeus book and some data from the MPC.
- */
-
 #define _GNU_SOURCE
 
 #include <stdio.h>
