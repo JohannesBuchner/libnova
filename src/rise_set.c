@@ -99,30 +99,32 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_
   return 0;
 }
 
+// helper for ln_get_object_next_rst
+void __ln__check_rst (double JD, double *val)
+{
+  while (*val > JD + LN_SIDEREAL_DAY_DAY)
+    *val -= LN_SIDEREAL_DAY_DAY;
+  while (*val < JD)
+    *val += LN_SIDEREAL_DAY_DAY;
+}
+
+/*! \fn double ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+* \brief Calculate the time of next rise, set and transit for an object not orbiting the Sun.
+* E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
+* This function is not too precise, it's good to get general idea when object will rise.
+* \ingroup rst
+*/
+
 int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_posn *object, struct ln_rst_time *rst)
 {
-  struct ln_rst_time rst_p0;
-  double t_JD = JD;
   int ret;
-  ret = ln_get_object_rst (JD, observer, object, &rst_p0);
+  ret = ln_get_object_rst (JD, observer, object, rst);
   if (ret)
     // circumpolar
     return ret;
-#define get_next_rst(val) \
-	while (1) \
-	{ \
-		if (rst_p0.val < JD) \
-			t_JD = t_JD + 1; \
-		else if (rst_p0.val > JD + 1) \
-			t_JD = t_JD - 1; \
-		else \
-			break; \
-		ln_get_object_rst (t_JD, observer, object, &rst_p0); \
-	} \
-	rst->val = rst_p0.val;
-  get_next_rst (rise);
-  get_next_rst (set);
-  get_next_rst (transit);
+  __ln__check_rst (JD, &rst->rise);
+  __ln__check_rst (JD, &rst->transit);
+  __ln__check_rst (JD, &rst->set);
 #undef get_next_rst
   return ret;
 }

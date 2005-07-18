@@ -188,7 +188,7 @@ double ln_get_julian_from_timet (time_t * in_time)
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \param JD Julian day
-* \param time Pointer to store time_t
+* \param in_time Pointer to store time_t
 *
 * Calculate time_t from julian day
 */

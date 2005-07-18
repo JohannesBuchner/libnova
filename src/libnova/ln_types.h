@@ -28,7 +28,11 @@ extern "C" {
 #define M_PI_2          1.5707963267948966192313216916398
 #define M_PI_4          0.78539816339744830961566084581988
 #define M_PI            3.1415926535897932384626433832795
-#endif	
+#endif
+
+/* sideral day lenght in seconds and days (for JD)*/
+#define LN_SIDEREAL_DAY_SEC 86164.09
+#define LN_SIDEREAL_DAY_DAY LN_SIDEREAL_DAY_SEC/86400
 	
 /*!
 ** Date

@@ -1,5 +1,15 @@
 ChangeLog
 
+20050717
+	-src/rise_set.c
+	-src/libnova/rise_set.c
+
+	Add LN_SIDEREAL_DAY_SEC and LN_SIDEREAL_DAY_DAY #defines, fix error
+	in ln_get_object_next_rst (infinite loop in while on some special
+	occasions).
+
+	Petr Kubanek
+
 *********** release of 0.11.0
 
 20050705

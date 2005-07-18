@@ -72,7 +72,7 @@ void ln_get_date_from_sys (struct ln_date * date);
 */
 double ln_get_julian_from_timet (time_t * in_time);
 
-/*! \fn void ln_get_timet_from_julian (double JD, time_t * time)
+/*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \brief Calculate time_t from julian day
 * \ingroup calendar
 */
