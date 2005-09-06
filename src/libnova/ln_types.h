@@ -33,6 +33,9 @@ extern "C" {
 /* sideral day lenght in seconds and days (for JD)*/
 #define LN_SIDEREAL_DAY_SEC 86164.09
 #define LN_SIDEREAL_DAY_DAY LN_SIDEREAL_DAY_SEC/86400
+
+/* 1.1.2000 Julian Day & others */
+#define JD2000		2451545.0
 	
 /*!
 ** Date

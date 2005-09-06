@@ -335,7 +335,7 @@ int aberration_test (void)
 int precession_test(void)
 {
 	double JD;
-	struct ln_equ_posn object, pos;
+	struct ln_equ_posn object, pos, pos2;
 	struct lnh_equ_posn hobject;
 	int failed = 0;
 	
@@ -353,6 +353,17 @@ int precession_test(void)
 	ln_get_equ_prec (&object, JD, &pos);
 	failed += test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.54306131, 0.00000001);
 	failed += test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.34921505, 0.00000001);
+
+	ln_get_equ_prec2 (&object, JD2000, JD, &pos);
+
+	failed += test_result ("(Precession 2) RA on JD 2462088.69  ", pos.ra, 41.54306131, 0.00000001);
+	failed += test_result ("(Precession 2) DEC on JD 2462088.69  ", pos.dec, 49.34921505, 0.00000001);
+
+	ln_get_equ_prec2 (&pos, JD, JD2000, &pos2);
+
+	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, object.ra, 0.00000001);
+	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, object.dec, 0.00000001);
+
 	return failed;
 }
 

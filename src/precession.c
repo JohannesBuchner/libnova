@@ -33,19 +33,18 @@
 * Uses mean equatorial coordinates and is
 * only for initial epoch J2000.0 
 */
-/* Equ 20.2, 20.3, 20.4 pg 126 
+/* Equ 20.3, 20.4 pg 126 
 */
 void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_equ_posn * position)
 {
-	long double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T;
+	long double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec;
 	
 	/* change original ra and dec to radians */
 	mean_ra = ln_deg_to_rad(mean_position->ra);
 	mean_dec = ln_deg_to_rad(mean_position->dec);
 
-	/* calc t, T, zeta, eta and theta for J2000.0 Equ 20.3 */
-	t = (JD - 2451545.0) / 36525.0;
-	T = t * 100.0;
+	/* calc t, zeta, eta and theta for J2000.0 Equ 20.3 */
+	t = (JD - JD2000) / 36525.0;
 	t *= 1.0 / 3600.0;
 	t2 = t * t;
 	t3 = t2 *t;
@@ -55,10 +54,6 @@ void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	zeta = ln_deg_to_rad(zeta);
 	eta = ln_deg_to_rad(eta);
 	theta = ln_deg_to_rad(theta); 
-/*	zeta = range_radians(zeta);
-	eta = range_radians(eta);
-	theta = range_radians(theta);
-*/	
 
 	/* calc A,B,C equ 20.4 */
 	A = cos(mean_dec) * sin(mean_ra + zeta);
@@ -81,6 +76,60 @@ void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	position->dec = ln_rad_to_deg (dec);
 }
 
+/*! \fn void ln_get_equ_prec2 (struct ln_equ_posn * mean_position, double fromJD, double toJD, struct ln_equ_posn * position);
+*
+* \param mean_position Mean object position
+* \param JD Julian day
+* \param position Pointer to store new object position.
+*
+* Calculate the effects of precession on equatorial coordinates, between arbitary Jxxxx epochs.
+* Use fromJD and toJD parameters to specify required Jxxxx epochs.
+*/
+
+/* Equ 20.2, 20.4 pg 126 */
+void ln_get_equ_prec2 (struct ln_equ_posn * mean_position, double fromJD, double toJD, struct ln_equ_posn * position)
+{
+	long double t, t2, t3, A, B, C, zeta, eta, theta, ra, dec, mean_ra, mean_dec, T, T2;
+	
+	/* change original ra and dec to radians */
+	mean_ra = ln_deg_to_rad(mean_position->ra);
+	mean_dec = ln_deg_to_rad(mean_position->dec);
+
+	/* calc t, T, zeta, eta and theta Equ 20.2 */
+	T = (fromJD - JD2000) / 36525.0;
+	T *= 1.0 / 3600.0;
+	t = (toJD - fromJD) / 36525.0;
+	t *= 1.0 / 3600.0;
+	T2 = T * T;
+	t2 = t * t;
+	t3 = t2 *t;
+	zeta = (2306.2181 + 1.39656 * T - 0.000139 * T2) * t + (0.30188 - 0.000344 * T) * t2 + 0.017998 * t3;
+	eta = (2306.2181 + 1.39656 * T - 0.000139 * T2) * t + (1.09468 + 0.000066 * T) * t2 + 0.018203 * t3;
+	theta = (2004.3109 - 0.85330 * T - 0.000217 * T2) * t - (0.42665 + 0.000217 * T) * t2 - 0.041833 * t3;
+	zeta = ln_deg_to_rad(zeta);
+	eta = ln_deg_to_rad(eta);
+	theta = ln_deg_to_rad(theta); 
+
+	/* calc A,B,C equ 20.4 */
+	A = cos(mean_dec) * sin(mean_ra + zeta);
+	B = cos(theta) * cos(mean_dec) * cos(mean_ra + zeta) - sin(theta) * sin (mean_dec);
+	C = sin(theta) * cos (mean_dec) * cos(mean_ra + zeta) + cos(theta) * sin(mean_dec);
+	
+	ra = atan2 (A,B) + eta;
+	
+	/* check for object near celestial pole */
+	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
+		/* close to pole */
+		dec = acos(sqrt(A * A + B * B));
+	} else {
+		/* not close to pole */
+		dec = asin (C);
+	}
+
+	/* change to degrees */
+	position->ra = ln_rad_to_deg (ra);
+	position->dec = ln_rad_to_deg (dec);
+}
 
 /*! \fn void ln_get_ecl_prec (struct ln_lnlat_posn * mean_position, double JD, struct ln_lnlat_posn * position)
 * \param mean_position Mean object position
