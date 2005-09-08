@@ -1,5 +1,13 @@
 ChangeLog
 
+20050908
+	-src/parallax.c
+	-src/libnova/parallax.h
+
+	Add Parallax routines (Ch. 39).
+
+	Petr Kubanek
+
 20050906
         -src/precession.c
 

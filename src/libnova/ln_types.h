@@ -153,7 +153,7 @@ struct lnh_lnlat_posn
 
 struct ln_equ_posn
 {
-    double ra;	/*!< RA. Object right ascension.*/
+    double ra;	/*!< RA. Object right ascension in degrees.*/
     double dec;	/*!< DEC. Object declination */
 };
 

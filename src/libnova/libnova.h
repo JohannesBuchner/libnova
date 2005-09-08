@@ -127,5 +127,6 @@
 #include <libnova/ln_types.h>
 #include <libnova/utility.h>
 #include <libnova/hyperbolic_motion.h>
+#include <libnova/parallax.h>
 
 #endif

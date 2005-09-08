@@ -835,6 +835,51 @@ int rst_test ()
 	return failed;
 }
 
+int parallax_test ()
+{
+	struct ln_equ_posn mars, parallax;
+  	struct ln_lnlat_posn observer;
+	struct ln_dms dms;
+	struct ln_date date;
+	double jd;
+	int failed = 0;
+
+	dms.neg = 0;
+	dms.degrees = 33;
+	dms.minutes = 21;
+	dms.seconds = 22;
+	
+	observer.lat = ln_dms_to_deg (&dms);
+
+	dms.neg = 1;
+	dms.degrees = 116;
+	dms.minutes = 51;
+	dms.seconds = 47;
+	
+	observer.lng = ln_dms_to_deg (&dms);
+
+	date.years = 2003;
+	date.months = 8;
+	date.days = 28;
+
+	date.hours = 3;
+	date.minutes = 17;
+	date.seconds = 0;
+
+	jd = ln_get_julian_day (&date);
+
+	ln_get_mars_equ_coords (jd, &mars);
+
+	ln_get_parallax (&mars, ln_get_mars_earth_dist (jd), &observer, 1706, jd, &parallax);
+
+	/* parallax is hard to calculate, so we allow relatively big errror */
+
+	failed += test_result ("Mars RA parallax for Palomar observatory at 2003/08/28 3:17 UT  ", parallax.ra, 0.0053917, 0.00001);
+	failed += test_result ("Mars DEC parallax for Palomar observatory at 2003/08/28 3:17 UT  ", parallax.dec, -14.1 / 3600.0, 0.00002);
+
+	return failed;
+}
+
 int angular_test ()
 {
 	int failed = 0;
@@ -891,6 +936,7 @@ int main ()
 	failed += parabolic_motion_test ();
 	failed += hyperbolic_motion_test ();
 	failed += rst_test ();
+	failed += parallax_test ();
 	failed += angular_test();
 	failed += utility_test();
 	
