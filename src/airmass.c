@@ -33,5 +33,5 @@ double ln_get_airmass (double alt, double airmass_scale)
 {
   double a;
   a = airmass_scale * sin (ln_deg_to_rad (alt));
-  return (a * a + 2 * airmass_scale + 1) - a;
+  return sqrt (a * a + 2 * airmass_scale + 1) - a;
 }
