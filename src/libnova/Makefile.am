@@ -32,4 +32,6 @@ include_HEADERS = \
 	angular_separation.h \
 	ln_types.h \
 	utility.h \
-	hyperbolic_motion.h
+	hyperbolic_motion.h \
+	parallax.h \
+	airmass.h

@@ -35,7 +35,8 @@ libnova_la_SOURCES = \
 	rise_set.c \
 	angular_separation.c \
 	hyperbolic_motion.c \
-	parallax.c
+	parallax.c \
+	airmass.c
 
 libnova_la_LDFLAGS = \
 	-version-info $(LT_VERSION) \

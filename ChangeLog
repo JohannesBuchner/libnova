@@ -1,5 +1,13 @@
 ChangeLog
 
+20050914
+	-src/airmass.h
+	-src/libnova/airmass.h
+
+	Airmass code
+
+	Petr Kubanek
+
 20050908
 	-src/parallax.c
 	-src/libnova/parallax.h

@@ -128,5 +128,6 @@
 #include <libnova/utility.h>
 #include <libnova/hyperbolic_motion.h>
 #include <libnova/parallax.h>
+#include <libnova/airmass.h>
 
 #endif
