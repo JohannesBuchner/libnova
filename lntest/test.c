@@ -337,6 +337,7 @@ int precession_test(void)
 	double JD;
 	struct ln_equ_posn object, pos, pos2;
 	struct lnh_equ_posn hobject;
+	struct ln_date grb_date;
 	int failed = 0;
 	
 	/* object position */
@@ -363,6 +364,24 @@ int precession_test(void)
 
 	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, object.ra, 0.00000001);
 	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, object.dec, 0.00000001);
+
+	// INTEGRAL GRB050922A coordinates lead to RA not in <0-360> range
+	pos.ra = 271.2473;
+	pos.dec = -32.0227;
+
+	grb_date.years = 2005;
+	grb_date.months = 9;
+	grb_date.days = 22;
+	grb_date.hours = 13;
+	grb_date.minutes = 43;
+	grb_date.seconds = 18; 
+
+	JD = ln_get_julian_day (&grb_date);
+
+	ln_get_equ_prec2 (&pos, JD, JD2000, &pos2);
+
+	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, 271.1541, 0.0001);
+	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, -32.0235, 0.001);
 
 	return failed;
 }

@@ -72,7 +72,7 @@ void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	}
 
 	/* change to degrees */
-	position->ra = ln_rad_to_deg (ra);
+	position->ra = ln_range_degrees (ln_rad_to_deg (ra));
 	position->dec = ln_rad_to_deg (dec);
 }
 
@@ -127,7 +127,7 @@ void ln_get_equ_prec2 (struct ln_equ_posn * mean_position, double fromJD, double
 	}
 
 	/* change to degrees */
-	position->ra = ln_rad_to_deg (ra);
+	position->ra = ln_range_degrees (ln_rad_to_deg (ra));
 	position->dec = ln_rad_to_deg (dec);
 }
 

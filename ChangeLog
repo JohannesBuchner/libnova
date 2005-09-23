@@ -1,5 +1,13 @@
 ChangeLog
 
+20050922
+	-src/precession.c
+
+	Return ln_range_degrees of ra, otherwise we can get < 0 ra from prec2
+	function.
+
+	Petr Kubanek
+
 20050914
 	-src/airmass.h
 	-src/libnova/airmass.h
