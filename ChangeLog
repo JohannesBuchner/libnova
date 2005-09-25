@@ -1,5 +1,10 @@
 ChangeLog
 
+20050925 
+	-src/utility.c
+
+	Fixed bug in degrees --> dms overflows
+
 20050922
 	-src/precession.c
 

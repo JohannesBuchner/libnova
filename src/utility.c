@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.10 2005-07-05 09:16:06 l_girdwood Exp $
+/* $Id: utility.c,v 1.11 2005-09-25 20:51:07 l_girdwood Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -132,6 +132,16 @@ void ln_deg_to_hms (double degrees, struct ln_hms * hms)
 
     /* divide remainder by 60 to get seconds */
     hms->seconds = dtemp * 60.0;
+    
+    /* catch any overflows */
+    if (hms->seconds > 59) {
+    	hms->seconds = 0;
+    	hms->minutes ++;
+    }
+    if (hms->minutes > 59) {
+    	hms->minutes = 0;
+    	hms->hours ++;
+    }
 }
 
 /* convert radians to hh:mm:ss */
@@ -153,6 +163,16 @@ void ln_rad_to_hms (double radians, struct ln_hms * hms)
 
     /* divide remainder by 60 to get seconds */
     hms->seconds = dtemp * 60.0;
+    
+    /* catch any overflows */
+    if (hms->seconds > 59) {
+    	hms->seconds = 0;
+    	hms->minutes ++;
+    }
+    if (hms->minutes > 59) {
+    	hms->minutes = 0;
+    	hms->hours ++;
+    }
 }
 
 
@@ -208,6 +228,16 @@ void ln_deg_to_dms (double degrees, struct ln_dms * dms)
     
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
+    
+    /* catch any overflows */
+    if (dms->seconds > 59) {
+    	dms->seconds = 0;
+    	dms->minutes ++;
+    }
+    if (dms->minutes > 59) {
+    	dms->minutes = 0;
+    	dms->degrees ++;
+    }
 }
 
 /* convert radians to dms */
@@ -232,6 +262,16 @@ void ln_rad_to_dms (double radians, struct ln_dms * dms)
     
     /* divide remainder by 60 to get seconds */
     dms->seconds = dtemp * 60;
+    
+     /* catch any overflows */
+    if (dms->seconds > 59) {
+    	dms->seconds = 0;
+    	dms->minutes ++;
+    }
+    if (dms->minutes > 59) {
+    	dms->minutes = 0;
+    	dms->degrees ++;
+    }
 }
 
 
@@ -516,7 +556,7 @@ double ln_get_dec_location(char *s)
 {
 	char *ptr, *dec, *hh, *ame, *tok_ptr;
 	BOOL negative = FALSE;
-	char delim1[] = " :.,;ºDdHhMm'\n\t";
+	char delim1[] = " :.,;DdHhMm'\n\t";
 	char delim2[] = " NSEWnsew\"\n\t";
 	int dghh = 0, minutes = 0;
 	double seconds = 0.0, pos;
