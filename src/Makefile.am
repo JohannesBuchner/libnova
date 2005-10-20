@@ -40,5 +40,6 @@ libnova_la_SOURCES = \
 
 libnova_la_LDFLAGS = \
 	-version-info $(LT_VERSION) \
-	-release $(LT_RELEASE) 
+	-release $(LT_RELEASE) \
+	-no-undefined \
 	-export-dynamic

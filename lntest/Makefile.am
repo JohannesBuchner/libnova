@@ -14,7 +14,7 @@ libnovaconfig_SOURCES = \
 	
 		
 INCLUDES = \
-	 -Wall -I../src
+	 -Wall -I$(top_srcdir)/src
 
 lntest_LDADD = \
 	../src/libnova.la

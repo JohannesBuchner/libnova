@@ -1,5 +1,5 @@
 doc: doxyfile
-	-doxygen
+	-doxygen doxyfile
 
 clean:
 	rm -fr html man
@@ -7,4 +7,4 @@ clean:
 maintainer-clean: clean
 	rm -fr Makefile
 	
-EXTRA_DIST = doxyfile libnova-logo.jpg
+EXTRA_DIST = doxyfile.in libnova-logo.jpg

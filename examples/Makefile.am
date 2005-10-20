@@ -27,7 +27,7 @@ transforms_SOURCES = \
 	transforms.c
 	
 INCLUDES = \
-	 -Wall -I../src
+	 -Wall -I$(top_srcdir)/src
 
 lunar_LDADD = \
 	../src/libnova.la
