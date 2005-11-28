@@ -1,6 +1,11 @@
 ChangeLog
 
 20051128
+	-configure.in
+	
+	Removed doxygen.in reference from configure
+
+20051128
 	-src/precession.c
 
 	Fixed doxygen warning in precession.

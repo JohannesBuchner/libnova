@@ -74,6 +74,5 @@ src/Makefile
 src/libnova/Makefile
 lntest/Makefile
 doc/Makefile
-doc/doxyfile
 examples/Makefile
 ])
