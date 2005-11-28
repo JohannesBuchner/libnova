@@ -66,6 +66,8 @@ void ln_get_equ_prec (struct ln_equ_posn * mean_position, double JD, struct ln_e
 	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
 		/* close to pole */
 		dec = acos(sqrt(A * A + B * B));
+		if (mean_dec < 0.)
+		  dec *= -1; /* 0 <= acos() <= PI */
 	} else {
 		/* not close to pole */
 		dec = asin (C);
@@ -122,6 +124,8 @@ void ln_get_equ_prec2 (struct ln_equ_posn * mean_position, double fromJD, double
 	if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
 		/* close to pole */
 		dec = acos(sqrt(A * A + B * B));
+		if (mean_dec < 0.)
+		  dec *= -1; /* 0 <= acos() <= PI */
 	} else {
 		/* not close to pole */
 		dec = asin (C);
