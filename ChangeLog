@@ -1,5 +1,11 @@
 ChangeLog
 
+20051128
+	-src/precession.c
+
+	Fixed doxygen warning in precession.
+	
+
 20051020
 	[#1315356] applied
 
