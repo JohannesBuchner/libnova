@@ -35,7 +35,11 @@ extern "C" {
 #define LN_SIDEREAL_DAY_DAY LN_SIDEREAL_DAY_SEC/86400
 
 /* 1.1.2000 Julian Day & others */
-#define JD2000		2451545.0
+#define JD2000          2451545.0
+#define JD2050          2469807.50
+
+#define B1900           2415020.3135
+#define B1950           2433282.4235
 	
 /*!
 ** Date
