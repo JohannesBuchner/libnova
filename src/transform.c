@@ -21,6 +21,7 @@
 #include <libnova/utility.h>
 #include <libnova/sidereal_time.h>
 #include <libnova/nutation.h>
+#include <libnova/precession.h>
 
 /*! \fn void ln_get_rect_from_helio (struct ln_helio_posn *object, struct ln_rect_posn * position); 
 * \param object Object heliocentric coordinates
@@ -69,7 +70,6 @@ void ln_get_rect_from_helio
 *
 * TODO:
 * Transform horizontal coordinates to galactic coordinates.
-* Transfrom equatorial coordinates to galactic coordinates - improve (solve B1950 issues etc.).
 */
 
 void ln_get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
@@ -211,7 +211,7 @@ void ln_get_equ_from_ecl (struct ln_lnlat_posn * object, double JD, struct ln_eq
 }
 
 /*! \fn void ln_get_ecl_from_equ (struct ln_equ_posn * object, double JD, struct ln_lnlat_posn * position)
-* \param object Object coordinates.
+* \param object Object coordinates in B1950. Use ln_get_equ_prec2 to transform from J2000.
 * \param JD Julian day
 * \param position Pointer to store new position.
 *
@@ -260,9 +260,9 @@ void ln_get_ecl_from_rect (struct ln_rect_posn * rect, struct ln_lnlat_posn * po
 
 /*! \fn void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
 * \param gal Galactic coordinates.
-* \param equ Equatorial coordinates.
+* \param equ B1950 equatorial coordinates. Use ln_get_equ_prec2 to transform to J2000.
 * 
-* Transform an object galactic coordinates into equatorial coordinate.
+* Transform an object galactic coordinates into B1950 equatorial coordinate.
 */
 /* Pg 94 */
 void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
@@ -290,11 +290,23 @@ void ln_get_equ_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
 	equ->dec = ln_rad_to_deg (asin (sin_b * SIN_27_4 + cos_b * COS_27_4 * cos_l_123));
 }
 
+/*! \fn void ln_get_equ2000_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
+* \param gal Galactic coordinates.
+* \param equ J2000 equatorial coordinates.
+* 
+* Transform an object galactic coordinates into equatorial coordinate.
+*/
+void ln_get_equ2000_from_gal (struct ln_gal_posn *gal, struct ln_equ_posn *equ)
+{
+	ln_get_equ_from_gal (gal, equ);
+	ln_get_equ_prec2 (equ, B1950, JD2000, equ);
+}
+
 /*! \fn ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
-* \param equ Equatorial coordinates.
+* \param equ B1950 equatorial coordinates.
 * \param gal Galactic coordinates.
 * 
-* Transform an object equatorial coordinate into galactic coordinates.
+* Transform an object B1950 equatorial coordinate into galactic coordinates.
 */
 /* Pg 94 */
 void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
@@ -321,6 +333,19 @@ void ln_get_gal_from_equ (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
 	x = atan2 (sin (ra_192_25), cos_ra_192_25 * SIN_27_4 - (sin_dec / cos_dec) * COS_27_4);
 	gal->l = ln_range_degrees (303 - ln_rad_to_deg (x));
 	gal->b = ln_rad_to_deg (asin (sin_dec * SIN_27_4 + cos_dec * COS_27_4 * cos_ra_192_25));
+}
+
+/*! \fn void ln_get_gal_from_equ2000 (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
+* \param equ J2000 equatorial coordinates.
+* \param gal Galactic coordinates.
+* 
+* Transform an object J2000 equatorial coordinate into galactic coordinates.
+*/
+void ln_get_gal_from_equ2000 (struct ln_equ_posn *equ, struct ln_gal_posn *gal)
+{
+	struct ln_equ_posn equ_1950;
+	ln_get_equ_prec2 (equ, JD2000, B1950, &equ_1950);
+	ln_get_gal_from_equ (&equ_1950, gal);
 }
 
 /*! \example transforms.c
