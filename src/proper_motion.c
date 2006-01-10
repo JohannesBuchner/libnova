@@ -36,21 +36,7 @@
 */
 void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 {
-	long double mean_ra, mean_dec, T;
-	
-	T = (JD - 2451545.0) / 365.25;
-	
-	/* change original ra and dec to radians */
-	mean_ra = ln_deg_to_rad(mean_position->ra);
-	mean_dec = ln_deg_to_rad(mean_position->dec);
-
-	/* calc proper motion */
-	mean_ra += T * ln_deg_to_rad(proper_motion->ra);
-	mean_dec += T * ln_deg_to_rad(proper_motion->dec);
-	
-	/* change to degrees */
-	position->ra = ln_rad_to_deg (mean_ra);
-	position->dec = ln_rad_to_deg (mean_dec);
+	ln_get_equ_pm_epoch (mean_position, proper_motion, JD, JD2000, position);
 }
 
 /*! \fn void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
@@ -68,18 +54,22 @@ void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * pro
 void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
 {
 	long double mean_ra, mean_dec, T;
+	long double d;
 	
 	T = (JD - epoch_JD) / 365.25;
 	
 	/* change original ra and dec to radians */
-	mean_ra = ln_deg_to_rad(mean_position->ra);
-	mean_dec = ln_deg_to_rad(mean_position->dec);
+	mean_ra = mean_position->ra;
+	mean_dec = mean_position->dec;
 
 	/* calc proper motion */
-	mean_ra += T * ln_deg_to_rad(proper_motion->ra);
-	mean_dec += T * ln_deg_to_rad(proper_motion->dec);
+	d = T * proper_motion->ra;
+	mean_ra += d;
+
+	d = T * proper_motion->dec;
+	mean_dec += d;
 	
 	/* change to degrees */
-	position->ra = ln_rad_to_deg (mean_ra);
-	position->dec = ln_rad_to_deg (mean_dec);
+	position->ra = ln_range_degrees (mean_ra);
+	position->dec = ln_range_degrees (mean_dec);
 }
