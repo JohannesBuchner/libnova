@@ -1,5 +1,22 @@
 ChangeLog
 
+20060110
+	-src/precession.c
+
+	Changed to long double, use l goniometric functions
+
+	-src/proper_motion.c
+
+	Code cleanup.
+
+	-src/transform.c
+
+	Solve B1950 and J2000 issues in galactic coordinates transformation.
+
+	Add tests.
+
+	Petr Kubanek
+
 20051128
 	-configure.in
 	

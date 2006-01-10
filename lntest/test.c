@@ -257,7 +257,14 @@ int transform_test(void)
 	ln_get_gal_from_equ (&equ, &gal);
 	failed += test_result ("(Transforms) Equ to Gal b", gal.b, 90, 0.00000001);
 
-	// TODO add another test
+	// Swift triger 174738
+	
+	equ.ra = 125.2401;
+	equ.dec = +31.9260;
+
+	ln_get_gal_from_equ2000 (&equ, &gal);
+	failed += test_result ("(Transforms) Equ J2000 to Gal l", gal.l, 190.54, 0.005);
+	failed += test_result ("(Transforms) Equ J2000 to Gal b", gal.b, 31.92, 0.005);
 
 	return failed;
 }    
@@ -335,7 +342,7 @@ int aberration_test (void)
 int precession_test(void)
 {
 	double JD;
-	struct ln_equ_posn object, pos, pos2;
+	struct ln_equ_posn object, pos, pos2, pm;
 	struct lnh_equ_posn hobject;
 	struct ln_date grb_date;
 	int failed = 0;
@@ -351,19 +358,28 @@ int precession_test(void)
 
 	JD = 2462088.69;
 	ln_hequ_to_equ (&hobject, &object);
+
+	pm.ra = 0.03425 * (15.0 / 3600.0);
+	pm.dec = -0.0895 / 3600.0;
+	
+	ln_get_equ_pm (&object, &pm, JD, &object);
+
+	failed += test_result ("(Proper motion) RA on JD 2462088.69  ", object.ra, 41.054063, 0.00001);
+	failed += test_result ("(Proper motion) DEC on JD 2462088.69  ", object.dec, 49.227750, 0.00001);
+
 	ln_get_equ_prec (&object, JD, &pos);
-	failed += test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.54306131, 0.00000001);
-	failed += test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.34921505, 0.00000001);
+	failed += test_result ("(Precession) RA on JD 2462088.69  ", pos.ra, 41.547214, 0.00003);
+	failed += test_result ("(Precession) DEC on JD 2462088.69  ", pos.dec, 49.348483, 0.00001);
 
 	ln_get_equ_prec2 (&object, JD2000, JD, &pos);
 
-	failed += test_result ("(Precession 2) RA on JD 2462088.69  ", pos.ra, 41.54306131, 0.00000001);
-	failed += test_result ("(Precession 2) DEC on JD 2462088.69  ", pos.dec, 49.34921505, 0.00000001);
+	failed += test_result ("(Precession 2) RA on JD 2462088.69  ", pos.ra, 41.547214, 0.00003);
+	failed += test_result ("(Precession 2) DEC on JD 2462088.69  ", pos.dec, 49.348483, 0.00001);
 
 	ln_get_equ_prec2 (&pos, JD, JD2000, &pos2);
 
-	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, object.ra, 0.00000001);
-	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, object.dec, 0.00000001);
+	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, object.ra, 0.00001);
+	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, object.dec, 0.00001);
 
 	// INTEGRAL GRB050922A coordinates lead to RA not in <0-360> range
 	pos.ra = 271.2473;
@@ -380,8 +396,41 @@ int precession_test(void)
 
 	ln_get_equ_prec2 (&pos, JD, JD2000, &pos2);
 
-	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, 271.1541, 0.0001);
-	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, -32.0235, 0.001);
+	failed += test_result ("(Precession 2) RA on JD 2451545.0  ", pos2.ra, 271.1541, 0.0002);
+	failed += test_result ("(Precession 2) DEC on JD 2451545.0  ", pos2.dec, -32.0235, 0.0002);
+
+	// second test from AA, p. 128
+	hobject.ra.hours = 2;
+	hobject.ra.minutes = 31;
+	hobject.ra.seconds = 48.704;
+	hobject.dec.neg = 0;
+	hobject.dec.degrees = 89;
+	hobject.dec.minutes = 15;
+	hobject.dec.seconds = 50.72;
+
+	ln_hequ_to_equ (&hobject, &object);
+
+	// proper motions
+	pm.ra = ((long double) 0.19877) * (15.0 / 3600.0);
+	pm.dec = ((long double) -0.0152) / 3600.0;
+
+	ln_get_equ_pm (&object, &pm, B1900, &pos);
+	
+	ln_get_equ_prec2 (&pos, JD2000, B1900, &pos2);
+
+	// the position is so close to pole, that it depends a lot on how precise
+	// functions we will use. So we get such big errors compared to Meeus.
+	// I checked results agains SLAlib on-line calculator and SLAlib performs even worse then we
+	
+	failed += test_result ("(Precision 2) RA on B1900  ", pos2.ra, 20.6412499980, 0.002);
+	failed += test_result ("(Precision 2) DEC on B1900  ", pos2.dec, 88.7739388888, 0.0001);
+
+	ln_get_equ_pm (&object, &pm, JD2050, &pos);
+
+	ln_get_equ_prec2 (&pos, JD2000, JD2050, &pos2);
+
+	failed += test_result ("(Precision 2) RA on J2050  ", pos2.ra, 57.0684583320, 0.003);
+	failed += test_result ("(Precision 2) DEC on J2050  ", pos2.dec, 89.4542722222, 0.0001);
 
 	return failed;
 }
