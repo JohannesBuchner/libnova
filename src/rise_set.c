@@ -28,13 +28,13 @@
 * \param observer Observers position
 * \param object Object position
 * \param rst Pointer to store Rise, Set and Transit time in JD
-* \return 0 for success, else 1 for circumpolar.
+* \return 0 for success, 1 for circumpolar (above horizont), -1 for circumpolar (bellow horizont)
 *
 * Calculate the time the rise, set and transit (crosses the local meridian at upper culmination)
 * time of the object for the given Julian day.
 *
 * Note: this functions returns 1 if the object is circumpolar, that is it remains the whole
-* day either above or below the horizon.
+* day above the horizon. Returns -1 when it remains whole day bellow horizont.
 */
 int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_posn *object, struct ln_rst_time *rst)
 {
@@ -63,11 +63,22 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_
 
   H1 = H0 / H1;
 
-  /* check if body is circumpolar */
-  if (H1 > 1.0)
-    return (1);
-  if (H1 < -1.0)
-    return (-1);
+  /* check if body is circumpolar; see note 2 in chapter 15 */
+  if (fabs(H1) > 1.0)
+  {
+    if (observer->lat > 0)
+    {
+      if (object->dec < 0)
+	return -1;
+    }
+    else if (observer->lat < 0)
+    {
+      if (object->dec > 0)
+	return -1;
+    }
+    // on equator, object cannot be always bellow horizont
+    return 1;
+  }
 
   H0 = acos (H1);
   H0 = ln_rad_to_deg (H0);
@@ -108,7 +119,7 @@ void __ln__check_rst (double JD, double *val)
     *val += LN_SIDEREAL_DAY_DAY;
 }
 
-/*! \fn double ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+/*! \fn int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
 * \brief Calculate the time of next rise, set and transit for an object not orbiting the Sun.
 * E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
 * This function is not too precise, it's good to get general idea when object will rise.
