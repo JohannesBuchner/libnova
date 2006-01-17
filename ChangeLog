@@ -1,5 +1,17 @@
 ChangeLog
 
+20060117
+	-src/rise_set.c
+
+	Bug fixed error at calculation whenever circumpolar object is always
+	above or bellow horizont.
+
+	-lntest/test.c
+
+	Add tests for ln_get_object_rst function.
+
+	Petr Kubanek
+
 20060110
 	-src/precession.c
 
