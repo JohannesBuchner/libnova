@@ -892,14 +892,115 @@ int hyperbolic_motion_test ()
 int rst_test ()
 {
 	struct ln_lnlat_posn observer;
-	struct ln_rst_time time;
+	struct ln_rst_time rst;
+	struct ln_hms hms;
+	struct ln_dms dms;
+	struct ln_date date;
+	struct ln_equ_posn object;
+	double JD;
 	int failed = 0;
-	double JD = ln_get_julian_from_sys ();
-	
-	observer.lng = 3;
+
+	// Arcturus
+	hms.hours = 14;
+	hms.minutes = 15;
+	hms.seconds = 39.67;
+
+	dms.neg = 0;
+	dms.degrees = 19;
+	dms.minutes = 10;
+	dms.seconds = 56.7;
+
+	object.ra = ln_hms_to_deg (&hms);
+	object.dec = ln_dms_to_deg (&dms);
+
+	date.years = 2006;
+	date.months = 1;
+	date.days = 17;
+
+	date.hours = 0;
+	date.minutes = 0;
+	date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	observer.lng = 15;
 	observer.lat = 51;
+
+	if (ln_get_object_rst (JD, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
+		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 44, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 30, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus set hour on 2006/01/17 at (15 E,51 N)", date.hours, 13, 0);
+		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 16, 0);
+	}
+
+	observer.lat = -51;
+
+	if (ln_get_object_rst (JD, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 S)", date.hours, 1, 0);
+		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 S)", date.minutes, 8, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 S)", date.hours, 5, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 30, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus set hour on 2006/01/17 at (15 E,51 S)", date.hours, 9, 0);
+		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 52, 0);
+	}
 	
-	ln_get_solar_rst (JD, &observer, &time);
+	if (ln_get_solar_rst (JD, &observer, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Sun rise hour on 2006/01/17 at (15 E,51 S)", date.hours, 3, 0);
+		failed += test_result ("Sun rise minute on 2006/01/17 at (15 E,51 S)", date.minutes, 11, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Sun transit hour on 2006/01/17 at (15 E,51 S)", date.hours, 11, 0);
+		failed += test_result ("Sun transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 9, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Sun set hour on 2006/01/17 at (15 E,51 S)", date.hours, 19, 0);
+		failed += test_result ("Sun set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 7, 0);
+	}
+
+	observer.lat = 37;
+
+	object.dec = -59;
+	failed += test_result ("Object at dec -59 never rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
+
+	object.dec = 59;
+	failed += test_result ("Object at dec 59 is always above horizont at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+
+	observer.lat = -37;
+
+	failed += test_result ("Object at dec 59 never rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
+
+	object.dec = -59;
+	failed += test_result ("Object at dec -59 is always above horizont at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+
+
 	return failed;
 }
 
