@@ -146,6 +146,38 @@ void ln_get_date (double JD, struct ln_date * date)
        date->years = C - 4715;
 }	
 
+/*! \fn void ln_get_date_from_timet (time_t * t, struct ln_date * date)
+* \param t system time
+* \param date Pointer to new calendar date.
+*
+* Set date from system time
+*/
+void ln_get_date_from_timet (time_t * t, struct ln_date * date)
+{
+	struct tm gmt;
+
+	/* convert to UTC time representation */
+	gmtime_r (t, &gmt);
+    	
+	ln_get_date_from_tm (&gmt, date);
+}
+
+/*! \fn void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
+* \param tm system tm structure
+* \param date Pointer to new calendar date.
+*
+* Set date from system tm structure
+*/
+void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
+{
+	/* fill in date struct */
+	date->seconds = t->tm_sec;
+	date->minutes = t->tm_min;
+	date->hours = t->tm_hour;
+	date->days = t->tm_mday;
+	date->months = t->tm_mon + 1;
+	date->years = t->tm_year + 1900;
+}
 
 /*! \fn void ln_get_date_from_sys (struct ln_date * date)
 * \param date Pointer to store date.

@@ -1,5 +1,13 @@
 ChangeLog
 
+20060215
+	-src/julina_day.c
+	-src/libnova/julian_day.h
+
+	Add ln_get_date_from_timet and ln_get_date_from_tm functions.
+
+	Petr Kubanek
+
 20060117
 	-src/rise_set.c
 
