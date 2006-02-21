@@ -1,5 +1,7 @@
 ChangeLog
 
+*********** release of 0.12.0
+
 20060215
 	-src/julina_day.c
 	-src/libnova/julian_day.h
