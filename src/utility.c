@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.11 2005-09-25 20:51:07 l_girdwood Exp $
+/* $Id: utility.c,v 1.12 2006-03-16 21:48:32 l_girdwood Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -667,7 +667,7 @@ double ln_interpolate3 (double n, double y1, double y2, double y3)
 	/* equ 3.2 */
 	a = y2 - y1;
 	b = y3 - y2;
-	c = a - b;
+	c = b - a;
 	
 	/* equ 3.3 */
 	y = y2 + n / 2.0 * (a + b + n * c);

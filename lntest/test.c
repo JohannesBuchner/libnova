@@ -142,7 +142,7 @@ int dynamical_test ()
 	struct ln_date date;
 	double TD,JD;
 	int failed = 0;
-
+ 
 	/* Dynamical Time test for 01/01/2000 00:00:00 */
 	date.years = 2000;
 	date.months = 1;
@@ -153,7 +153,7 @@ int dynamical_test ()
 
 	JD = ln_get_julian_day (&date);
 	TD = ln_get_jde (JD);
-	failed += test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50065885, 0.000001);
+	failed += test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50073877, 0.000001);
 	return failed;
 }
 

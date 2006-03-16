@@ -17,7 +17,7 @@
  */
 
 #include <libnova/dynamical_time.h>
-
+#include <stdio.h>
 #define TERMS 192
 
 struct year_TD
@@ -43,7 +43,6 @@ static double get_dynamical_diff_other (double JD);
 
 
 /* dynamical time in seconds for every second year from 1620 to 1992 */
-
 const static double delta_t[TERMS] =
 {   124.0, 115.0, 106.0, 98.0, 91.0,
     85.0, 79.0, 74.0, 70.0, 65.0,
@@ -87,7 +86,6 @@ const static double delta_t[TERMS] =
  					
 
 /* Stephenson and Houlden  for years prior to 948 A.D.*/
-
 static double get_dynamical_diff_sh1 (double JD)
 {
     double TD,E;
@@ -99,8 +97,7 @@ static double get_dynamical_diff_sh1 (double JD)
     return (TD);
 }
 
-/* Stephenson and Houlden  for years between 948 A.D. and 1600 A.D.*/
-
+/* Stephenson and Houlden for years between 948 A.D. and 1600 A.D.*/
 static double get_dynamical_diff_sh2 (double JD)
 {
     double TD,t;
@@ -114,7 +111,6 @@ static double get_dynamical_diff_sh2 (double JD)
 
 /* Table 9.a pg 72 for years 1600..1992.*/
 /* uses interpolation formula 3.3 on pg 25 */
-
 static double get_dynamical_diff_table (double JD)
 {
     double TD = 0;
@@ -129,8 +125,8 @@ static double get_dynamical_diff_table (double JD)
         i = TERMS - 2;
 	
 	/* calc a,b,c,n */
-	a = delta_t[i] - delta_t[i+1];
-	b = delta_t[i+1] - delta_t[i+2];
+	a = delta_t[i+1] - delta_t[i];
+	b = delta_t[i+2] - delta_t[i+1];
 	c = a - b;
 	n = ((JD - (2312752.5 + (730.5 * i))) / 730.5);
 	
@@ -139,29 +135,24 @@ static double get_dynamical_diff_table (double JD)
     return TD;
 }
 
-
-
-
 /* get the dynamical time diff in the near past / future 1992 .. 2010 */
 /* uses interpolation formula 3.3 on pg 25 */
-
 static double get_dynamical_diff_near (double JD)
 {
     double TD = 0;
     /* TD for 1990, 2000, 2010 */
-    double delta_T[3] = {56.9, 67.0 ,80.0};
+    double delta_T[3] = {56.86, 63.83, 70.0};
     double a,b,c,n;
-            
+         
     /* calculate TD by interpolating value */
-    a = delta_T[0] - delta_T[1];
-    b = delta_T[1] - delta_T[2];
-    c = a - b;
+    a = delta_T[1] - delta_T[0];
+    b = delta_T[2] - delta_T[1];
+    c = b - a;
     
-    /* get number of days since 1990 and divide by 10 years */
-	n = (JD - 2447892.5) / 3652.5;
-	
-	TD = delta_T[1] + n / 2 * (a + b + n * c);
-	       
+    /* get number of days since 2000 and divide by 10 years */
+	n = (JD - 2451544.5) / 3652.5; 
+	TD = delta_T[1] + (n / 2) * (a + b + n * c);
+	     
     return TD;
 } 
 
@@ -188,22 +179,22 @@ static double get_dynamical_diff_other (double JD)
 */
 /* Equation 9.1 on pg 73.
 */
-
 double ln_get_dynamical_time_diff (double JD)
 {
     double TD;
+
     /* check when JD is, and use corresponding formula */
     /* check for date < 948 A.D. */
     if ( JD < 2067314.5 )
         /* Stephenson and Houlden */
 	    TD = get_dynamical_diff_sh1 (JD);
-    else if ( JD >= 2067314.5  && JD < 2305447.5 )
+    else if ( JD >= 2067314.5 && JD < 2305447.5 )
 	    /* check for date 948..1600 A.D. Stephenson and Houlden */
     	TD = get_dynamical_diff_sh2 (JD);
 	else if ( JD >= 2312752.5 && JD < 2448622.5 )
 		/* check for value in table 1620..1992  interpolation of table */
 		TD = get_dynamical_diff_table (JD);
-	else if ( JD >= 2448622.5 && JD <= 2455197.5 )   
+	else if ( JD >= 2448622.5 && JD <= 2455197.5 )
 		/* check for near future 1992..2010 interpolation */
 		TD = get_dynamical_diff_near (JD);       
 	else
@@ -220,7 +211,7 @@ double ln_get_dynamical_time_diff (double JD)
 *     
 * Calculates the Julian Ephemeris Day (JDE) from the given julian day
 */     
-     
+    
 double ln_get_jde (double JD)
 {
     double JDE;
