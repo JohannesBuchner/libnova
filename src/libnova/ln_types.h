@@ -90,10 +90,10 @@ struct ln_zonedate
 
 struct ln_dms
 {
-    unsigned short neg:1;           /*!< Non zero if negative */
-	unsigned short degrees:9;   	/*!< Degrees. Valid 0 - 360 */
-	unsigned short minutes:6;   	/*!< Minutes. Valid 0 - 59 */
-    double seconds;					/*!< Seconds. Valid 0 - 59.9999... */
+    unsigned short neg;         /*!< Non zero if negative */
+    unsigned short degrees;   	/*!< Degrees. Valid 0 - 360 */
+    unsigned short minutes;   	/*!< Minutes. Valid 0 - 59 */
+    double seconds;		/*!< Seconds. Valid 0 - 59.9999... */
 };
 
 /*! \struct ln_hms
