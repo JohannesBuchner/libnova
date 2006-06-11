@@ -216,13 +216,13 @@ void ln_get_ell_helio_rect_posn (struct ln_ell_orbit* orbit, double JD, struct l
 
 	/* get mean anomaly */
 	M = ln_get_ell_mean_anomaly (orbit->n, JD - orbit->JD);
-	
+
 	/* get eccentric anomaly */
 	E = ln_solve_kepler (orbit->e, M);
-	
+
 	/* get true anomaly */
 	v = ln_get_ell_true_anomaly (orbit->e, E);
-	
+
 	/* get radius vector */
 	r = ln_get_ell_radius_vector (orbit->a, orbit->e, E);
 
@@ -280,16 +280,22 @@ void ln_get_ell_body_equ_coords (double JD, struct ln_ell_orbit * orbit, struct 
 	dist = ln_get_rect_distance (&body_rect_posn, &sol_rect_posn);
 	t = ln_get_light_time (dist);
 
+	sol_rect_posn.Y, body_rect_posn.Y,
+	sol_rect_posn.Z, body_rect_posn.Z);
+
 	/* repeat calculation with new time (i.e. JD - t) */
 	ln_get_ell_helio_rect_posn (orbit, JD - t, &body_rect_posn);
 	
 	/* calc equ coords equ 33.10 */
+	sol_rect_posn.Y, body_rect_posn.Y,
+	sol_rect_posn.Z, body_rect_posn.Z);
+
 	x = sol_rect_posn.X + body_rect_posn.X;
 	y = sol_rect_posn.Y + body_rect_posn.Y;
 	z = sol_rect_posn.Z + body_rect_posn.Z;
 
 	posn->ra = ln_range_degrees(ln_rad_to_deg(atan2 (y,x)));
-	posn->dec = ln_rad_to_deg(atan2 (z,sqrt (x * x + y * y)));
+	posn->dec = ln_rad_to_deg(asin (z / sqrt (x * x + y * y + z * z)));
 }
 
 
