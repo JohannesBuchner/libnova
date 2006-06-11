@@ -280,16 +280,10 @@ void ln_get_ell_body_equ_coords (double JD, struct ln_ell_orbit * orbit, struct 
 	dist = ln_get_rect_distance (&body_rect_posn, &sol_rect_posn);
 	t = ln_get_light_time (dist);
 
-	sol_rect_posn.Y, body_rect_posn.Y,
-	sol_rect_posn.Z, body_rect_posn.Z);
-
 	/* repeat calculation with new time (i.e. JD - t) */
 	ln_get_ell_helio_rect_posn (orbit, JD - t, &body_rect_posn);
 	
 	/* calc equ coords equ 33.10 */
-	sol_rect_posn.Y, body_rect_posn.Y,
-	sol_rect_posn.Z, body_rect_posn.Z);
-
 	x = sol_rect_posn.X + body_rect_posn.X;
 	y = sol_rect_posn.Y + body_rect_posn.Y;
 	z = sol_rect_posn.Z + body_rect_posn.Z;
