@@ -1,5 +1,16 @@
 ChangeLog
 
+20060611
+	-lntest/test.c
+
+	Add TNO test, which explain MPO Epoch (which have anomaly, and hence
+	to fit to Libnova perihelion-pass epoch, M/n have to be substracted)
+
+	-src/elliptic_motion.c
+
+	Change atan2 to asin, and put correct parameters.
+	Petr Kubanek
+
 20060316
 	-src/dynamical_time.c
 	-src/utility.c
