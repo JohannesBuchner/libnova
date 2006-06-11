@@ -753,6 +753,43 @@ int elliptic_motion_test ()
 	
 	dist = ln_get_ell_body_earth_dist (o_JD, &orbit);
 	failed += test_result ("(Body Earth Dist) for comet Enckle in AU   ", dist, 0.82481670, 0.00000001);
+
+	// TNO http://www.cfa.harvard.edu/mpec/K05/K05O42.html
+
+	obs_date.years = 2006;
+	obs_date.months = 5;
+	obs_date.days = 5;
+	obs_date.hours = 0;
+	obs_date.minutes = 0;
+	obs_date.seconds = 0;
+		
+	epoch_date.years = 2006;
+	epoch_date.months = 3;
+	epoch_date.days = 6;
+	epoch_date.hours = 0;
+	epoch_date.minutes = 0;
+	epoch_date.seconds = 0;
+	
+	e_JD = ln_get_julian_day (&epoch_date);
+	o_JD = ln_get_julian_day (&obs_date);
+	
+	orbit.JD = e_JD;
+	orbit.a = 45.7082927;
+	orbit.e = 0.1550125;
+	orbit.i = 28.99870;
+	orbit.omega = 79.55499;
+	orbit.w = 296.40937;
+	orbit.n = 0.00318942;
+
+	// MPO refers to Mean anomaly & epoch, we hence need to convert epoch
+	// to perihelion pass
+
+	orbit.JD -= 147.09926 / orbit.n;
+
+	ln_get_ell_body_equ_coords (o_JD, &orbit, &equ_posn);
+	failed += test_result ("(RA) for TNO K05F09Y   ", equ_posn.ra, 184.3699999995, 0.001);
+	failed += test_result ("(Dec) for TNO K05F09Y  ", equ_posn.dec, 30.3316666666, 0.001);
+
 	return failed;
 }
 
