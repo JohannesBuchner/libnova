@@ -113,11 +113,16 @@ void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_l
 
 	/* sane check for zenith distance; don't try to divide by 0 */
 
-	if (Zs < 1e-5) {
-		if (observer->lat > 0)
+	if (fabs(Zs) < 1e-5) {
+		if (object->dec > 0)
 			position->az = 180;
 		else
 			position->az = 0;
+		if ((object->dec > 0 && observer->lat > 0)
+		   || (object->dec < 0 && observer->lat < 0))
+		  	position->alt = 90;
+		else
+		  	position->alt = -90;
 		return;
 	}
 
@@ -126,14 +131,14 @@ void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_l
 	Ac = (sin (latitude) * cos (declination) * cos (H) - cos (latitude) * sin (declination)) / Zs;
 
 	// don't blom at atan2
-	if (fabs(As) < 1e-5) {
-		position->az = 0;
+	if (Ac == 0 && As == 0) {
+	        if (object->dec > 0)
+			position->az = 180.0;
+		else
+			position->az = 0.0;
 		return;
 	}
 	A = atan2 (As, Ac);
-
-	// normalize A
-	A = (A < 0) ? 2 * M_PI + A : A;
 
 	/* covert back to degrees */
 	position->az = ln_range_degrees(ln_rad_to_deg (A));

@@ -222,10 +222,31 @@ int transform_test(void)
 	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 15.12426274, 0.00000001);
 	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 68.03429264, 0.00000001);
 
-	ln_get_equ_from_hrz (&hrz, &observer, JD, &equ);
-	failed += test_result ("(Transforms) Horiz to Equ RA ", equ.ra, 347.31926752, 0.00000001);
-	failed += test_result ("(Transforms) Horiz to Equ DEC", equ.dec, -6.71989167, 0.00000001);
+	/* try something close to the pole */
+	object.dec = 90;
+
+	ln_get_hrz_from_equ (&object, &observer, JD, &hrz);
+	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 38.9213888888, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 180.0, 0.00000001);
 	
+	object.dec = -90;
+
+	ln_get_hrz_from_equ (&object, &observer, JD, &hrz);
+	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, -38.9213888888, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 0.0, 0.00000001);
+
+	observer.lat *= -1;
+
+	ln_get_hrz_from_equ (&object, &observer, JD, &hrz);
+	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, 38.9213888888, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 0.0, 0.00000001);
+	
+	object.dec = 90;
+
+	ln_get_hrz_from_equ (&object, &observer, JD, &hrz);
+	failed += test_result ("(Transforms) Equ to Horiz ALT ", hrz.alt, -38.9213888888, 0.00000001);
+	failed += test_result ("(Transforms) Equ to Horiz AZ ", hrz.az, 180.0, 0.00000001);
+
 	/* Equ position of Pollux */
 	hpollux.ra.hours = 7;
 	hpollux.ra.minutes = 45;

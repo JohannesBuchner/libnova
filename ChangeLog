@@ -1,4 +1,14 @@
 ChangeLog
+20060901
+	-src/transform.h
+	
+	Change code how az is calculated if dec = +- 90.
+
+	-lntest/test.c
+
+	Add tests for ln_get_hrz_from_equ when dec = +- 90.
+
+	Petr Kubanek
 
 20060611
 	-lntest/test.c
