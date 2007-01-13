@@ -4000,7 +4000,7 @@ double ln_get_jupiter_phase (double JD)
 */
 int ln_get_jupiter_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return ln_get_body_rst_horizont (JD, observer, ln_get_jupiter_equ_coords, LN_STAR_STANDART_HORIZONT, rst);
+	return ln_get_body_rst_horizon (JD, observer, ln_get_jupiter_equ_coords, LN_STAR_STANDART_HORIZON, rst);
 }
 
 

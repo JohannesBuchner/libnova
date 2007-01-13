@@ -1,4 +1,34 @@
 ChangeLog
+20070112
+	-src/rise_set.c
+	-src/libnova/rise_set.h
+
+	Replace "horizont" with correct "horizon" (typo).
+	Add ln_get_object_rst_horizon function.
+
+	-src/solar.c
+	-src/libnova/solar.c
+	-src/mercury.c
+	-src/venus.c
+	-src/lunar.c
+	-src/libnova/lunar.h
+	-src/mars.c
+	-src/jupiter.c
+	-src/saturn.c
+	-src/urans.c
+	-src/neptune.c
+	-src/pluto.c
+
+	Replace "horizont" with correct "horizon" (typo).
+
+	-src/elliptic_motion.c
+	-src/parabolic_motion.c
+	-src/hyperbolic_motion.c
+
+	Return -1 when object is never visible.
+
+	Petr Kubanek
+
 20060901
 	-src/transform.h
 	

@@ -1003,6 +1003,24 @@ int rst_test ()
 		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 16, 0);
 	}
 
+	if (ln_get_object_rst_horizon (JD, &observer, &object, 20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus rise above 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 0, 0);
+		failed += test_result ("Arcturus rise above 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 4, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 30, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus set bellow 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 10, 0);
+		failed += test_result ("Arcturus set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 57, 0);
+	}
 	observer.lat = -51;
 
 	if (ln_get_object_rst (JD, &observer, &object, &rst))
@@ -1022,6 +1040,25 @@ int rst_test ()
 		ln_get_date (rst.set, &date);
 		failed += test_result ("Arcturus set hour on 2006/01/17 at (15 E,51 S)", date.hours, 9, 0);
 		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 52, 0);
+	}
+
+	if (ln_get_object_rst_horizon (JD, &observer, &object, -20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus rise above -20 deg hour on 2006/01/17 at (15 E,51 S)", date.hours, 22, 0);
+		failed += test_result ("Arcturus rise above -20 deg minute on 2006/01/17 at (15 E,51 S)", date.minutes, 57, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 S)", date.hours, 5, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 30, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus set bellow -20 deg hour on 2006/01/17 at (15 E,51 S)", date.hours, 12, 0);
+		failed += test_result ("Arcturus set bellow -20 deg minute on 2006/01/17 at (15 E,51 S)", date.minutes, 4, 0);
 	}
 	
 	if (ln_get_solar_rst (JD, &observer, &rst))
@@ -1049,15 +1086,14 @@ int rst_test ()
 	failed += test_result ("Object at dec -59 never rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
 
 	object.dec = 59;
-	failed += test_result ("Object at dec 59 is always above horizont at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+	failed += test_result ("Object at dec 59 is always above the horizon at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
 
 	observer.lat = -37;
 
 	failed += test_result ("Object at dec 59 never rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
 
 	object.dec = -59;
-	failed += test_result ("Object at dec -59 is always above horizont at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
-
+	failed += test_result ("Object at dec -59 is always above the horizon at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
 
 	return failed;
 }
