@@ -21,10 +21,10 @@
 
 #include <libnova/ln_types.h>
 
-#define LN_SOLAR_STANDART_HORIZONT              -0.8333
-#define LN_SOLAR_CIVIL_HORIZONT                 -6.0
-#define LN_SOLAR_NAUTIC_HORIZONT                -12.0 
-#define LN_SOLAR_ASTRONOMICAL_HORIZONT          -18.0
+#define LN_SOLAR_STANDART_HORIZON              -0.8333
+#define LN_SOLAR_CIVIL_HORIZON                 -6.0
+#define LN_SOLAR_NAUTIC_HORIZON                -12.0 
+#define LN_SOLAR_ASTRONOMICAL_HORIZON          -18.0
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,11 +38,11 @@ extern "C" {
 * All angles are expressed in degrees.
 */
 
-/*! \fn int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time *rst);
-* \brief Return solar rise/set time over local horizont (specified in degrees).
+/*! \fn int ln_get_solar_rst_horizon (double JD, struct ln_lnlat_posn * observer, double horizon, struct ln_rst_time *rst);
+* \brief Return solar rise/set time over local horizon (specified in degrees).
 *  \ingroup solar
 */
-int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time * rst);
+int ln_get_solar_rst_horizon (double JD, struct ln_lnlat_posn * observer, double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for the Sun.

@@ -314,7 +314,7 @@ double ln_get_par_body_elong (double JD, struct ln_par_orbit * orbit)
 * time of a body with a parabolic orbit for the given Julian day.
 *
 * Note: this functions returns 1 if the body is circumpolar, that is it remains the whole
-* day either above or below the horizon.
+* day either above the horizon. Returns -1 when it remains whole day below the horizon.
 */
 int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst)
 {
@@ -349,9 +349,22 @@ int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_p
 	H1 = (cos(ln_deg_to_rad(observer->lat)) * cos (ln_deg_to_rad(sol2.dec)));
 
 	/* check if body is circumpolar */
-	if (H1 > 1.0)
-		return (1);
-	
+	if (fabs(H1) > 1.0)
+	{
+          if (observer->lat > 0)
+          {
+            if (sol2.dec < 0)
+	      return -1;
+          }
+          else if (observer->lat < 0)
+          {
+            if (sol2.dec > 0)
+              return -1;
+          }
+          // on equator, object cannot be always bellow horizon
+          return 1;
+        }
+
 	H0 = acos (H0/H1);
 	H0 = ln_rad_to_deg(H0);
 

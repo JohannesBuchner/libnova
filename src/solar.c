@@ -25,11 +25,6 @@
 #include <libnova/rise_set.h>
 #include <libnova/utility.h>
 
-#define SOLAR_STANDART_HORIZONT		-0.8333
-#define CIVIL_HORIZONT			-6.0
-#define NAUTIC_HORIZONT			-12.0 
-#define ASTRONOMICAL_HORIZONT		-18.0
-
 /*! \fn void ln_get_solar_geom_coords (double JD, struct ln_helio_posn * position)
 * \param JD Julian day
 * \param position Pointer to store calculated solar position.
@@ -131,19 +126,19 @@ void ln_get_solar_geo_coords (double JD, struct ln_rect_posn * position)
 	position->Z *=-1.0;
 }
 
-int ln_get_solar_rst_horizont (double JD, struct ln_lnlat_posn * observer, double horizont, struct ln_rst_time * rst)
+int ln_get_solar_rst_horizon (double JD, struct ln_lnlat_posn * observer, double horizon, struct ln_rst_time * rst)
 {
-	return ln_get_body_rst_horizont (JD, observer, ln_get_solar_equ_coords, horizont, rst);
+	return ln_get_body_rst_horizon (JD, observer, ln_get_solar_equ_coords, horizon, rst);
 }
 
 
 /*! \fn double ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
- * Calls get_solar_rst_horizont with horizont set to SOLAR_STANDART_HORIZONT.
+ * Calls get_solar_rst_horizon with horizon set to LN_SOLAR_STANDART_HORIZON.
  */
 
 int ln_get_solar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst)
 {
-	return ln_get_solar_rst_horizont (JD, observer, SOLAR_STANDART_HORIZONT, rst);
+	return ln_get_solar_rst_horizon (JD, observer, LN_SOLAR_STANDART_HORIZON, rst);
 }
 
 /*! \fn double ln_get_solar_sdiam (double JD)

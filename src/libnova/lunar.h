@@ -21,7 +21,7 @@
 
 #include <libnova/ln_types.h>
 
-#define LN_LUNAR_STANDART_HORIZONT		0.125
+#define LN_LUNAR_STANDART_HORIZON		0.125
 
 #ifdef __cplusplus
 extern "C" {

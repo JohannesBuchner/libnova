@@ -21,7 +21,7 @@
 
 #include <libnova/ln_types.h>
 
-#define LN_STAR_STANDART_HORIZONT		-0.5667
+#define LN_STAR_STANDART_HORIZON		-0.5667
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,13 +35,21 @@ extern "C" {
 * All angles are expressed in degrees.
 */
 
-/*! \fn double ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+/*! \fn int ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for an object not orbiting the Sun.
 * \ingroup rst
 */
 int ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
-/*! \fn double ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
+/*! \fn int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit above local horizon for
+* an objet not orbiting the Sun.
+*
+*/
+int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
+    struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
+
+/*! \fn int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,struct ln_rst_time * rst);
 * \brief Calculate the time of next rise, set and transit for an object not orbiting the Sun.
 * E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
 * This function is not too precise, it's good to get general idea when object will rise.
@@ -49,7 +57,7 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ
 */
 int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
-int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizont, struct ln_rst_time * rst);
+int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };

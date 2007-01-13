@@ -28,20 +28,39 @@
 * \param observer Observers position
 * \param object Object position
 * \param rst Pointer to store Rise, Set and Transit time in JD
-* \return 0 for success, 1 for circumpolar (above horizont), -1 for circumpolar (bellow horizont)
+* \return 0 for success, 1 for circumpolar (above the horizon), -1 for circumpolar (bellow the horizon)
 *
 * Calculate the time the rise, set and transit (crosses the local meridian at upper culmination)
 * time of the object for the given Julian day.
 *
 * Note: this functions returns 1 if the object is circumpolar, that is it remains the whole
-* day above the horizon. Returns -1 when it remains whole day bellow horizont.
+* day above the horizon. Returns -1 when it remains the whole day bellow the horizon.
 */
 int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_posn *object, struct ln_rst_time *rst)
+{
+  return ln_get_object_rst_horizon (JD, observer, object, -0.5667, rst);	/* standard altitude of stars */
+}
+
+/*! \fn int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
+* \param JD Julian day
+* \param observer Observers position
+* \param object Object position
+* \param horizon Horizon height
+* \param rst Pointer to store Rise, Set and Transit time in JD
+* \return 0 for success, 1 for circumpolar (above the horizon), -1 for circumpolar (bellow the horizon)
+*
+* Calculate the time the rise, set and transit (crosses the local meridian at upper culmination)
+* time of the object for the given Julian day and horizon.
+*
+* Note: this functions returns 1 if the object is circumpolar, that is it remains the whole
+* day above the horizon. Returns -1 when it remains whole day bellow the horizon.
+*/
+int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
+  struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst)
 {
   int jd;
   long double T, O, JD_UT, H0, H1;
   long double mt, mr, ms;
-  long double h = -0.5667;		/* standard altitude of stars */
 
   /* dynamical time diff */
   T = ln_get_dynamical_time_diff (JD);
@@ -57,7 +76,7 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_
   O *= 15.0;
 
   /* equ 15.1 */
-  H0 = (sin (ln_deg_to_rad (h)) -
+  H0 = (sin (ln_deg_to_rad (horizon)) -
      sin (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (object->dec)));
   H1 = (cos (ln_deg_to_rad (observer->lat)) * cos (ln_deg_to_rad (object->dec)));
 
@@ -76,7 +95,7 @@ int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_
       if (object->dec > 0)
 	return -1;
     }
-    // on equator, object cannot be always bellow horizont
+    // on equator, object cannot be always bellow horizon
     return 1;
   }
 
@@ -136,21 +155,20 @@ int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln
   __ln__check_rst (JD, &rst->rise);
   __ln__check_rst (JD, &rst->transit);
   __ln__check_rst (JD, &rst->set);
-#undef get_next_rst
   return ret;
 }
 
-/*! \fn int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizont, struct ln_rst_time *rst); 
+/*! \fn int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time *rst); 
 * \param JD Julian day 
 * \param observer Observers position 
 * \param get_equ_body_coords Pointer to get_equ_body_coords() function
-* \param horizont Sun horizont use *_HORIZONT constants from libnova.h 
+* \param horizon Sun horizon use *_HORIZONT constants from libnova.h 
 * \param rst Pointer to store Rise, Set and Transit time in JD 
 * \return 0 for success, else 1 for circumpolar.
 *
 * Calculate the time the rise, set and transit (crosses the local meridian at
 * upper culmination) time of the body for the given Julian day and given
-* horizont.
+* horizon.
 *
 * Note 1: this functions returns 1 if the body is circumpolar, that is it remains
 * the whole day either above or below the horizon.
@@ -160,7 +178,7 @@ int ln_get_object_next_rst (double JD, struct ln_lnlat_posn *observer, struct ln
 * you should't use that function for any body which moves to fast..use
 * some special function for such things.
 */
-int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double,struct ln_equ_posn *),double horizont, struct ln_rst_time *rst)
+int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn *observer, void (*get_equ_body_coords) (double,struct ln_equ_posn *),double horizon, struct ln_rst_time *rst)
 {
   int jd;
   double T, O, JD_UT, H0, H1;
@@ -189,7 +207,7 @@ int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*
 
   /* equ 15.1 */
   H0 =
-    (sin (ln_deg_to_rad (horizont)) -
+    (sin (ln_deg_to_rad (horizon)) -
      sin (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (sol2.dec)));
   H1 = (cos (ln_deg_to_rad (observer->lat)) * cos (ln_deg_to_rad (sol2.dec)));
 
@@ -276,8 +294,8 @@ int ln_get_body_rst_horizont (double JD, struct ln_lnlat_posn *observer, void (*
     Hat -= 360;
 
   dmt = -(Hat / 360.0);
-  dmr = (altr - horizont) / (360 * cos (ln_deg_to_rad (posr.dec)) * cos (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (Har)));
-  dms = (alts - horizont) / (360 * cos (ln_deg_to_rad (poss.dec)) * cos (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (Has)));
+  dmr = (altr - horizon) / (360 * cos (ln_deg_to_rad (posr.dec)) * cos (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (Har)));
+  dms = (alts - horizon) / (360 * cos (ln_deg_to_rad (poss.dec)) * cos (ln_deg_to_rad (observer->lat)) * sin (ln_deg_to_rad (Has)));
 
   /* add corrections and change to JD */
   mt += dmt;
