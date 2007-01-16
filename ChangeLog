@@ -1,5 +1,35 @@
 ChangeLog
 20070116
+	libnova is now ported to Win32 with the following changes.
+
+	-src/julian_day.c
+
+	Added preprocessing directive for POSIX header (sys/time.h) exclusion	for Win32 compilation.
+	Changed ln_get_date_from_sys to be compatible with Win32.
+
+	-src/misc.c
+
+	Added preprocessing directive for POSIX header (unistd.h) exclusion for Win32 compilation.
+	Changed libnova.h include to libnova/libnova.h.
+
+	-src/utility.c
+
+	Added preprocessing directive for POSIX header (unistd.h) exclusion for Win32 compilation.
+	Added functions gettimeofday, gmtime_r, and strtok_r to substitute for their POSIX coupterparts.
+	Added functions cbrt, nan, and round to subsistute, in C89, for their C99 counterparts.
+
+	-src/libnova/ln_types.h
+
+        Added definitions of struct timeval and struct timezone to subtitute in Win32 for their POSIX counterparts.
+
+        -src/libnova/utility.h
+
+        Added include of time.h.
+	Added declarations of new functions noted in this change under src/utility.c
+
+        Daniel Schultze
+
+20070116
 	-src/rise_set.c
 	-src/libnova/rise_set.h
 
