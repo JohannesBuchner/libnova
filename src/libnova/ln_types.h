@@ -324,8 +324,26 @@ struct ln_nutation
 	double ecliptic;	/*!< Obliquity of the ecliptic */
 };
 
+/* Definitions of POSIX structures for Win32. */
+#ifdef __WIN32__
+
+struct timeval
+{
+	long    tv_sec;         /* count of seconds since Jan. 1, 1970 */
+	long    tv_usec;        /* and microseconds */
+};
+
+struct timezone
+{
+	int     tz_minuteswest; /* Minutes west of GMT */
+	int     tz_dsttime;     /* DST correction offset */
+};
+
+#endif /* __WIN32__ */
+
 #ifdef __cplusplus
 };
 #endif
 
 #endif
+
