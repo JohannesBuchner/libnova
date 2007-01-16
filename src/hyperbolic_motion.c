@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <libnova/parabolic_motion.h>
+#include <libnova/hyperbolic_motion.h>
 #include <libnova/solar.h>
 #include <libnova/earth.h>
 #include <libnova/transform.h>
@@ -340,7 +341,6 @@ double ln_get_hyp_body_elong (double JD, struct ln_hyp_orbit* orbit)
 	return ln_range_degrees (ln_rad_to_deg (acos (elong)));
 }
 
-
 /*! \fn double ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit* orbit, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
@@ -356,116 +356,24 @@ double ln_get_hyp_body_elong (double JD, struct ln_hyp_orbit* orbit)
 */
 int ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit* orbit, struct ln_rst_time * rst)
 {
-	int jd;
-	double T, O, JD_UT, H0, H1;
-	double Hat, Har, Has, altr, alts;
-	double mt, mr, ms, mst, msr, mss, nt, nr, ns;
-	double h = -0.5667; /* standard altitude of the body */
-	struct ln_equ_posn sol1, sol2, sol3, post, posr, poss;
-	double dmt, dmr, dms;
-		
-	/* dynamical time diff */
-	T = ln_get_dynamical_time_diff (JD);
-	
-	/* convert local sidereal time into degrees
-	for 0h of UT on day JD*/
-	jd = (int)JD;
-	if (JD - jd > 0.5)
-		JD_UT = jd + 0.5 + (T / (24 * 60 * 60));
-	else
-		JD_UT = jd - 0.5 + (T / (24 * 60 * 60));
-	O = ln_get_apparent_sidereal_time (JD_UT);
-	O *= 15.0;
-	
-	/* get body coords for JD_UT -1, JD_UT and JD_UT + 1 */
-	ln_get_hyp_body_equ_coords (JD_UT - 1.0, orbit, &sol1);
-	ln_get_hyp_body_equ_coords (JD_UT, orbit, &sol2);
-	ln_get_hyp_body_equ_coords (JD_UT + 1.0, orbit, &sol3);
-	
-	/* equ 15.1 */
-	H0 = (sin (ln_deg_to_rad (h)) - sin (ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(sol2.dec)));
-	H1 = (cos(ln_deg_to_rad(observer->lat)) * cos (ln_deg_to_rad(sol2.dec)));
+	return ln_get_hyp_body_rst_horizon (JD, observer, orbit, LN_STAR_STANDART_HORIZON, rst);
+}
 
-	/* check if body is circumpolar */
-	if (fabs(H1) > 1.0)
-	{
-          if (observer->lat > 0)
-          {
-            if (sol2.dec < 0)
-	      return -1;
-          }
-          else if (observer->lat < 0)
-          {
-            if (sol2.dec > 0)
-              return -1;
-          }
-          // on equator, object cannot be always bellow horizon
-          return 1;
-        }
-
-	H0 = acos (H0/H1);
-	H0 = ln_rad_to_deg(H0);
-
-	/* equ 15.2 */
-	mt = (sol2.ra - observer->lng - O) / 360.0;
-	mr = mt - H0 / 360.0;
-	ms = mt + H0 / 360.0;
-	
-	/* put in correct range */
-	if (mt > 1.0 )
-		mt--;
-	else if (mt < -1.0)
-		mt++;
-	if (mr > 1.0 )
-		mr--;
-	else if (mr < -1.0)
-		mr++;
-	if (ms > 1.0 )
-		ms--;
-	else if (ms < -1.0)
-		ms++;
-	
-	/* find sidereal time at Greenwich, in degrees, for each m*/
-	mst = O + 360.985647 * mt;
-	msr = O + 360.985647 * mr;
-	mss = O + 360.985647 * ms;
-	
-	/* calc n */
-	nt = mt + T / 86400.0;
-	nr = mr + T / 86400.0;
-	ns = ms + T / 86400.0;
-
-	/* interpolate ra and dec for each m, except for transit dec (dec2) */
-	posr.ra = ln_interpolate3 (nr, sol1.ra, sol2.ra, sol3.ra);
-	posr.dec = ln_interpolate3 (nr, sol1.dec, sol2.dec, sol3.dec);
-	post.ra = ln_interpolate3 (nt, sol1.ra, sol2.ra, sol3.ra);
-	poss.ra = ln_interpolate3 (ns, sol1.ra, sol2.ra, sol3.ra);
-	poss.dec = ln_interpolate3 (ns, sol1.dec, sol2.dec, sol3.dec);
-	
-	/* find local hour angle */
-	Hat = mst + observer->lng - post.ra;
-	Har = msr + observer->lng - posr.ra;
-	Has = mss + observer->lng - poss.ra;
-
-	/* find altitude for rise and set */
-	altr =  sin (ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(posr.dec)) +
-				cos (ln_deg_to_rad(observer->lat)) * cos (ln_deg_to_rad(posr.dec)) * cos (ln_deg_to_rad (Har));
-	alts =  sin (ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(poss.dec)) +
-				cos (ln_deg_to_rad(observer->lat)) * cos (ln_deg_to_rad(poss.dec)) * cos (ln_deg_to_rad (Has));
-
-	/* corrections for m */
-	dmt = - (Hat / 360.0);
-	dmr = (altr - h) / (360 * cos (ln_deg_to_rad(posr.dec)) * cos(ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(Har)));
-	dms = (alts - h) / (360 * cos (ln_deg_to_rad(poss.dec)) * cos(ln_deg_to_rad(observer->lat)) * sin (ln_deg_to_rad(Has)));
-
-	/* add corrections and change to JD */
-	mt += dmt;
-	mr += dms;
-	ms += dms;
-	rst->rise = JD_UT + mr;
-	rst->transit = JD_UT + mt;
-	rst->set = JD_UT + ms;
-	
-	/* not circumpolar */
-	return 0;
+/*! \fn double ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit* orbit, double horizon, struct ln_rst_time * rst);
+* \param JD Julian day
+* \param observer Observers position
+* \param orbit Orbital parameters
+* \param horizon Horizon height
+* \param rst Pointer to store Rise, Set and Transit time in JD
+* \return 0 for success, 1 for circumpolar (above the horizon), -1 for circumpolar (bellow the horizon)
+*
+* Calculate the time the rise, set and transit (crosses the local meridian at upper culmination)
+* time of a body with a parabolic orbit for the given Julian day.
+*
+* Note: this functions returns 1 if the body is circumpolar, that is it remains the whole
+* day above or below the horizon. Returns -1 when it remains whole day below the horizon.
+*/
+int ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit* orbit, double horizon, struct ln_rst_time * rst)
+{
+	return ln_get_motion_body_rst_horizon (JD, observer, (get_motion_body_coords_t) ln_get_hyp_body_equ_coords, orbit, horizon, rst);
 }

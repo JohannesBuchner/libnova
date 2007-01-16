@@ -28,6 +28,9 @@ Copyright 2000 Liam Girdwood  */
 //#define DATE
 //#define SYS_DATE
 
+// holds number of tests
+static int test_number = 0;
+
 double compare_results (double calc, double expect, double tolerance)
 {
 	if (calc - expect > tolerance || calc - expect < (tolerance * -1.0))
@@ -41,6 +44,8 @@ int test_result (char * test, double calc, double expect, double tolerance)
 	double diff;
 	
 	printf ("TEST %s....", test);
+
+	test_number++;
 	
 	diff = compare_results (calc, expect, tolerance);
 	if (diff) {
@@ -955,7 +960,7 @@ int rst_test ()
 	struct ln_dms dms;
 	struct ln_date date;
 	struct ln_equ_posn object;
-	double JD;
+	double JD, JD_next;
 	int failed = 0;
 
 	// Arcturus
@@ -992,15 +997,111 @@ int rst_test ()
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
-		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 44, 0);
+		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 40, 0);
 
 		ln_get_date (rst.transit, &date);
 		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
-		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 30, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 29, 0);
 
 		ln_get_date (rst.set, &date);
 		failed += test_result ("Arcturus set hour on 2006/01/17 at (15 E,51 N)", date.hours, 13, 0);
-		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 16, 0);
+		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 14, 0);
+	}
+
+	JD_next = rst.transit - 0.001;
+	if (ln_get_object_rst (JD_next, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
+		failed += test_result ("Arcturus next rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 40, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 29, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set hour on 2006/01/17 at (15 E,51 N)", date.hours, 13, 0);
+		failed += test_result ("Arcturus next set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 14, 0);
+	}
+
+	JD_next = rst.set - 0.001;
+	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then set time", (JD_next < rst.set), 1, 0);
+		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
+		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
+		failed += test_result ("Arcturus next rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 40, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/18 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/18 at (15 E,51 N)", date.minutes, 25, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set hour on 2006/01/17 at (15 E,51 N)", date.hours, 13, 0);
+		failed += test_result ("Arcturus next set minute on 2006/01/17 at (15 E,51 N)", date.minutes, 14, 0);
+	}
+
+	JD_next = rst.rise - 0.001;
+	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
+		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
+		failed += test_result ("Arcturus next rise minute on 2006/01/17 at (15 E,51 N)", date.minutes, 40, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/18 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/18 at (15 E,51 N)", date.minutes, 25, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set hour on 2006/01/18 at (15 E,51 N)", date.hours, 13, 0);
+		failed += test_result ("Arcturus next set minute on 2006/01/18 at (15 E,51 N)", date.minutes, 10, 0);
+	}
+
+	JD_next = rst.rise + 0.001;
+	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise hour on 2006/01/18 at (15 E,51 N)", date.hours, 21, 0);
+		failed += test_result ("Arcturus next rise minute on 2006/01/18 at (15 E,51 N)", date.minutes, 37, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/18 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/18 at (15 E,51 N)", date.minutes, 25, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set hour on 2006/01/18 at (15 E,51 N)", date.hours, 13, 0);
+		failed += test_result ("Arcturus next set minute on 2006/01/18 at (15 E,51 N)", date.minutes, 10, 0);
 	}
 
 	if (ln_get_object_rst_horizon (JD, &observer, &object, 20, &rst))
@@ -1011,16 +1112,113 @@ int rst_test ()
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise above 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 0, 0);
-		failed += test_result ("Arcturus rise above 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 4, 0);
+		failed += test_result ("Arcturus rise above 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 6, 0);
 
 		ln_get_date (rst.transit, &date);
 		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
-		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 30, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 29, 0);
 
 		ln_get_date (rst.set, &date);
 		failed += test_result ("Arcturus set bellow 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 10, 0);
-		failed += test_result ("Arcturus set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 57, 0);
+		failed += test_result ("Arcturus set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 52, 0);
 	}
+
+	JD_next = rst.rise - 0.001;
+	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
+		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise above 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 0, 0);
+		failed += test_result ("Arcturus next rise above 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 6, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 29, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set bellow 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 10, 0);
+		failed += test_result ("Arcturus next set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 52, 0);
+	}
+
+	JD_next = rst.transit - 0.001;
+	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise above 20 deg hour on 2006/01/18 at (15 E,51 N)", date.hours, 0, 0);
+		failed += test_result ("Arcturus next rise above 20 deg minute on 2006/01/18 at (15 E,51 N)", date.minutes, 2, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/17 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/17 at (15 E,51 N)", date.minutes, 29, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set bellow 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 10, 0);
+		failed += test_result ("Arcturus next set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 52, 0);
+	}
+
+	JD_next = rst.set - 0.001;
+	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then set time", (JD_next < rst.set), 1, 0);
+		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
+		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise above 20 deg hour on 2006/01/18 at (15 E,51 N)", date.hours, 0, 0);
+		failed += test_result ("Arcturus next rise above 20 deg minute on 2006/01/18 at (15 E,51 N)", date.minutes, 2, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/18 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/18 at (15 E,51 N)", date.minutes, 25, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set bellow 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 10, 0);
+		failed += test_result ("Arcturus next set bellow 20 deg minute on 2006/01/17 at (15 E,51 N)", date.minutes, 52, 0);
+	}
+
+	JD_next = rst.set + 0.001;
+	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
+		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
+		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
+
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Arcturus next rise above 20 deg hour on 2006/01/18 at (15 E,51 N)", date.hours, 0, 0);
+		failed += test_result ("Arcturus next rise above 20 deg minute on 2006/01/18 at (15 E,51 N)", date.minutes, 2, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Arcturus next transit hour on 2006/01/18 at (15 E,51 N)", date.hours, 5, 0);
+		failed += test_result ("Arcturus next transit minute on 2006/01/18 at (15 E,51 N)", date.minutes, 25, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Arcturus next set bellow 20 deg hour on 2006/01/18 at (15 E,51 N)", date.hours, 10, 0);
+		failed += test_result ("Arcturus next set bellow 20 deg minute on 2006/01/18 at (15 E,51 N)", date.minutes, 48, 0);
+	}
+
 	observer.lat = -51;
 
 	if (ln_get_object_rst (JD, &observer, &object, &rst))
@@ -1031,15 +1229,15 @@ int rst_test ()
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 S)", date.hours, 1, 0);
-		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 S)", date.minutes, 8, 0);
+		failed += test_result ("Arcturus rise minute on 2006/01/17 at (15 E,51 S)", date.minutes, 7, 0);
 
 		ln_get_date (rst.transit, &date);
 		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 S)", date.hours, 5, 0);
-		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 30, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 29, 0);
 
 		ln_get_date (rst.set, &date);
 		failed += test_result ("Arcturus set hour on 2006/01/17 at (15 E,51 S)", date.hours, 9, 0);
-		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 52, 0);
+		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 51, 0);
 	}
 
 	if (ln_get_object_rst_horizon (JD, &observer, &object, -20, &rst))
@@ -1050,11 +1248,11 @@ int rst_test ()
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise above -20 deg hour on 2006/01/17 at (15 E,51 S)", date.hours, 22, 0);
-		failed += test_result ("Arcturus rise above -20 deg minute on 2006/01/17 at (15 E,51 S)", date.minutes, 57, 0);
+		failed += test_result ("Arcturus rise above -20 deg minute on 2006/01/17 at (15 E,51 S)", date.minutes, 50, 0);
 
 		ln_get_date (rst.transit, &date);
 		failed += test_result ("Arcturus transit hour on 2006/01/17 at (15 E,51 S)", date.hours, 5, 0);
-		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 30, 0);
+		failed += test_result ("Arcturus transit minute on 2006/01/17 at (15 E,51 S)", date.minutes, 29, 0);
 
 		ln_get_date (rst.set, &date);
 		failed += test_result ("Arcturus set bellow -20 deg hour on 2006/01/17 at (15 E,51 S)", date.hours, 12, 0);
@@ -1236,7 +1434,7 @@ int main ()
 	failed += angular_test();
 	failed += utility_test();
 	
-	printf ("Test completed: %d errors.\n",failed);
+	printf ("Test completed: %d tests, %d errors.\n", test_number, failed);
 		
-	return 0;
+	return (failed > 0);
 }

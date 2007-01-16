@@ -1,4 +1,34 @@
 ChangeLog
+20070116
+	-src/rise_set.c
+	-src/libnova/rise_set.h
+
+	Add various _next_ & _horizon functions.
+	Add ln_get_motion_body_rst_horizon function.
+	Fix dynamic time diffs in rst functions - remove dynamical time
+	correction from object_rst, where it's not needed, use it only for
+	nr, nt and ns corrections (interpolation coeficient) in body &
+	motion_body variants.
+	Add dm corrections for object calculation, as 0.01 is ~ 10 minutes.
+
+	-src/elliptic_motion.c
+	-src/libnova/elliptic_motion.h
+	-src/parabolic_motion.c
+	-src/libnova/parabolic_motion.h
+	-src/hyperbolic_motion.c
+	-src/libnova/hyperbolic_motion.h
+
+	Change _rst calculation to use generic motion_body code.
+	Add _horizont functions.
+
+	-lntest/test.c
+
+	Change Arcturus test times.
+	Add test for Venus RST.
+	Add tests for _next functions.
+
+	Petr Kubanek
+
 20070115
 	-lntest/test.c
 

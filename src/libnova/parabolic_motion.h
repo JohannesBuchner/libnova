@@ -102,6 +102,12 @@ double ln_get_par_body_elong (double JD, struct ln_par_orbit * orbit);
 */
 int ln_get_par_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, struct ln_rst_time * rst);
 
+/*! \fn double ln_get_par_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, double horizon, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with a parabolic orbit.
+* \ingroup parabolic
+*/
+int ln_get_par_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_par_orbit * orbit, double horizon, struct ln_rst_time * rst);
+
 #ifdef __cplusplus
 };
 #endif
