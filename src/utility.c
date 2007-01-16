@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.12 2006-03-16 21:48:32 l_girdwood Exp $
+/* $Id: utility.c,v 1.13 2007-01-16 22:53:40 kinglag Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -49,11 +49,16 @@
 #include <malloc.h>
 #endif
 
-#ifndef WIN32
-#include "config.h"
+/* Include unistd.h only if not on a Win32 platform */
+/* Include Win32 Headers sys/types.h and sys/timeb.h if on Win32 */
+#ifndef __WIN32__
+#include <unistd.h>
 #else
-#define VERSION "0.9.0"
+#include <sys/types.h>
+#include <sys/timeb.h>
 #endif
+
+#define VERSION "0.12.1"
 
 /* Conversion factors between degrees and radians */
 #define D2R  (1.7453292519943295769e-2)  /* deg->radian */
@@ -718,3 +723,67 @@ double ln_interpolate5 (double n, double y1, double y2, double y3, double y4, do
 	
 	return y;
 }
+
+/* This section is for Win32 substitutions. */
+#ifdef __WIN32__
+
+/* Catches calls to the POSIX gettimeofday and converts them to a related WIN32 version. */
+int gettimeofday(struct timeval *tv, struct timezone *tz)
+{
+	struct _timeb timeptr;
+
+	_ftime_s (&timeptr);
+
+	tv->tv_sec = timeptr.time + timeptr.timezone * 60;
+	tv->tv_sec = timeptr.millitm;
+
+	tz->tz_dsttime = timeptr.dstflag;
+	tz->tz_dsttime = timeptr.timezone;
+
+	return 0;
+}
+
+/* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */
+struct tm *gmtime_r (time_t *t, struct tm *gmt)
+{
+	gmtime_s (gmt, t);
+
+	return gmt;
+}
+
+/* Catches calls to the POSIX strtok_r and converts them to a related WIN32 version. */
+char *strtok_r(char *str, const char *sep, char **last)
+{
+	return strtok_s(str, sep, last);
+}
+
+#endif /* __WIN32__ */
+
+/* C89 substitutions for C99 functions. */
+#ifdef __C89_SUB__
+
+/* Simple cube root */
+double cbrt (double x)
+{
+	return pow (x, 1.0/3.0);
+}
+
+/* Not a Number function generator */
+double nan (const char *code)
+{
+	double zero = 0.0;
+
+	return zero/0.0;
+}
+
+/* Simple round to nearest */
+double round (double x)
+{
+	double y;
+
+	y = x - floor (x);
+
+	return (y >= 0.5) ? (ceil(x)) : (floor (x));
+}
+
+#endif /* __C89_SUB__ */
