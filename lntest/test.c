@@ -1095,6 +1095,39 @@ int rst_test ()
 	object.dec = -59;
 	failed += test_result ("Object at dec -59 is always above the horizon at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
 
+	/* Venus on 1988 March 20 at Boston */
+	date.years = 1988;
+	date.months = 3;
+	date.days = 20;
+
+	date.hours = 0;
+	date.minutes = 0;
+	date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	observer.lng = -71.0833;
+	observer.lat = 42.3333;
+
+	if (ln_get_venus_rst (JD, &observer, &rst))
+	{
+		failed++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Venus rise hour on 1988/03/20 at Boston", date.hours, 12, 0);
+		failed += test_result ("Venus rise minute on 1988/03/20 at Boston", date.minutes, 25, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Venus transit hour on 1988/03/20 at Boston", date.hours, 19, 0);
+		failed += test_result ("Venus transit minute on 1988/03/20 at Boston", date.minutes, 41, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Venus set hour on 1988/03/20 at Boston", date.hours, 2, 0);
+		failed += test_result ("Venus set minute on 1988/03/20 at Boston", date.minutes, 55, 0);
+	}
+
 	return failed;
 }
 
