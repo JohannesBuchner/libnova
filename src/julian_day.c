@@ -19,9 +19,13 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <math.h>
 #include <libnova/julian_day.h>
+
+/* Standard Win32 apps do not have POSIX support. */
+#ifndef __WIN32__
+#include <sys/time.h>
+#endif
 
 /* should be in math.h, but isn't on FC3 even with _GNU_SOURCE */
 double round (double __x); 
@@ -189,12 +193,20 @@ void ln_get_date_from_sys (struct ln_date * date)
 	struct tm * gmt;
         struct timeval tv;
         struct timezone tz;
+#ifdef __WIN32__
+	time_t now;
+#endif 
 		
 	/* get current time with microseconds precission*/
 	gettimeofday (&tv, &tz);
 
 	/* convert to UTC time representation */
+#ifndef __WIN32__
 	gmt = gmtime(&tv.tv_sec);
+#else
+	now = time (NULL);
+	gmt = gmtime (&now);
+#endif
     	
 	/* fill in date struct */
 	date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
