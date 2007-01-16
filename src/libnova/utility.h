@@ -21,6 +21,10 @@
 
 #include <libnova/ln_types.h>
 
+#ifdef __WIN32__
+#include <time.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -209,6 +213,33 @@ double ln_interpolate3 (double n, double y1, double y2, double y3);
 * \brief Calculate an intermediate value of the 5 arguments.
 */
 double ln_interpolate5 (double n, double y1, double y2, double y3, double y4, double y5);
+
+#ifdef __WIN32__
+
+/* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */
+struct tm *gmtime_r (time_t *t, struct tm *gmt);
+
+/* Catches calls to the POSIX gettimeofday and converts them to a related WIN32 version. */
+int gettimeofday(struct timeval *tp, struct timezone *tzp);
+
+/* Catches calls to the POSIX strtok_r and converts them to a related WIN32 version. */
+char *strtok_r(char *str, const char *sep, char **last);
+
+#endif /* __WIN32__ */
+
+/* C89 substitutions for C99 functions. */
+#ifdef __C89_SUB__
+
+/* Simple cube root */
+double cbrt (double x);
+
+/* Not a Number function generator */
+double nan (const char *code);
+
+/* Simple round to nearest */
+double round (double x);
+
+#endif /* __C89_SUB__ */
 
 #ifdef __cplusplus
 };
