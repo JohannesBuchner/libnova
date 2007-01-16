@@ -1,4 +1,11 @@
 ChangeLog
+20070115
+	-lntest/test.c
+
+	Add test for Venus RST.
+
+	Petr Kubanek
+
 20070112
 	-src/rise_set.c
 	-src/libnova/rise_set.h
