@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.8 2005-07-05 09:16:06 l_girdwood Exp $
+/* $Id: misc.c,v 1.9 2007-01-16 22:50:53 kinglag Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -39,15 +39,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <unistd.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-#include "libnova.h"
+#include <libnova/libnova.h>
 
 #ifndef __APPLE__
 #include <malloc.h>
 #endif
+
+/* Include unistd.h only if not on a Win32 platform */
+#ifndef __WIN32__
+#include <unistd.h>
+#else
+
 
 /* local types and macros */
 typedef int BOOL;
