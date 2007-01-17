@@ -14,6 +14,8 @@ Description:  Celestial Mechanics and Astronomical Calculation Library
  The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects or celestial mechanics.
  .  
  libnova is the calculation engine used by the Nova (http://nova.sf.net) project and most importantly, is free software.
+ .
+ This package contains development files.
 
 Package: libnova
 Section: libs
@@ -25,5 +27,3 @@ Description:  Celestial Mechanics and Astronomical Calculation Library
  The intended audience of libnova is C / C++ programmers, astronomers and anyone else interested in calculating positions of astronomical objects or celestial mechanics.
  .  
  libnova is the calculation engine used by the Nova (http://nova.sf.net) project and most importantly, is free software.
- .
- This package contains development files.

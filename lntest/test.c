@@ -961,6 +961,7 @@ int rst_test ()
 	struct ln_date date;
 	struct ln_equ_posn object;
 	double JD, JD_next;
+	int ret;
 	int failed = 0;
 
 	// Arcturus
@@ -989,11 +990,10 @@ int rst_test ()
 	observer.lng = 15;
 	observer.lat = 51;
 
-	if (ln_get_object_rst (JD, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_rst (JD, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 N)", date.hours, 21, 0);
@@ -1009,11 +1009,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.transit - 0.001;
-	if (ln_get_object_rst (JD_next, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst (JD_next, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
 		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
@@ -1033,11 +1032,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.set - 0.001;
-	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst (JD_next, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then set time", (JD_next < rst.set), 1, 0);
 		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
@@ -1057,11 +1055,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.rise - 0.001;
-	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst (JD_next, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
 		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
@@ -1081,11 +1078,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.rise + 0.001;
-	if (ln_get_object_next_rst (JD_next, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst (JD_next, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
 		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
@@ -1104,11 +1100,10 @@ int rst_test ()
 		failed += test_result ("Arcturus next set minute on 2006/01/18 at (15 E,51 N)", date.minutes, 10, 0);
 	}
 
-	if (ln_get_object_rst_horizon (JD, &observer, &object, 20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_rst_horizon (JD, &observer, &object, 20, &rst);
+	failed += test_result ("Arcturus sometimes rise above 20 deg at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise above 20 deg hour on 2006/01/17 at (15 E,51 N)", date.hours, 0, 0);
@@ -1124,11 +1119,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.rise - 0.001;
-	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst);
+	failed += test_result ("Arcturus sometimes rise above 20 deg at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
 		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
@@ -1148,11 +1142,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.transit - 0.001;
-	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst);
+	failed += test_result ("Arcturus sometimes rise above 20 deg at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then transit time", (JD_next < rst.transit), 1, 0);
 		failed += test_result ("Arcturus next transit time is less then set time", (rst.transit < rst.set), 1, 0);
@@ -1172,11 +1165,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.set - 0.001;
-	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst);
+	failed += test_result ("Arcturus sometimes rise above 20 deg at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then set time", (JD_next < rst.set), 1, 0);
 		failed += test_result ("Arcturus next set time is less then rise time", (rst.set < rst.rise), 1, 0);
@@ -1196,11 +1188,10 @@ int rst_test ()
 	}
 
 	JD_next = rst.set + 0.001;
-	if (ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_next_rst_horizon (JD_next, &observer, &object, 20, &rst);
+	failed += test_result ("Arcturus sometimes rise above 20 deg at 15 E, 51 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		failed += test_result ("Arcturus next date is less then rise time", (JD_next < rst.rise), 1, 0);
 		failed += test_result ("Arcturus next rise time is less then transit time", (rst.rise < rst.transit), 1, 0);
@@ -1221,11 +1212,10 @@ int rst_test ()
 
 	observer.lat = -51;
 
-	if (ln_get_object_rst (JD, &observer, &object, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_rst (JD, &observer, &object, &rst);
+	failed += test_result ("Arcturus sometimes rise at 15 E, 51 S", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise hour on 2006/01/17 at (15 E,51 S)", date.hours, 1, 0);
@@ -1240,11 +1230,10 @@ int rst_test ()
 		failed += test_result ("Arcturus set minute on 2006/01/17 at (15 E,51 S)", date.minutes, 51, 0);
 	}
 
-	if (ln_get_object_rst_horizon (JD, &observer, &object, -20, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_object_rst_horizon (JD, &observer, &object, -20, &rst);
+	failed += test_result ("Arcturus sometimes rise above -20 deg at 15 E, 51 S", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Arcturus rise above -20 deg hour on 2006/01/17 at (15 E,51 S)", date.hours, 22, 0);
@@ -1259,11 +1248,10 @@ int rst_test ()
 		failed += test_result ("Arcturus set bellow -20 deg minute on 2006/01/17 at (15 E,51 S)", date.minutes, 4, 0);
 	}
 	
-	if (ln_get_solar_rst (JD, &observer, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_solar_rst (JD, &observer, &rst);
+	failed += test_result ("Sun sometimes rise on 2006/01/17 at 15 E, 51 S", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Sun rise hour on 2006/01/17 at (15 E,51 S)", date.hours, 3, 0);
@@ -1280,18 +1268,31 @@ int rst_test ()
 
 	observer.lat = 37;
 
-	object.dec = -59;
-	failed += test_result ("Object at dec -59 never rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
+	object.dec = -54;
+	failed += test_result ("Object at dec -54 never rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
 
-	object.dec = 59;
-	failed += test_result ("Object at dec 59 is always above the horizon at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+	object.dec = -52;
+	failed += test_result ("Object at dec -52 rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 0, 0);
+
+	object.dec = 54;
+	failed += test_result ("Object at dec 54 is always above the horizon at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+
+	object.dec = 52;
+	failed += test_result ("Object at dec 52 rise at 37 N", ln_get_object_rst (JD, &observer, &object, &rst), 0, 0);
 
 	observer.lat = -37;
 
-	failed += test_result ("Object at dec 59 never rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
+	object.dec = 54;
+	failed += test_result ("Object at dec 54 never rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), -1, 0);
 
-	object.dec = -59;
-	failed += test_result ("Object at dec -59 is always above the horizon at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+	object.dec = 52;
+	failed += test_result ("Object at dec 52 rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 0, 0);
+
+	object.dec = -54;
+	failed += test_result ("Object at dec -54 is always above the horizon at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 1, 0);
+
+	object.dec = -52;
+	failed += test_result ("Object at dec -52 rise at 37 S", ln_get_object_rst (JD, &observer, &object, &rst), 0, 0);
 
 	/* Venus on 1988 March 20 at Boston */
 	date.years = 1988;
@@ -1307,11 +1308,10 @@ int rst_test ()
 	observer.lng = -71.0833;
 	observer.lat = 42.3333;
 
-	if (ln_get_venus_rst (JD, &observer, &rst))
-	{
-		failed++;
-	}
-	else
+	ret = ln_get_venus_rst (JD, &observer, &rst);
+	failed += test_result ("Venus sometime rise on 1988/03/20 at Boston", ret, 0, 0);
+	
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Venus rise hour on 1988/03/20 at Boston", date.hours, 12, 0);
@@ -1337,7 +1337,9 @@ int ell_rst_test ()
 	struct ln_rst_time rst;
 	struct ln_equ_posn pos;
 	double JD;
+	int ret;
 	int failed = 0;
+
 	/* Comment C/1996 B2 (Hyakutake) somewhere at Japan */
 
 	observer.lng = 135;
@@ -1397,11 +1399,10 @@ int ell_rst_test ()
 
 	JD = ln_get_julian_day (&date);
 	
-	if (ln_get_ell_body_rst (JD, &observer, &orbit, &rst))
-	{
-		failed ++;
-	}
-	else
+	ret = ln_get_ell_body_rst (JD, &observer, &orbit, &rst);
+	failed += test_result ("Hyakutake sometime rise on 1996/03/23 at 135 E, 35 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Hyakutake rise hour on 1996/03/23 at 135 E, 35 N", date.hours, 9, 0);
@@ -1416,11 +1417,10 @@ int ell_rst_test ()
 		failed += test_result ("Hyakutake set minute on 1996/03/23 at 135 E, 35 N", date.minutes, 49, 0);
 	}
 
-	if (ln_get_ell_body_next_rst (JD, &observer, &orbit, &rst))
-	{
-		failed ++;
-	}
-	else
+	ret = ln_get_ell_body_next_rst (JD, &observer, &orbit, &rst);
+	failed += test_result ("Hyakutake sometime rise on 1996/03/23 at 135 E, 35 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Hyakutake next rise hour on 1996/03/23 at 135 E, 35 N", date.hours, 9, 0);
@@ -1438,12 +1438,68 @@ int ell_rst_test ()
 	return failed;
 }
 
+int hyp_future_rst_test ()
+{
+	struct ln_lnlat_posn observer;
+	struct ln_hyp_orbit orbit;
+	struct ln_date date;
+	struct ln_rst_time rst;
+	double JD;
+	int ret;
+	int failed = 0;
+
+	observer.lng = 15;
+	observer.lat = 50;
+
+	/* C/2006 P1 (McNaught) */
+
+	orbit.q = 0.170742005109787;
+	orbit.e = 1.00001895427704;
+	orbit.i = 77.8348999023438;
+	orbit.w = 155.977096557617;
+	orbit.omega = 267.414398193359;
+	orbit.JD = 2454113.251;
+
+	date.years = 2007;
+	date.months = 1;
+	date.days = 17;
+
+	date.hours = 12;
+	date.minutes = date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	ret = ln_get_hyp_body_next_rst_horizon (JD, &observer, &orbit, 0, &rst);
+	failed += test_result ("McNaught rise on 2997/01/18 at 15 E, 50 N", ret, 0, 0);
+
+	if (!ret)
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("McNaught rise hour on 2007/01/18 at 15 E, 50 N", date.hours, 9, 0);
+		failed += test_result ("McNaught rise minute on 2007/01/18 at 15 E, 50 N", date.minutes, 6, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("McNaught transit hour on 2007/01/18 at 15 E, 50 N", date.hours, 11, 0);
+		failed += test_result ("McNaught transit minute on 2007/01/18 at 15 E, 50 N", date.minutes, 38, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("McNaught set hour on 2007/01/17 at 15 E, 50 N", date.hours, 14, 0);
+		failed += test_result ("McNaught set minute on 2007/01/17 at 15 E, 50 N", date.minutes, 37, 0);
+	}
+
+	ret = ln_get_hyp_body_next_rst_horizon (JD, &observer, &orbit, 15, &rst);
+	failed += test_result ("McNaught does not rise above 15 degrees on 2007/01/17 at 15 E, 50 N", ret, -1, 0);
+	
+	return failed;
+}
+
 int body_future_rst_test ()
 {
 	struct ln_lnlat_posn observer;
 	struct ln_date date;
 	struct ln_rst_time rst;
 	double JD;
+	int ret;
 	int failed = 0;
 
 	observer.lng = 0;
@@ -1457,11 +1513,10 @@ int body_future_rst_test ()
 
 	JD = ln_get_julian_day (&date);
 
-	if (ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, LN_SOLAR_STANDART_HORIZON, 300, &rst))
-	{
-		failed ++;
-	}
-	else
+	ret = ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, LN_SOLAR_STANDART_HORIZON, 300, &rst);
+	failed += test_result ("Sun is above horizon sometimes at 0, 85 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Solar next rise years at 0, 85 N", date.years, 2006, 0);
@@ -1485,11 +1540,10 @@ int body_future_rst_test ()
 		failed += test_result ("Solar next set minute at 0, 85 N", date.minutes, 7, 0);
 	}
 
-	if (ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, 0, 300, &rst))
-	{
-		failed ++;
-	}
-	else
+	ret = ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, 0, 300, &rst);
+	failed += test_result ("Sun is above 0 horizon sometimes at 0, 85 N", ret, 0, 0);
+
+	if (!ret)
 	{
 		ln_get_date (rst.rise, &date);
 		failed += test_result ("Solar next rise years at 0, 85 N with 0 horizon", date.years, 2006, 0);
@@ -1618,6 +1672,7 @@ int main ()
 	failed += hyperbolic_motion_test ();
 	failed += rst_test ();
 	failed += ell_rst_test ();
+	failed += hyp_future_rst_test ();
 	failed += body_future_rst_test ();
 	failed += parallax_test ();
 	failed += angular_test();

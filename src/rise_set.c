@@ -23,6 +23,29 @@
 #include <libnova/sidereal_time.h>
 #include <libnova/transform.h>
 
+// helper function to check if object can be visible
+int check_coords (struct ln_lnlat_posn * observer, double H1, double horizon, struct ln_equ_posn * object)
+{
+	double h;
+	/* check if body is circumpolar */
+	if (fabs(H1) > 1.0)
+	{
+		/* check if maximal height < horizon */
+		// h = asin(cos(ln_deg_to_rad(observer->lat - object->dec)))
+		h = 90 + object->dec - observer->lat;
+		// normalize to <-90;+90>
+		if (h > 90)
+			h = 180 - h;
+		if (h < -90)
+		  	h = -180 - h;
+		if (h < horizon)
+			return -1;
+		// else it must be above horizon
+		return 1;
+	}
+	return 0;
+}
+
 /*! \fn int ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 * \param JD Julian day
 * \param observer Observers position
@@ -63,6 +86,7 @@ int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
 	double Hat, Har, Has, altr, alts;
 	double mt, mr, ms, mst, msr, mss;
 	double dmt, dmr, dms;
+	int ret;
 
 	/* convert local sidereal time into degrees
 		 for 0h of UT on day JD */
@@ -78,22 +102,9 @@ int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
 
 	H1 = H0 / H1;
 
-	/* check if body is circumpolar; see note 2 in chapter 15 */
-	if (fabs(H1) > 1.0)
-	{
-		if (observer->lat > 0)
-		{
-			if (object->dec < 0)
-				return -1;
-		}
-		else if (observer->lat < 0)
-		{
-			if (object->dec > 0)
-				return -1;
-		}
-		// on equator, object cannot be always bellow horizon
-		return 1;
-	}
+	ret = check_coords (observer, H1, horizon, object);
+	if (ret)
+		return ret;
 
 	H0 = acos (H1);
 	H0 = ln_rad_to_deg (H0);
@@ -280,6 +291,7 @@ int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn *observer,
 	double mt, mr, ms, mst, msr, mss, nt, nr, ns;
 	struct ln_equ_posn sol1, sol2, sol3, post, posr, poss;
 	double dmt, dmr, dms;
+	int ret;
 
 	/* dynamical time diff */
 	T = ln_get_dynamical_time_diff (JD);
@@ -304,11 +316,9 @@ int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn *observer,
 
 	H1 = H0 / H1;
 
-	/* check if body is circumpolar */
-	if (H1 > 1.0)
-		return 1;
-	if (H1 < -1.0)
-		return -1;
+	ret = check_coords (observer, H1, horizon, &sol2);
+	if (ret)
+		return ret;
 
 	H0 = acos (H1);
 	H0 = ln_rad_to_deg (H0);
@@ -524,6 +534,7 @@ int ln_get_motion_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, 
 	double mt, mr, ms, mst, msr, mss, nt, nr, ns;
 	struct ln_equ_posn sol1, sol2, sol3, post, posr, poss;
 	double dmt, dmr, dms;
+	int ret;
 		
 	/* dynamical time diff */
 	T = ln_get_dynamical_time_diff (JD);
@@ -544,25 +555,14 @@ int ln_get_motion_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, 
 	H0 = (sin(ln_deg_to_rad (horizon)) - sin(ln_deg_to_rad(observer->lat)) * sin(ln_deg_to_rad(sol2.dec)));
 	H1 = (cos(ln_deg_to_rad(observer->lat)) * cos(ln_deg_to_rad(sol2.dec)));
 
-	/* check if body is circumpolar */
-	if (fabs(H1) > 1.0)
-	{
-		if (observer->lat > 0)
-		{
-			if (sol2.dec < 0)
-				return -1;
-		}
-		else if (observer->lat < 0)
-		{
-			if (sol2.dec > 0)
-				return -1;
-		}
-		// on equator, object cannot be always bellow horizon
-		return 1;
-	}
+	H1 = H0 / H1;
 
-	H0 = acos (H0/H1);
-	H0 = ln_rad_to_deg(H0);
+	ret = check_coords (observer, H1, horizon, &sol2);
+	if (ret)
+		return ret;
+
+	H0 = acos (H1);
+	H0 = ln_rad_to_deg (H0);
 
 	/* equ 15.2 */
 	mt = (sol2.ra - observer->lng - O) / 360.0;

@@ -1,5 +1,21 @@
 ChangeLog
 20070117
+	Bug-fix of RST.
+
+	-src/rise_set.c
+
+	check_coords function, rewrite H1 checks, fix some nasty bugs which
+	were there.
+	
+	-lntest/test.c
+
+	Additional tests for RST functions (hyp_future_rst_test).
+	Fix RST tests - error will be displayed if libnova calculates wrong
+	circumpolar value.
+
+	Petr Kubanek
+
+20070117
 	Future functions, which calculated next rises.
 	
 	-src/rise_set.c
