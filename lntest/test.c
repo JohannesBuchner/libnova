@@ -1329,6 +1329,193 @@ int rst_test ()
 	return failed;
 }
 
+int ell_rst_test ()
+{
+  	struct ln_lnlat_posn observer;
+	struct ln_ell_orbit orbit;
+	struct ln_date date;
+	struct ln_rst_time rst;
+	struct ln_equ_posn pos;
+	double JD;
+	int failed = 0;
+	/* Comment C/1996 B2 (Hyakutake) somewhere at Japan */
+
+	observer.lng = 135;
+	observer.lat = 35;
+	
+	date.years = 1996;
+	date.months = 5;
+	date.days = 1;
+	
+	date.hours = 0;
+	date.minutes = 0;
+	date.seconds = 0;
+
+	orbit.JD = ln_get_julian_day (&date);
+	orbit.JD += 0.39481;
+	orbit.a = 1014.2022026431;
+	orbit.e = 0.9997730;
+	orbit.i = 124.92379;
+	orbit.omega = 188.04546;
+	orbit.w = 130.17654;
+	orbit.n = 0;
+
+	date.years = 1996;
+	date.months = 3;
+	date.days = 24;
+
+	date.hours = date.minutes = date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	ln_get_ell_body_equ_coords (JD, &orbit, &pos);
+	failed += test_result ("(RA) for Hyakutake 1996/03/28 00:00", pos.ra, 220.8554, 0.001);
+	failed += test_result ("(Dec) for Hyakutake 1996/03/28 00:00", pos.dec, 36.5341, 0.001);
+
+	date.days = 28;
+
+	date.hours = 10;
+	date.minutes = 42;
+
+	JD = ln_get_julian_day (&date);
+
+	ln_get_ell_body_equ_coords (JD, &orbit, &pos);
+	failed += test_result ("(RA) for Hyakutake 1996/03/28 10:42", pos.ra, 56.2140, 0.001);
+	failed += test_result ("(Dec) for Hyakutake 1996/03/28 10:42", pos.dec, 74.4302, 0.001);
+
+	date.days = 23;
+
+	date.hours = 17;
+	date.minutes = 38;
+	date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	ln_get_ell_body_equ_coords (JD, &orbit, &pos);
+	failed += test_result ("(RA) for Hyakutake 1996/03/23 17:38", pos.ra,  221.2153, 0.001);
+	failed += test_result ("(Dec) for Hyakutake 1996/03/23 17:38", pos.dec, 32.4803, 0.001);
+
+	JD = ln_get_julian_day (&date);
+	
+	if (ln_get_ell_body_rst (JD, &observer, &orbit, &rst))
+	{
+		failed ++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Hyakutake rise hour on 1996/03/23 at 135 E, 35 N", date.hours, 9, 0);
+		failed += test_result ("Hyakutake rise minute on 1996/03/23 at 135 E, 35 N", date.minutes, 31, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Hyakutake transit hour on 1996/03/23 at 135 E, 35 N", date.hours, 17, 0);
+		failed += test_result ("Hyakutake transit minute on 1996/03/23 at 135 E, 35 N", date.minutes, 27, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Hyakutake set hour on 1996/03/23 at 135 E, 35 N", date.hours, 1, 0);
+		failed += test_result ("Hyakutake set minute on 1996/03/23 at 135 E, 35 N", date.minutes, 49, 0);
+	}
+
+	if (ln_get_ell_body_next_rst (JD, &observer, &orbit, &rst))
+	{
+		failed ++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Hyakutake next rise hour on 1996/03/23 at 135 E, 35 N", date.hours, 9, 0);
+		failed += test_result ("Hyakutake next rise minute on 1996/03/23 at 135 E, 35 N", date.minutes, 31, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Hyakutake next transit hour on 1996/03/24 at 135 E, 35 N", date.hours, 17, 0);
+		failed += test_result ("Hyakutake next transit minute on 1996/03/24 at 135 E, 35 N", date.minutes, 4, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Hyakutake next set hour on 1996/03/23 at 135 E, 35 N", date.hours, 1, 0);
+		failed += test_result ("Hyakutake next set minute on 1996/03/23 at 135 E, 35 N", date.minutes, 49, 0);
+	}
+
+	return failed;
+}
+
+int body_future_rst_test ()
+{
+	struct ln_lnlat_posn observer;
+	struct ln_date date;
+	struct ln_rst_time rst;
+	double JD;
+	int failed = 0;
+
+	observer.lng = 0;
+	observer.lat = 85;
+
+	date.years = 2006;
+	date.months = 1;
+	date.days = 1;
+
+	date.hours = date.minutes = date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	if (ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, LN_SOLAR_STANDART_HORIZON, 300, &rst))
+	{
+		failed ++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Solar next rise years at 0, 85 N", date.years, 2006, 0);
+		failed += test_result ("Solar next rise months at 0, 85 N", date.months, 3, 0);
+		failed += test_result ("Solar next rise days at 0, 85 N", date.days, 7, 0);
+		failed += test_result ("Solar next rise hour at 0, 85 N", date.hours, 10, 0);
+		failed += test_result ("Solar next rise minute at 0, 85 N", date.minutes, 19, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Solar next transit years at 0, 85 N", date.years, 2006, 0);
+		failed += test_result ("Solar next transit months at 0, 85 N", date.months, 3, 0);
+		failed += test_result ("Solar next transit days at 0, 85 N", date.days, 7, 0);
+		failed += test_result ("Solar next transit hour at 0 E, 85 N", date.hours, 12, 0);
+		failed += test_result ("Solar next transit minute at 0 E, 85 N", date.minutes, 10, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Solar next set years at 0, 85 N", date.years, 2006, 0);
+		failed += test_result ("Solar next set months at 0, 85 N", date.months, 3, 0);
+		failed += test_result ("Solar next set days at 0, 85 N", date.days, 7, 0);
+		failed += test_result ("Solar next set hour at 0 E, 85 N", date.hours, 14, 0);
+		failed += test_result ("Solar next set minute at 0, 85 N", date.minutes, 7, 0);
+	}
+
+	if (ln_get_body_next_rst_horizon_future (JD, &observer, ln_get_solar_equ_coords, 0, 300, &rst))
+	{
+		failed ++;
+	}
+	else
+	{
+		ln_get_date (rst.rise, &date);
+		failed += test_result ("Solar next rise years at 0, 85 N with 0 horizon", date.years, 2006, 0);
+		failed += test_result ("Solar next rise months at 0, 85 N with 0 horizon", date.months, 3, 0);
+		failed += test_result ("Solar next rise days at 0, 85 N with 0 horizon", date.days, 6, 0);
+		failed += test_result ("Solar next rise hour at 0, 85 N with 0 horizon", date.hours, 10, 0);
+		failed += test_result ("Solar next rise minute at 0, 85 N with 0 horizon", date.minutes, 19, 0);
+
+		ln_get_date (rst.transit, &date);
+		failed += test_result ("Solar next transit years at 0, 85 N with 0 horizon", date.years, 2006, 0);
+		failed += test_result ("Solar next transit months at 0, 85 N with 0 horizon", date.months, 3, 0);
+		failed += test_result ("Solar next transit days at 0, 85 N with 0 horizon", date.days, 6, 0);
+		failed += test_result ("Solar next transit hour at 0 E, 85 N with 0 horizon", date.hours, 12, 0);
+		failed += test_result ("Solar next transit minute at 0 E, 85 N with 0 horizon", date.minutes, 10, 0);
+
+		ln_get_date (rst.set, &date);
+		failed += test_result ("Solar next set years at 0, 85 N with 0 horizon", date.years, 2006, 0);
+		failed += test_result ("Solar next set months at 0, 85 N with 0 horizon", date.months, 3, 0);
+		failed += test_result ("Solar next set days at 0, 85 N with 0 horizon", date.days, 6, 0);
+		failed += test_result ("Solar next set hour at 0 E, 85 N with 0 horizon", date.hours, 14, 0);
+		failed += test_result ("Solar next set minute at 0, 85 N with 0 horizon", date.minutes, 7, 0);
+	}
+
+	return failed;
+}
+
 int parallax_test ()
 {
 	struct ln_equ_posn mars, parallax;
@@ -1430,6 +1617,8 @@ int main ()
 	failed += parabolic_motion_test ();
 	failed += hyperbolic_motion_test ();
 	failed += rst_test ();
+	failed += ell_rst_test ();
+	failed += body_future_rst_test ();
 	failed += parallax_test ();
 	failed += angular_test();
 	failed += utility_test();

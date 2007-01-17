@@ -106,8 +106,25 @@ int ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_h
 * \brief Calculate the time of rise, set and transit for a body with a hyperbolic orbit.
 * \ingroup hyperbolic
 */
-
 int ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
+
+/*! \fn double ln_get_hyp_body_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
+* \ingroup hyperbolic
+*/
+int ln_get_hyp_body_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
+
+/*! \fn double ln_get_hyp_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
+* \ingroup hyperbolic
+*/
+int ln_get_hyp_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
+
+/*! \fn double ln_get_hyp_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
+* \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
+* \ingroup hyperbolic
+*/
+int ln_get_hyp_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };

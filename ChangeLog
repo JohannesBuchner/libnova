@@ -1,4 +1,28 @@
 ChangeLog
+20070117
+	Future functions, which calculated next rises.
+	
+	-src/rise_set.c
+	-src/libnova/rise_set.h
+
+	Add _next_rst_future functions.
+
+	-src/elliptic_motion.c
+	-src/libnova/elliptic_motion.h
+	-src/parabolic_motion.c
+	-src/libnova/parabolic_motion.h
+	-src/hyperbolic_motion.c
+	-src/libnova/hyperbolic_motion.h
+
+	Add _next functions (and their variants).
+
+	-lntest/test.c
+
+	Add test for new functions (ell_rst_test, body_future_rst_test
+	functions).
+
+	Petr Kubanek
+
 20070116
 	libnova is now ported to Win32 with the following changes.
 
@@ -20,14 +44,14 @@ ChangeLog
 
 	-src/libnova/ln_types.h
 
-        Added definitions of struct timeval and struct timezone to subtitute in Win32 for their POSIX counterparts.
+	Added definitions of struct timeval and struct timezone to subtitute in Win32 for their POSIX counterparts.
 
-        -src/libnova/utility.h
-
-        Added include of time.h.
+	-src/libnova/utility.h
+	
+	Added include of time.h.
 	Added declarations of new functions noted in this change under src/utility.c
 
-        Daniel Schultze
+	Daniel Schultze
 
 20070116
 	-src/rise_set.c
