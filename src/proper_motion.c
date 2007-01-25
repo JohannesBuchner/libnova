@@ -32,7 +32,7 @@
 * Calculate a stars equatorial coordinates from it's mean coordinates (J2000.0)
 * with the effects of proper motion for a given Julian Day. 
 */ 
-/* Equ 20.2, 20.3, 20.4 pg 126 
+/* Example 20.b pg 126 
 */
 void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position)
 {
@@ -49,27 +49,18 @@ void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * pro
 * Calculate a stars equatorial coordinates from it's mean coordinates and epoch
 * with the effects of proper motion for a given Julian Day. 
 */ 
-/* Equ 20.2, 20.3, 20.4 pg 126 
+/* Example 20.b, pg 126
 */
 void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
 {
-	long double mean_ra, mean_dec, T;
-	long double d;
+	long double T;
 	
 	T = (JD - epoch_JD) / 365.25;
 	
-	/* change original ra and dec to radians */
-	mean_ra = mean_position->ra;
-	mean_dec = mean_position->dec;
-
 	/* calc proper motion */
-	d = T * proper_motion->ra;
-	mean_ra += d;
-
-	d = T * proper_motion->dec;
-	mean_dec += d;
+	position->ra = mean_position->ra + T * proper_motion->ra;
+	position->dec = mean_position->dec + T * proper_motion->dec;
 	
 	/* change to degrees */
-	position->ra = ln_range_degrees (mean_ra);
-	position->dec = ln_range_degrees (mean_dec);
+	position->ra = ln_range_degrees (position->ra);
 }

@@ -1,5 +1,12 @@
 ChangeLog
 
+20070125
+	fixed
+
+	[ 1644739 ] DEC coordinate error in ln_get_equ_pm_epoch
+
+	Petr Kubanek
+
 *********** release of 0.12.1
 
 20070117
