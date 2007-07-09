@@ -345,7 +345,7 @@ int ln_get_date_from_mpc (struct ln_date* date, char* mpc_date)
 	/* get the year */
 	year[0] = *(mpc_date + 1);
 	year[1] = *(mpc_date + 2);
-	year[3] = 0;
+	year[2] = 0;
 	date->years += strtol (year,0,10);
 	
 	/* month */

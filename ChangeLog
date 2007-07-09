@@ -1,5 +1,10 @@
 ChangeLog
 
+20070709
+	Fixed bug in julian_day.c, reported by Michael Richmod.
+
+	Petr Kubanek
+
 20070125
 	fixed
 
