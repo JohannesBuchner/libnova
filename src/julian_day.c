@@ -195,17 +195,17 @@ void ln_get_date_from_sys (struct ln_date * date)
 	struct tm * gmt;
 #ifndef __WIN32__
         struct timeval tv;
-#endif
         struct timezone tz;
+#endif
 #ifdef __WIN32__
 	time_t now;
 #endif 
 		
+#ifndef __WIN32__
 	/* get current time with microseconds precission*/
 	gettimeofday (&tv, &tz);
 
 	/* convert to UTC time representation */
-#ifndef __WIN32__
 	gmt = gmtime(&tv.tv_sec);
 #else
 	now = time (NULL);
