@@ -61,7 +61,7 @@ int check_coords (struct ln_lnlat_posn * observer, double H1, double horizon, st
 */
 int ln_get_object_rst (double JD, struct ln_lnlat_posn *observer, struct ln_equ_posn *object, struct ln_rst_time *rst)
 {
-	return ln_get_object_rst_horizon (JD, observer, object, -0.5667, rst);	/* standard altitude of stars */
+	return ln_get_object_rst_horizon (JD, observer, object, LN_STAR_STANDART_HORIZON, rst);	/* standard altitude of stars */
 }
 
 /*! \fn int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
@@ -170,15 +170,6 @@ int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
 
 	/* not circumpolar */
 	return 0;
-}
-
-// helper for ln_get_object_next_rst
-void __ln__check_rst (double JD, double *val)
-{
-	while (*val > JD + LN_SIDEREAL_DAY_DAY)
-		*val -= LN_SIDEREAL_DAY_DAY;
-	while (*val < JD)
-		*val += LN_SIDEREAL_DAY_DAY;
 }
 
 /*! \fn int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);

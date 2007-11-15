@@ -1,5 +1,12 @@
 ChangeLog
 
+*********** release of 0.12.2
+
+20071115
+	Fixed time.h issues.
+
+	Petr Kubanek
+
 20070709
 	Fixed bug in julian_day.c, reported by Michael Richmod.
 

@@ -156,6 +156,7 @@ void ln_get_date (double JD, struct ln_date * date)
 *
 * Set date from system time
 */
+#ifndef __WIN32__
 void ln_get_date_from_timet (time_t * t, struct ln_date * date)
 {
 	struct tm gmt;
@@ -165,6 +166,7 @@ void ln_get_date_from_timet (time_t * t, struct ln_date * date)
     	
 	ln_get_date_from_tm (&gmt, date);
 }
+#endif
 
 /*! \fn void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 * \param tm system tm structure
@@ -191,7 +193,9 @@ void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 void ln_get_date_from_sys (struct ln_date * date)
 {
 	struct tm * gmt;
+#ifndef __WIN32__
         struct timeval tv;
+#endif
         struct timezone tz;
 #ifdef __WIN32__
 	time_t now;
@@ -224,11 +228,13 @@ void ln_get_date_from_sys (struct ln_date * date)
 *
 * Calculate Julian day from time_t.
 */
+#ifndef __WIN32__
 double ln_get_julian_from_timet (time_t * in_time)
 {
 	// 1.1.1970 = JD 2440587.5
 	return (double)(2440587.5 + (double)(*in_time / (double) 86400.0));
 }
+#endif
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \param JD Julian day
@@ -236,10 +242,12 @@ double ln_get_julian_from_timet (time_t * in_time)
 *
 * Calculate time_t from julian day
 */
+#ifndef __WIN32__
 void ln_get_timet_from_julian (double JD, time_t * in_time)
 {	
 	*in_time = (time_t)round((JD - (double) 2440587.5) * (double) 86400.0);
 }
+#endif
 
 /*! \fn double ln_get_julian_from_sys()
 * \return Julian day (UT)

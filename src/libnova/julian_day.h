@@ -19,7 +19,9 @@
 #ifndef _LN_JULIAN_DAY_H
 #define _LN_JULIAN_DAY_H
 
+#ifndef __WIN32__
 #include <time.h>
+#endif
 #include <libnova/ln_types.h>
 
 #ifdef __cplusplus
@@ -45,7 +47,9 @@ void ln_get_date (double JD, struct ln_date * date);
 * \\ingroup calendar
 * \brief Set date from system time
 */
+#ifndef __WIN32__
 void ln_get_date_from_timet (time_t * t, struct ln_date * date);
+#endif
 
 /*! \fn void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 * \\ingroup calendar
@@ -82,13 +86,17 @@ void ln_get_date_from_sys (struct ln_date * date);
 * \brief Calculate julian day from time_t
 * \ingroup calendar
 */
+#ifndef __WIN32__
 double ln_get_julian_from_timet (time_t * in_time);
+#endif
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \brief Calculate time_t from julian day
 * \ingroup calendar
 */
+#ifndef __WIN32__
 void ln_get_timet_from_julian (double JD, time_t * in_time);
+#endif
 
 /*! \fn double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 * \brief Calculate Julian day from local date
