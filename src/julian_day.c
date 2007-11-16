@@ -213,7 +213,11 @@ void ln_get_date_from_sys (struct ln_date * date)
 #endif
     	
 	/* fill in date struct */
+#ifndef __WIN32__
 	date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
+#else
+	date->seconds = gmt->tm_sec;
+#endif
 	date->minutes = gmt->tm_min;
 	date->hours = gmt->tm_hour;
 	date->days = gmt->tm_mday;
