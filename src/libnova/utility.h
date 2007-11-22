@@ -23,6 +23,10 @@
 
 #ifdef __WIN32__
 #include <time.h>
+// cbrt replacement
+#define cbrt(x)   pow (x,1.0/3.0)
+// nan
+#define nan(x)    0
 #endif
 
 #ifdef __cplusplus
