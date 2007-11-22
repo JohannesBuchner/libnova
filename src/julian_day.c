@@ -208,7 +208,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 	gmt = gmtime(&tv.tv_sec);
 #else
 	now = time (NULL);
-	gmtime (&gmt, &now;
+	gmtime (&gmt, &now);
 #endif
     	
 	/* fill in date struct */
