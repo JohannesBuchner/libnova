@@ -116,10 +116,10 @@ void ln_get_date (double JD, struct ln_date * date)
    F = JD - Z;
    
    if (Z < 2299161)
-       A = Z;
+       A = (int) Z;
    else {
        a = (int) ((Z - 1867216.25) / 36524.25);
-       A = Z + 1 + a - (int)(a / 4);
+       A = (int) (Z + 1 + a - (int)(a / 4));
    }
    
    B = A + 1524;
@@ -128,9 +128,9 @@ void ln_get_date (double JD, struct ln_date * date)
    E = (int) ((B - D) / 30.6001);
    
    /* get the hms */
-   date->hours = F * 24;
+   date->hours = (int) (F * 24);
    F -= (double)date->hours / 24;
-   date->minutes = F * 1440;
+   date->minutes = (int) (F * 1440);
    F -= (double)date->minutes / 1440;
    date->seconds = F * 86400;
    
@@ -196,8 +196,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 #ifndef __WIN32__
         struct timeval tv;
         struct timezone tz;
-#endif
-#ifdef __WIN32__
+#else
 	time_t now;
 #endif 
 		
@@ -209,7 +208,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 	gmt = gmtime(&tv.tv_sec);
 #else
 	now = time (NULL);
-	gmt = gmtime (&now);
+	gmtime (&gmt, &now;
 #endif
     	
 	/* fill in date struct */
@@ -298,14 +297,14 @@ void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 #ifndef __WIN32__
 	time_t curtime;
 	struct tm *loctime;
-	long gmtoff;
 #endif
-	
+	long gmtoff;
+
 	ln_get_date (JD, &date);
 
 	/* add day light savings time and hour angle */
 #ifdef __WIN32__
- 	tzset();
+ 	_tzset();
  	gmtoff = _timezone;
  	if (_daylight)
  		gmtoff += 3600;
