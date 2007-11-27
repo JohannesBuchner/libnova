@@ -2,6 +2,11 @@ ChangeLog
 
 *********** release of 0.12.2
 
+20071127
+	Fixed bug #1838359.
+
+	Petr Kubanek
+
 20071115
 	Fixed time.h issues.
 

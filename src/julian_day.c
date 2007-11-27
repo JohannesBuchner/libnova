@@ -396,7 +396,7 @@ double ln_get_julian_from_mpc (char* mpc_date)
 
 /*! \fn void ln_date_to_zonedate (struct ln_date * date, struct ln_zonedate * zonedate, long gmtoff)
 * \param zonedate Ptr to zonedate
-* \param gmtoff Offset in hours from UT
+* \param gmtoff Offset in seconds from UT
 * \param date Ptr to date
 *
 * Converts a ln_date (UT) to a ln_zonedate (local time). 
