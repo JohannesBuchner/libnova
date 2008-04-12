@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.9 2007-01-16 22:50:53 kinglag Exp $
+/* $Id: misc.c,v 1.10 2008-04-12 19:13:29 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -53,21 +53,20 @@
 #include <unistd.h>
 #else
 
-
 /* local types and macros */
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 #define iswhite(c)  ((c)== ' ' || (c)=='\t')
 
-/*
-[]------------------------------------------------------------------------[]
-|  trim() & strip()                                                        |
-|                                                                          |
-|  strips trailing whitespaces from buf.                                   |
-|                                                                          |
-[]------------------------------------------------------------------------[]
-*/
+#endif  /* !__WIN32__ */
+
+/*! \fn char *trim(char *x)
+ * \param x Character which will be trimmed.
+ * \return Trimmed character
+ *
+ * Trim from character leading whitespaces.
+ */
 static char *trim(char *x)
 {
     char *y;
@@ -81,14 +80,11 @@ static char *trim(char *x)
 }
 
 
-/*
-[]------------------------------------------------------------------------[]
-|                                                                          |
-|   skipwhite()                                                            |
-|   salta espacios en blanco                                               |
-|                                                                          |
-[]------------------------------------------------------------------------[]
-*/
+/*! \fn void skipwhite(char **s)
+ * \param s String in which whites will be skipped.
+ *
+ * Skip white spaces.
+ */
 static void skipwhite(char **s)
 {
    while(iswhite(**s))
