@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.13 2007-01-16 22:53:40 kinglag Exp $
+/* $Id: utility.c,v 1.14 2008-05-16 11:29:43 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -43,7 +43,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-#include <libnova/utility.h>
+#include <libnova/libnova.h>
 
 #ifndef __APPLE__
 #include <malloc.h>
@@ -58,8 +58,6 @@
 #include <sys/timeb.h>
 #endif
 
-#define VERSION "0.12.1"
-
 /* Conversion factors between degrees and radians */
 #define D2R  (1.7453292519943295769e-2)  /* deg->radian */
 #define R2D  (5.7295779513082320877e1)   /* radian->deg */
@@ -69,7 +67,7 @@
 #define DM_PI (2*M_PI)
 #define RADIAN (180.0 / M_PI)
 
-static const char ln_version[] = VERSION;
+static const char ln_version[] = LIBNOVA_VERSION;
 
 /*! \fn char * ln_get_version (void)
 * \return Null terminated version string.

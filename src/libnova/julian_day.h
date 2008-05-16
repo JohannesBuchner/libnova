@@ -19,6 +19,10 @@
 #ifndef _LN_JULIAN_DAY_H
 #define _LN_JULIAN_DAY_H
 
+#ifdef __WIN32
+#define __WIN32__
+#endif
+
 #ifndef __WIN32__
 #include <time.h>
 #endif

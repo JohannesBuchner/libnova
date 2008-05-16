@@ -16,6 +16,8 @@
  *  Copyright (C) 2000 - 2005 Liam Girdwood  
  */
 
+#define LIBNOVA_VERSION "0.12.2"
+
 /*! \mainpage libnova
 * \image html libnova-logo.jpg
 * Celestial Mechanics, Astrometry and Astrodynamics Library

@@ -2,6 +2,11 @@ ChangeLog
 
 *********** release of 0.12.2
 
+20080516
+	Fixed bug #1838539.
+
+	Petr Kubanek
+
 20080413
 	Fixed bug #1940972.
 
