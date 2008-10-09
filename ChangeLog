@@ -1,5 +1,10 @@
 ChangeLog
 
+20081008
+	Fixed MS Windows support
+
+	path provided by Stephane Lamoliatte, applied by Petr Kubanek
+
 *********** release of 0.12.2
 
 20080516

@@ -30,6 +30,14 @@
 /* should be in math.h, but isn't on FC3 even with _GNU_SOURCE */
 double round (double __x); 
 
+#ifdef __WIN32__
+// The round function does not exist on visual studio
+double round (double __x)
+{
+    return floor(__x + 0.5);
+}
+#endif 
+
 /*! \fn double ln_get_julian_day (struct ln_date * date)
 * \param date Date required.
 * \return Julian day
@@ -208,7 +216,7 @@ void ln_get_date_from_sys (struct ln_date * date)
 	gmt = gmtime(&tv.tv_sec);
 #else
 	now = time (NULL);
-	gmtime (&gmt, &now);
+	gmt = gmtime (&now);
 #endif
     	
 	/* fill in date struct */
@@ -231,13 +239,11 @@ void ln_get_date_from_sys (struct ln_date * date)
 *
 * Calculate Julian day from time_t.
 */
-#ifndef __WIN32__
 double ln_get_julian_from_timet (time_t * in_time)
 {
 	// 1.1.1970 = JD 2440587.5
 	return (double)(2440587.5 + (double)(*in_time / (double) 86400.0));
 }
-#endif
 
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \param JD Julian day
@@ -245,12 +251,10 @@ double ln_get_julian_from_timet (time_t * in_time)
 *
 * Calculate time_t from julian day
 */
-#ifndef __WIN32__
 void ln_get_timet_from_julian (double JD, time_t * in_time)
 {	
 	*in_time = (time_t)round((JD - (double) 2440587.5) * (double) 86400.0);
 }
-#endif
 
 /*! \fn double ln_get_julian_from_sys()
 * \return Julian day (UT)

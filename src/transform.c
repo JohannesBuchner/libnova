@@ -75,7 +75,7 @@ void ln_get_rect_from_helio
 void ln_get_hrz_from_equ (struct ln_equ_posn * object, struct ln_lnlat_posn * observer, double JD, struct ln_hrz_posn * position)
 {
 	double sidereal;
-
+	
 	/* get mean sidereal time in hours*/
 	sidereal = ln_get_mean_sidereal_time (JD);
 	ln_get_hrz_from_equ_sidereal_time (object, observer, sidereal, position);
@@ -102,7 +102,7 @@ void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_l
 	A = sin (latitude) * sin (declination) + cos (latitude) * cos (declination) * cos (H);
 	h = asin (A);
 
-	/* covert back to degrees */
+	/* convert back to degrees */
 	position->alt = ln_rad_to_deg (h);   
 
 	/* zenith distance, Telescope Control 6.8a */
@@ -112,7 +112,6 @@ void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_l
 	Zs = sin (Z);
 
 	/* sane check for zenith distance; don't try to divide by 0 */
-
 	if (fabs(Zs) < 1e-5) {
 		if (object->dec > 0)
 			position->az = 180;
@@ -140,7 +139,7 @@ void ln_get_hrz_from_equ_sidereal_time (struct ln_equ_posn * object, struct ln_l
 	}
 	A = atan2 (As, Ac);
 
-	/* covert back to degrees */
+	/* convert back to degrees */
 	position->az = ln_range_degrees(ln_rad_to_deg (A));
 }
 

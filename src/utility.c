@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.14 2008-05-16 11:29:43 pkubanek Exp $
+/* $Id: utility.c,v 1.15 2008-10-09 04:59:48 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -39,7 +39,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <unistd.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>

@@ -20,7 +20,20 @@ Copyright 2000 Liam Girdwood  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <libnova/libnova.h>
-#include <unistd.h>
+#ifndef __WIN32__
+    #include <unistd.h>
+#endif 
+
+#ifdef __WIN32__
+// the usleep functtion does not exist in visual studio
+void usleep(int miliseconds)
+{
+    clock_t endwait;
+    endwait = clock () + miliseconds * CLOCKS_PER_SEC / 1000;
+    while (clock() < endwait) {}
+}
+
+#endif
 
 /*
  * Define DATE or SYS_DATE for testing VSOP87 theory with other JD
@@ -137,7 +150,7 @@ int julian_test (void)
 	time (&now);
 	ln_get_timet_from_julian (ln_get_julian_from_timet (&now), &now_jd);
 
-	failed += test_result ("(Julian Day) Diferrence between time_t from system and from JD", now - now_jd, 0, 0);
+	failed += test_result ("(Julian Day) Diferrence between time_t from system and from JD", difftime(now, now_jd), 0, 0);
 
 	return failed;
 }
@@ -1366,7 +1379,8 @@ int ell_rst_test ()
 	date.months = 3;
 	date.days = 24;
 
-	date.hours = date.minutes = date.seconds = 0;
+	date.hours = date.minutes = 0;
+	date.seconds = 0.0;
 
 	JD = ln_get_julian_day (&date);
 
@@ -1465,7 +1479,8 @@ int hyp_future_rst_test ()
 	date.days = 17;
 
 	date.hours = 12;
-	date.minutes = date.seconds = 0;
+	date.minutes = 0;
+	date.seconds = 0.0;
 
 	JD = ln_get_julian_day (&date);
 
@@ -1509,7 +1524,8 @@ int body_future_rst_test ()
 	date.months = 1;
 	date.days = 1;
 
-	date.hours = date.minutes = date.seconds = 0;
+	date.hours = date.minutes = 0;
+	date.seconds = 0.0;
 
 	JD = ln_get_julian_day (&date);
 
