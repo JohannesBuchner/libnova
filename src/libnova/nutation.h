@@ -39,7 +39,7 @@ extern "C" {
 * \ingroup nutation
 * \brief Calculate nutation. 
 */
-void ln_get_nutation (double JD, struct ln_nutation * nutation);
+void LIBNOVA_EXPORT ln_get_nutation (double JD, struct ln_nutation * nutation);
 	
 #ifdef __cplusplus
 };

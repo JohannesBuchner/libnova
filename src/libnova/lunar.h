@@ -35,78 +35,78 @@ extern "C" {
 */
 
 /*! \fn double ln_get_lunar_sdiam (double JD)
-* \brief Calcaluate the semidiameter of the Moon in arc seconds.
+* \brief Calculate the semidiameter of the Moon in arc seconds.
 * \ingroup lunar
 */
-double ln_get_lunar_sdiam (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_sdiam (double JD);
 
 /*! \fn double ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for the Moon.
 * \ingroup lunar
 */
 
-int ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_lunar_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
 * \brief Calculate the rectangular geocentric lunar cordinates.
 * \ingroup lunar
 */ 
 /* ELP 2000-82B theory */
-void ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
+void LIBNOVA_EXPORT ln_get_lunar_geo_posn (double JD, struct ln_rect_posn * moon, double precision);
 
 /*! \fn void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
 * \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 
-void ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
+void LIBNOVA_EXPORT ln_get_lunar_equ_coords_prec (double JD, struct ln_equ_posn * position, double precision);
 
 /*! \fn void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate lunar equatorial coordinates.
 * \ingroup lunar
 */ 
-void ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_lunar_equ_coords (double JD, struct ln_equ_posn * position);
 
 /*! \fn void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
 * \brief Calculate lunar ecliptical coordinates.
 * \ingroup lunar
 */ 
-void ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
+void LIBNOVA_EXPORT ln_get_lunar_ecl_coords (double JD, struct ln_lnlat_posn * position, double precision);
 
 /*! \fn double ln_get_lunar_phase (double JD);
 * \brief Calculate the phase angle of the Moon.
 * \ingroup lunar
 */ 
-double ln_get_lunar_phase (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_phase (double JD);
 
 /*! \fn double ln_get_lunar_disk (double JD);
 * \brief Calculate the illuminated fraction of the Moons disk
 * \ingroup lunar
 */ 
-double ln_get_lunar_disk (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_disk (double JD);
 	
 /*! \fn double ln_get_lunar_earth_dist (double JD);
 * \brief Calculate the distance between the Earth and the Moon.
 * \ingroup lunar
 */ 
-double ln_get_lunar_earth_dist (double JD);	
+double LIBNOVA_EXPORT ln_get_lunar_earth_dist (double JD);	
 	
 /*! \fn double ln_get_lunar_bright_limb (double JD);
 * \brief Calculate the position angle of the Moon's bright limb.
 * \ingroup lunar
 */ 
-double ln_get_lunar_bright_limb (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_bright_limb (double JD);
 
 /*! \fn double ln_get_lunar_long_asc_node (double JD);
 * \brief Calculate the longitude of the Moon's mean ascending node.
 * \ingroup lunar
 */ 
-double ln_get_lunar_long_asc_node (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_long_asc_node (double JD);
 
 /*! \fn double ln_get_lunar_long_perigee (double JD);
 * \brief Calculate the longitude of the Moon's mean perigee.
 * \ingroup lunar
 */ 
-double ln_get_lunar_long_perigee (double JD);
+double LIBNOVA_EXPORT ln_get_lunar_long_perigee (double JD);
 
 #ifdef __cplusplus
 };

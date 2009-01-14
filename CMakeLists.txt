@@ -5,6 +5,15 @@ project(libnova)
 # define the name of the library
 set(LIBRARY_NAME libnova)
 
+option(BUILD_SHARED_LIBRARY "Set to ON to build libnova as a shared library." ON)
+if(BUILD_SHARED_LIBRARY)
+    set(BUILD_SHARED_LIBS TRUE)
+    add_definitions(-DLIBNOVA_SHARED)
+else(BUILD_SHARED_LIBRARY)
+    set(BUILD_SHARED_LIBS FALSE)
+    add_definitions(-DLIBNOVA_STATIC)
+endif(BUILD_SHARED_LIBRARY)
+
 # add some definitions
 if(WIN32)
     add_definitions(-D_USE_MATH_DEFINES)
@@ -15,8 +24,8 @@ endif(WIN32)
 
 # add more optimization flags to the visual studio release compilation
 if(MSVC)
-    SET(CMAKE_CXX_FLAGS_RELEASE "/MD /Ox /Ob2 /D NDEBUG")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2 /GS-")
+    set(CMAKE_CXX_FLAGS_RELEASE "/MD /Ox /Ob2 /D NDEBUG")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2 /GS-")
 endif(MSVC)
 
 

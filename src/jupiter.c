@@ -4039,7 +4039,7 @@ double ln_get_jupiter_pol_sdiam (double JD)
 
 /*! \fn void ln_get_jupiter_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
-* \param position ointer to return position
+* \param position pointer to return position
 *
 * Calculate Jupiters rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.

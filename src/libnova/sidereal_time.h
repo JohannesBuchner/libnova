@@ -35,14 +35,14 @@ extern "C" {
 * \brief Calculate mean sidereal time from date. 
 * \ingroup sidereal
 */ 
-double ln_get_mean_sidereal_time (double JD);
+double LIBNOVA_EXPORT ln_get_mean_sidereal_time (double JD);
 
 /*! \fn ln_get_apparent_sidereal_time (double JD)
 * \brief Calculate apparent sidereal time from date.
 * \ingroup sidereal
 */
  
-double ln_get_apparent_sidereal_time (double JD);
+double LIBNOVA_EXPORT ln_get_apparent_sidereal_time (double JD);
 
 #ifdef __cplusplus
 };

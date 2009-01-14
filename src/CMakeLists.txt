@@ -37,7 +37,7 @@ set(LIBRARY_PUBLIC_HEADERS
 	${HEADER_PATH}/airmass.h
 )
 
-add_library(${LIBRARY_NAME}
+add_library(${LIBRARY_NAME} 
   ${LIBRARY_PUBLIC_HEADERS}
 	julian_day.c
 	dynamical_time.c
@@ -74,7 +74,11 @@ add_library(${LIBRARY_NAME}
 )
 
 if(MSVC)
-    set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../" IMPORT_PREFIX "../../lib/")
+    if(BUILD_SHARED_LIBRARY)
+        set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../../bin/" IMPORT_PREFIX "../")
+    else(BUILD_SHARED_LIBRARY)
+        set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../")
+    endif(BUILD_SHARED_LIBRARY)
 endif(MSVC)
 
 
@@ -100,5 +104,5 @@ install(
 
 install(
     FILES       ${LIBRARY_PUBLIC_HEADERS}
-    DESTINATION ${INSTALL_INCDIR}/${LIB_NAME}
+    DESTINATION ${INSTALL_INCDIR}/${LIBRARY_NAME}
 )

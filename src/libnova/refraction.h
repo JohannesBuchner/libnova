@@ -37,7 +37,7 @@ extern "C" {
 * refraction.
 * \ingroup refraction
 */
-double ln_get_refraction_adj (double altitude, double atm_pres, double temp);
+double LIBNOVA_EXPORT ln_get_refraction_adj (double altitude, double atm_pres, double temp);
 	
 #ifdef __cplusplus
 };

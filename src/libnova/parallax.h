@@ -29,13 +29,13 @@ extern "C" {
 * \ingroup parallax
 * \brief Calculate parallax in RA and DEC for given geographic location
 */
-void ln_get_parallax (struct ln_equ_posn * object, double au_distance, struct ln_lnlat_posn * observer, double height, double JD, struct ln_equ_posn * parallax);
+void LIBNOVA_EXPORT ln_get_parallax (struct ln_equ_posn * object, double au_distance, struct ln_lnlat_posn * observer, double height, double JD, struct ln_equ_posn * parallax);
 
 /*! \fn void ln_get_parallax_ha (struct ln_equ_posn * object, double au_distance, struct ln_lnlat_posn * observer, double height, double H, struct ln_equ_posn * parallax);
 * \ingroup parallax
 * \brief Calculate parallax in RA and DEC for given geographic location
 */
-void ln_get_parallax_ha (struct ln_equ_posn * object, double au_distance, struct ln_lnlat_posn * observer, double height, double H, struct ln_equ_posn * parallax);
+void LIBNOVA_EXPORT ln_get_parallax_ha (struct ln_equ_posn * object, double au_distance, struct ln_lnlat_posn * observer, double height, double H, struct ln_equ_posn * parallax);
 
 #ifdef __cplusplus
 };

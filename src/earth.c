@@ -2690,7 +2690,7 @@ static const struct ln_vsop earth_radius_r5[RADIUS_R5] = {
 * \param JD Julian day
 * \param position Pointer to store heliocentric position
 *
-* Calculate Earths heliocentric (refered to the centre of the Sun) coordinates 
+* Calculate Earths heliocentric (referred to the centre of the Sun) coordinates 
 * for given julian day.
 * Longitude and Latitude are in degrees, whilst radius vector is in AU.
 */ 
@@ -2785,7 +2785,7 @@ double ln_get_earth_solar_dist (double JD)
 * \param p_sin_o Pointer to hold p_sin_o
 * \param p_cos_o Pointer to hold p_cos_o
 * 
-* Calculate the quantaties "p sin o" and "p cos o" needed in calculations for
+* Calculate the quantities "p sin o" and "p cos o" needed in calculations for
 * diurnal parallaxes, eclipses and occultations given the observers height
 * in metres above sea level and there latitude in degrees.
 */
@@ -2805,7 +2805,7 @@ void ln_get_earth_centre_dist (float height, double latitude, double *p_sin_o, d
      
 /*! \fn void ln_get_earth_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
-* \param position ointer to return position
+* \param position pointer to return position
 *
 * Calculate the Earths rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.

@@ -1884,7 +1884,7 @@ void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position)
 * \param JD Julian Day
 * \param position Pointer to store new heliocentric position
 *
-* Calculate Venus heliocentric (refered to the centre of the Sun) coordinates
+* Calculate Venus heliocentric (referred to the centre of the Sun) coordinates
 * in the FK5 reference frame for the given julian day.
 * Longitude and Latitude are in degrees, whilst radius vector is in AU.
 */ 
@@ -2114,7 +2114,7 @@ double ln_get_venus_sdiam (double JD)
 	
 /*! \fn void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
-* \param position ointer to return position
+* \param position pointer to return position
 *
 * Calculate Venus rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
@@ -2122,7 +2122,7 @@ double ln_get_venus_sdiam (double JD)
 void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 {
 	struct ln_helio_posn venus;
-		
+	
 	ln_get_venus_helio_coords (JD, &venus);
 	ln_get_rect_from_helio (&venus, position);
 }

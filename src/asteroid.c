@@ -64,7 +64,7 @@ double ln_get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, do
 * \param A Albedo of asteroid
 * \return Semidiameter in km
 *
-* Calcaluate the semidiameter of an asteroid in km.
+* Calculate the semidiameter of an asteroid in km.
 *
 * Note: Many asteroids have an irregular shape and therefore this function returns
 * an approximate value of the diameter.
@@ -81,7 +81,7 @@ double ln_get_asteroid_sdiam_km (double H, double A)
 * \param A Albedo of asteroid
 * \return Semidiameter in seconds of arc
 *
-* Calcaluate the semidiameter of an asteroid in arc seconds.
+* Calculate the semidiameter of an asteroid in arc seconds.
 *
 * Note: Many asteroids have an irregular shape and therefore this function returns
 * an approximate value of the diameter.

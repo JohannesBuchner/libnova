@@ -23,14 +23,26 @@
 extern "C" {
 #endif
 
-/* define some usefull constants if they are not already defined */	
-#ifndef M_PI_2
+#if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__)  || defined( __MWERKS__)
+#  if defined( LIBNOVA_STATIC )
+#    define LIBNOVA_EXPORT
+#  elif defined( LIBNOVA_SHARED )
+#    define LIBNOVA_EXPORT   __declspec(dllexport)
+#  else
+#    define LIBNOVA_EXPORT   __declspec(dllimport)
+#  endif
+#else
+#  define LIBNOVA_EXPORT
+#endif 
+
+/* define some useful constants if they are not already defined */
+#if(!defined(M_PI_2) && (!defined(_MSC_VER) || !defined(_USE_MATH_DEFINES)))
 #define M_PI_2          1.5707963267948966192313216916398
 #define M_PI_4          0.78539816339744830961566084581988
 #define M_PI            3.1415926535897932384626433832795
 #endif
 
-/* sideral day lenght in seconds and days (for JD)*/
+/* sideral day length in seconds and days (for JD)*/
 #define LN_SIDEREAL_DAY_SEC 86164.09
 #define LN_SIDEREAL_DAY_DAY LN_SIDEREAL_DAY_SEC/86400
 
@@ -110,7 +122,7 @@ struct ln_hms
 };
 
 /*! \struct lnh_equ_posn
-** \brief Right Acsension and Declination.
+** \brief Right Ascension and Declination.
 *
 * Human readable Equatorial Coordinates.
 */

@@ -39,14 +39,14 @@ extern "C" {
 * \brief Calculate the time of rise, set and transit for an object not orbiting the Sun.
 * \ingroup rst
 */
-int ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_object_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit above local horizon for
-* an objet not orbiting the Sun.
+* an object not orbiting the Sun.
 *
 */
-int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
+int LIBNOVA_EXPORT ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
     struct ln_equ_posn * object, long double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
@@ -55,35 +55,35 @@ int ln_get_object_rst_horizon (double JD, struct ln_lnlat_posn * observer,
 * This function is not too precise, it's good to get general idea when object will rise.
 * \ingroup rst
 */
-int ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_object_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_object_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object, double horizon, struct ln_rst_time * rst);
 * \brief Calculate the time of next rise, set and transit for an object not orbiting the Sun.
 * E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
 * \ingroup rst
 */
-int ln_get_object_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,
+int LIBNOVA_EXPORT ln_get_object_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_equ_posn * object,
     double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time *rst);
- * \brief Calculate the time of rise, set and transit for an object a body, ussually Sun, a planet or Moon.
+ * \brief Calculate the time of rise, set and transit for an object a body, usually Sun, a planet or Moon.
  * \ingroup rst
  */
-int ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time *rst);
- * \brief Calculate the time of next  rise, set and transit for an object a body, ussually Sun, a planet or Moon.
+ * \brief Calculate the time of next  rise, set and transit for an object a body, usually Sun, a planet or Moon.
  * E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
  * \ingroup rst
  */
-int ln_get_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, int day_limit, struct ln_rst_time *rst);
- * \brief Calculate the time of next  rise, set and transit for an object a body, ussually Sun, a planet or Moon.
+ * \brief Calculate the time of next  rise, set and transit for an object a body, usually Sun, a planet or Moon.
  * E.g. it's sure, that rise, set and transit will be in <JD, JD+day_limit> range.
  * \ingroup rst
  */
-int ln_get_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, int day_limit, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, void (*get_equ_body_coords) (double, struct ln_equ_posn *), double horizon, int day_limit, struct ln_rst_time * rst);
 
 typedef void (*get_motion_body_coords_t) (double, void * orbit, struct ln_equ_posn *);
 
@@ -91,21 +91,21 @@ typedef void (*get_motion_body_coords_t) (double, void * orbit, struct ln_equ_po
  * \brief Calculate the time of rise, set and transit for an object a body on elliptic, parabolic or hyperbolic orbit.
  * \ingroup rst
  */
-int ln_get_motion_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_motion_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_motion_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, double horizon, struct ln_rst_time *rst);
  * \brief Calculate the time of next  rise, set and transit for an object a body on elliptic, parabolic or hyperbolic orbit.
  * E.g. it's sure, that rise, set and transit will be in <JD, JD+1> range.
  * \ingroup rst
  */
-int ln_get_motion_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_motion_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, struct ln_rst_time * rst);
 
 /*! \fn int ln_get_motion_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, double horizon, int day_limit, struct ln_rst_time *rst);
  * \brief Calculate the time of next  rise, set and transit for an object a body on elliptic, parabolic or hyperbolic orbit.
  * E.g. it's sure, that rise, set and transit will be in <JD, JD+day_limit> range.
  * \ingroup rst
  */
-int ln_get_motion_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_motion_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, get_motion_body_coords_t get_motion_body_coords, void * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };

@@ -448,7 +448,7 @@ int ln_get_body_next_rst_horizon (double JD, struct ln_lnlat_posn *observer,
 * the whole day either above or below the horizon.
 *
 * Note 2: This function will not work for body, which ra changes more
-* then 180 deg in one day (get_equ_body_coords changes so much). But
+* than 180 deg in one day (get_equ_body_coords changes so much). But
 * you should't use that function for any body which moves to fast..use
 * some special function for such things.
 */

@@ -25,7 +25,7 @@ Copyright 2000 Liam Girdwood  */
 #endif 
 
 #ifdef __WIN32__
-// the usleep functtion does not exist in visual studio
+// the usleep function does not exist in visual studio
 void usleep(int miliseconds)
 {
     clock_t endwait;

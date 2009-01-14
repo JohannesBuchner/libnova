@@ -36,17 +36,17 @@ extern "C" {
 * \fn double ln_get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G)
 * \brief Calculate the visual magnitude of an asteroid.
 */
-double ln_get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G);	
+double LIBNOVA_EXPORT ln_get_asteroid_mag (double JD, struct ln_ell_orbit * orbit, double H, double G);	
 	
 /*! \fn double ln_get_asteroid_sdiam_km (double H, double A)
-* \brief Calcaluate the semidiameter of an asteroid in km.
+* \brief Calculate the semidiameter of an asteroid in km.
 */
-double ln_get_asteroid_sdiam_km (double H, double A);	
+double LIBNOVA_EXPORT ln_get_asteroid_sdiam_km (double H, double A);	
 	
 /*! \fn double ln_get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A)
-* \brief Calcaluate the semidiameter of an asteroid in arc seconds.
+* \brief Calculate the semidiameter of an asteroid in arc seconds.
 */
-double ln_get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A);
+double LIBNOVA_EXPORT ln_get_asteroid_sdiam_arc (double JD, struct ln_ell_orbit * orbit, double H, double A);
 
 #ifdef __cplusplus
 };

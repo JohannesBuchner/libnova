@@ -1,9 +1,16 @@
 ChangeLog
 
+*********** release of 0.12.3
+
+20090114
+	Another fix of MS Windows support
+
+	patch provided by Stephane Lamoliatte, applied by Petr Kubanek
+
 20081008
 	Fixed MS Windows support
 
-	path provided by Stephane Lamoliatte, applied by Petr Kubanek
+	patch provided by Stephane Lamoliatte, applied by Petr Kubanek
 
 *********** release of 0.12.2
 

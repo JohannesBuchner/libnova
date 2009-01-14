@@ -37,13 +37,13 @@ extern "C" {
 * \brief Calculate the angular separation between 2 bodies
 * \ingroup angular
 */		
-double ln_get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+double LIBNOVA_EXPORT ln_get_angular_separation (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
 
 /*! \fn double ln_get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
 * \brief Calculate the position angle between 2 bodies
 * \ingroup angular
 */	
-double ln_get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
+double LIBNOVA_EXPORT ln_get_rel_posn_angle (struct ln_equ_posn* posn1, struct ln_equ_posn* posn2);
 	
 #ifdef __cplusplus
 };

@@ -33,30 +33,30 @@ extern "C" {
 */
 
 /*! \fn double ln_get_venus_sdiam (double JD)
-* \brief Calcaluate the semidiameter of Venus in arc seconds.
+* \brief Calculate the semidiameter of Venus in arc seconds.
 * \ingroup venus
 */
-double ln_get_venus_sdiam (double JD);
+double LIBNOVA_EXPORT ln_get_venus_sdiam (double JD);
 
 /*! \fn double ln_get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for Venus.
 * \ingroup venus
 */
-int ln_get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_venus_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void ln_get_venus_helio_coords (double JD, struct ln_helio_posn * position);
-* \brief Calvulate Venus heliocentric coordinates 
+* \brief Calculate Venus heliocentric coordinates 
 * \ingroup venus
 */
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_venus_helio_coords (double JD, struct ln_helio_posn * position);
+void LIBNOVA_EXPORT ln_get_venus_helio_coords (double JD, struct ln_helio_posn * position);
 
 /*! \fn void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate Venus equatorial coordinates
 * \ingroup venus
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 
 /*! \fn double ln_get_venus_earth_dist (double JD);
 * \brief Calculate the distance between Venus and the Earth.
@@ -64,7 +64,7 @@ void ln_get_venus_equ_coords (double JD, struct ln_equ_posn * position);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_venus_earth_dist (double JD);
+double LIBNOVA_EXPORT ln_get_venus_earth_dist (double JD);
 	
 /*! \fn double ln_get_venus_solar_dist (double JD);
 * \brief Calculate the distance between Venus and the Sun.
@@ -72,7 +72,7 @@ double ln_get_venus_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_venus_solar_dist (double JD);
+double LIBNOVA_EXPORT ln_get_venus_solar_dist (double JD);
 	
 /*! \fn double ln_get_venus_magnitude (double JD);
 * \brief Calculate the visible magnitude of Venus
@@ -80,7 +80,7 @@ double ln_get_venus_solar_dist (double JD);
 * \return Visible magnitude of Venus
 */ 
 /* Chapter ?? */
-double ln_get_venus_magnitude (double JD);
+double LIBNOVA_EXPORT ln_get_venus_magnitude (double JD);
 
 /*! \fn double ln_get_venus_disk (double JD);
 * \brief Calculate the illuminated fraction of Venus disk
@@ -88,7 +88,7 @@ double ln_get_venus_magnitude (double JD);
 * \return Illuminated fraction of Venus disk
 */ 
 /* Chapter 41 */
-double ln_get_venus_disk (double JD);
+double LIBNOVA_EXPORT ln_get_venus_disk (double JD);
 
 /*! \fn double ln_get_venus_phase (double JD);
 * \brief Calculate the phase angle of Venus.
@@ -96,13 +96,13 @@ double ln_get_venus_disk (double JD);
 * \return Phase angle of Venus (degrees)
 */ 
 /* Chapter 41 */
-double ln_get_venus_phase (double JD);
+double LIBNOVA_EXPORT ln_get_venus_phase (double JD);
 
 /*! \fn void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position)
 * \ingroup venus
 * \brief Calculate Venus rectangular heliocentric coordinates.
 */
-void ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position);
+void LIBNOVA_EXPORT ln_get_venus_rect_helio (double JD, struct ln_rect_posn * position);
 	
 #ifdef __cplusplus
 };

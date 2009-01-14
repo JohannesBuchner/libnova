@@ -19,6 +19,8 @@
 #ifndef _LN_AIRMASS_H
 #define _LN_AIRMASS_H
 
+#include <libnova/ln_types.h> 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,7 +29,7 @@ extern "C" {
  * \brief Calculate airmass in given altitude.
  * \ingroup airmass
  */
-double ln_get_airmass (double alt, double airmass_scale);
+double LIBNOVA_EXPORT ln_get_airmass (double alt, double airmass_scale);
 
 #ifdef __cplusplus
 };

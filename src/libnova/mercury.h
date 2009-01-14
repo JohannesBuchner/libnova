@@ -33,23 +33,23 @@ extern "C" {
 */
 
 /*! \fn double ln_get_mercury_sdiam (double JD)
-* \brief Calcaluate the semidiameter of Mercury in arc seconds.
+* \brief Calculate the semidiameter of Mercury in arc seconds.
 * \ingroup mercury
 */
-double ln_get_mercury_sdiam (double JD);
+double LIBNOVA_EXPORT ln_get_mercury_sdiam (double JD);
 
 /*! \fn double ln_get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for Mercury.
 * \ingroup mercury
 */
-int ln_get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_mercury_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Mercury's heliocentric coordinates
 * \ingroup mercury
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
+void LIBNOVA_EXPORT ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
 
 
 /*! \fn void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
@@ -57,7 +57,7 @@ void ln_get_mercury_helio_coords (double JD, struct ln_helio_posn * position);
 * \ingroup mercury
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 
 /*! \fn double ln_get_mercury_earth_dist (double JD);
 * \brief Calculate the distance between Mercury and the Earth.
@@ -65,7 +65,7 @@ void ln_get_mercury_equ_coords (double JD, struct ln_equ_posn * position);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_mercury_earth_dist (double JD);
+double LIBNOVA_EXPORT ln_get_mercury_earth_dist (double JD);
 	
 /*! \fn double ln_get_mercury_solar_dist (double JD);
 * \brief Calculate the distance between Mercury and the Sun in AU
@@ -73,7 +73,7 @@ double ln_get_mercury_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_mercury_solar_dist (double JD);
+double LIBNOVA_EXPORT ln_get_mercury_solar_dist (double JD);
 	
 /*! \fn double ln_get_mercury_magnitude (double JD);
 * \brief Calculate the visible magnitude of Mercury
@@ -81,7 +81,7 @@ double ln_get_mercury_solar_dist (double JD);
 * \return Visible magnitude of Mercury
 */ 
 /* Chapter ?? */
-double ln_get_mercury_magnitude (double JD);	
+double LIBNOVA_EXPORT ln_get_mercury_magnitude (double JD);	
 	
 /*! \fn double ln_get_mercury_disk (double JD);
 * \brief Calculate the illuminated fraction of Mercury's disk
@@ -89,7 +89,7 @@ double ln_get_mercury_magnitude (double JD);
 * \return Illuminated fraction of mercurys disk
 */ 
 /* Chapter 41 */
-double ln_get_mercury_disk (double JD);
+double LIBNOVA_EXPORT ln_get_mercury_disk (double JD);
 
 /*! \fn double ln_get_mercury_phase (double JD);
 * \brief Calculate the phase angle of Mercury (Sun - Mercury - Earth)
@@ -97,14 +97,14 @@ double ln_get_mercury_disk (double JD);
 * \return Phase angle of Mercury (degrees)
 */ 
 /* Chapter 41 */
-double ln_get_mercury_phase (double JD);
+double LIBNOVA_EXPORT ln_get_mercury_phase (double JD);
 
 
 /*! \fn void ln_get_mercury_rect_helio (double JD, struct ln_rect_posn * position)
 * \ingroup mercury
 * \brief Calculate Mercurys rectangular heliocentric coordinates.
 */
-void ln_get_mercury_rect_helio (double JD, struct ln_rect_posn * position);
+void LIBNOVA_EXPORT ln_get_mercury_rect_helio (double JD, struct ln_rect_posn * position);
 
 #ifdef __cplusplus
 };

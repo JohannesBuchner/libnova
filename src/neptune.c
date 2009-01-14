@@ -2393,7 +2393,7 @@ double ln_get_neptune_sdiam (double JD)
 	
 /*! \fn void ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
-* \param position ointer to return position
+* \param position pointer to return position
 *
 * Calculate Neptunes rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.

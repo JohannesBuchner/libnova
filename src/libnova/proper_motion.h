@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-/*! \defgroup motion Proper Motion.
+/*! \defgroup motion Proper Motion
 * Proper motion is the motion in space of a star between 2 epochs. It has components
 * in right ascension and in declination.
 *
@@ -37,7 +37,7 @@ extern "C" {
 * \ingroup motion
 */
 /* Equ 20.2, 20.3, 20.4 pg 126 */
-void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, struct ln_equ_posn * position);
 
 
 /*! \fn void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position)
@@ -45,7 +45,7 @@ void ln_get_equ_pm (struct ln_equ_posn * mean_position, struct ln_equ_posn * pro
 */
 /* Equ 20.2, 20.3, 20.4 pg 126 
 */
-void ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_equ_pm_epoch (struct ln_equ_posn * mean_position, struct ln_equ_posn * proper_motion, double JD, double epoch_JD, struct ln_equ_posn * position);
 #ifdef __cplusplus
 };
 #endif

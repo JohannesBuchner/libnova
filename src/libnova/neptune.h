@@ -33,30 +33,30 @@ extern "C" {
 */
 
 /*! \fn double ln_get_neptune_sdiam (double JD)
-* \brief Calcaluate the semidiameter of Neptune in arc seconds.
+* \brief Calculate the semidiameter of Neptune in arc seconds.
 * \ingroup neptune
 */
-double ln_get_neptune_sdiam (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_sdiam (double JD);
 
 /*! \fn double ln_get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for Neptune.
 * \ingroup neptune
 */
-int ln_get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_neptune_rst (double JD, struct ln_lnlat_posn * observer, struct ln_rst_time * rst);
 
 /*! \fn void ln_get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
 * \brief Calculate Neptune's heliocentric coordinates.
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
+void LIBNOVA_EXPORT ln_get_neptune_helio_coords (double JD, struct ln_helio_posn * position);
 
 /*! \fn void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \brief Calculate Neptune's equatorial coordinates.
 * \ingroup neptune
 */ 
 /* Chapter 31 Pg 206-207 Equ 31.1 31.2 , 31.3 using VSOP 87 */
-void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
+void LIBNOVA_EXPORT ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 		
 /*! \fn double ln_get_neptune_earth_dist (double JD);
 * \brief Calculate the distance between Neptune and the Earth.
@@ -64,7 +64,7 @@ void ln_get_neptune_equ_coords (double JD, struct ln_equ_posn * position);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_neptune_earth_dist (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_earth_dist (double JD);
 	
 /*! \fn double ln_get_neptune_solar_dist (double JD);
 * \brief Calculate the distance between Neptune and the Sun.
@@ -72,15 +72,15 @@ double ln_get_neptune_earth_dist (double JD);
 * \return Distance in AU
 */ 
 /* Chapter ?? */
-double ln_get_neptune_solar_dist (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_solar_dist (double JD);
 	
 /*! \fn double ln_get_neptune_magnitude (double JD);
 * \brief Calculate the visible magnitude of Neptune.
 * \ingroup neptune
-* \return Visisble magnitude of Neptune.
+* \return Visible magnitude of Neptune.
 */ 
 /* Chapter ?? */
-double ln_get_neptune_magnitude (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_magnitude (double JD);
 
 /*! \fn double ln_get_neptune_disk (double JD);
 * \brief Calculate the illuminated fraction of Neptune's disk.
@@ -88,7 +88,7 @@ double ln_get_neptune_magnitude (double JD);
 * \return Illuminated fraction of Neptune's disk.
 */ 
 /* Chapter 41 */
-double ln_get_neptune_disk (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_disk (double JD);
 
 /*! \fn double ln_get_neptune_phase (double JD);
 * \brief Calculate the phase angle of Neptune.
@@ -96,13 +96,13 @@ double ln_get_neptune_disk (double JD);
 * \return Phase angle of Neptune (degrees)
 */ 
 /* Chapter 41 */
-double ln_get_neptune_phase (double JD);
+double LIBNOVA_EXPORT ln_get_neptune_phase (double JD);
 
 /*! \fn void ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position)
 * \ingroup neptune
 * \brief Calculate Neptunes rectangular heliocentric coordinates.
 */
-void ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position);
+void LIBNOVA_EXPORT ln_get_neptune_rect_helio (double JD, struct ln_rect_posn * position);
 
 #ifdef __cplusplus
 };

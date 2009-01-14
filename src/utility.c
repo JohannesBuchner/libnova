@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.15 2008-10-09 04:59:48 pkubanek Exp $
+/* $Id: utility.c,v 1.16 2009-01-14 00:22:16 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -413,7 +413,7 @@ void ln_hrz_to_hhrz (struct ln_hrz_posn * pos, struct lnh_hrz_posn * hpos)
 }
 
 /*! \fn const char * ln_hrz_to_nswe (struct ln_hrz_posn * pos);
- * \brief returns direction of given azimut - like N,S,W,E,NSW,...
+ * \brief returns direction of given azimuth - like N,S,W,E,NSW,...
  * \ingroup conversion
  */ 
 const char * ln_hrz_to_nswe (struct ln_hrz_posn * pos)
@@ -445,7 +445,7 @@ void ln_lnlat_to_hlnlat (struct ln_lnlat_posn * pos, struct lnh_lnlat_posn * hpo
 
 /*
 * \fn double ln_get_rect_distance (struct ln_rect_posn * a, struct ln_rect_posn * b)
-* \param a First recatngular coordinate
+* \param a First rectangular coordinate
 * \param b Second rectangular coordinate
 * \return Distance between a and b.
 *

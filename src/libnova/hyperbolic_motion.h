@@ -36,95 +36,95 @@ extern "C" {
 * \brief Solve Barkers equation. 
 * \ingroup hyperbolic 
 */
-double ln_solve_hyp_barker (double Q1, double G, double t);
+double LIBNOVA_EXPORT ln_solve_hyp_barker (double Q1, double G, double t);
 
 /*! \fn double ln_get_hyp_true_anomaly (double q, double e, double t);
 * \ingroup hyperbolic
 * \brief Calculate the true anomaly. 
 */
-double ln_get_hyp_true_anomaly (double q, double e, double t);
+double LIBNOVA_EXPORT ln_get_hyp_true_anomaly (double q, double e, double t);
 
 /*! \fn double ln_get_hyp_radius_vector (double q, double e, double t);
 * \ingroup hyperbolic
 * \brief Calculate the radius vector. 
 */
-double ln_get_hyp_radius_vector (double q, double e, double t);
+double LIBNOVA_EXPORT ln_get_hyp_radius_vector (double q, double e, double t);
 
 /*! \fn void ln_get_hyp_geo_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \ingroup hyperbolic
 * \brief Calculate an objects rectangular geocentric position.
 */
-void ln_get_hyp_geo_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
+void LIBNOVA_EXPORT ln_get_hyp_geo_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
 
 
 /*! \fn void ln_get_hyp_helio_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
 * \ingroup hyperbolic
 * \brief Calculate an objects rectangular heliocentric position. 
 */
-void ln_get_hyp_helio_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
+void LIBNOVA_EXPORT ln_get_hyp_helio_rect_posn (struct ln_hyp_orbit* orbit, double JD, struct ln_rect_posn* posn);
 	
 /*!
 * \fn void ln_get_hyp_body_equ_coords (double JD, struct ln_hyp_orbit * orbit, struct ln_equ_posn * posn)
 * \ingroup hyperbolic
 * \brief Calculate a bodies equatorial coordinates.
 */
-void ln_get_hyp_body_equ_coords (double JD, struct ln_hyp_orbit * orbit, struct ln_equ_posn * posn);
+void LIBNOVA_EXPORT ln_get_hyp_body_equ_coords (double JD, struct ln_hyp_orbit * orbit, struct ln_equ_posn * posn);
 	
 /*!
 * \fn double ln_get_hyp_body_earth_dist (double JD, struct ln_hyp_orbit * orbit)
 * \ingroup hyperbolic
 * \brief Calculate the distance between a body and the Earth.
 */
-double ln_get_hyp_body_earth_dist (double JD, struct ln_hyp_orbit * orbit);
+double LIBNOVA_EXPORT ln_get_hyp_body_earth_dist (double JD, struct ln_hyp_orbit * orbit);
 
 /*!
 * \fn double ln_get_hyp_body_solar_dist (double JD, struct ln_hyp_orbit * orbit) 
 * \ingroup hyperbolic
 * \brief Calculate the distance between a body and the Sun.
 */
-double ln_get_hyp_body_solar_dist (double JD, struct ln_hyp_orbit * orbit);
+double LIBNOVA_EXPORT ln_get_hyp_body_solar_dist (double JD, struct ln_hyp_orbit * orbit);
 
 /*! \fn double ln_get_hyp_body_phase_angle (double JD, struct ln_hyp_orbit * orbit);
 * \ingroup hyperbolic
-* \brief Calculate the pase angle of the body. 
+* \brief Calculate the phase angle of the body. 
 */
-double ln_get_hyp_body_phase_angle (double JD, struct ln_hyp_orbit * orbit);
+double LIBNOVA_EXPORT ln_get_hyp_body_phase_angle (double JD, struct ln_hyp_orbit * orbit);
 
 /*! \fn double ln_get_hyp_body_elong (double JD, struct ln_hyp_orbit * orbit);
 * \ingroup hyperbolic
 * \brief Calculate the bodies elongation to the Sun. 
 */
-double ln_get_hyp_body_elong (double JD, struct ln_hyp_orbit * orbit);
+double LIBNOVA_EXPORT ln_get_hyp_body_elong (double JD, struct ln_hyp_orbit * orbit);
 
 /*! \fn double ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with a hyperbolic orbit.
 * \ingroup hyperbolic
 */
-int ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_hyp_body_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
 
 /*! \fn double ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with a hyperbolic orbit.
 * \ingroup hyperbolic
 */
-int ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_hyp_body_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
 
 /*! \fn double ln_get_hyp_body_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
 * \ingroup hyperbolic
 */
-int ln_get_hyp_body_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_hyp_body_next_rst (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, struct ln_rst_time * rst);
 
 /*! \fn double ln_get_hyp_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
 * \ingroup hyperbolic
 */
-int ln_get_hyp_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_hyp_body_next_rst_horizon (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, struct ln_rst_time * rst);
 
 /*! \fn double ln_get_hyp_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
 * \brief Calculate the time of rise, set and transit for a body with an hyperbolic orbit.
 * \ingroup hyperbolic
 */
-int ln_get_hyp_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
+int LIBNOVA_EXPORT ln_get_hyp_body_next_rst_horizon_future (double JD, struct ln_lnlat_posn * observer, struct ln_hyp_orbit * orbit, double horizon, int day_limit, struct ln_rst_time * rst);
 
 #ifdef __cplusplus
 };

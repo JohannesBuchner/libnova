@@ -6802,7 +6802,7 @@ double ln_get_mars_sdiam (double JD)
 	
 /*! \fn void ln_get_mars_rect_helio (double JD, struct ln_rect_posn * position)
 * \param JD Julian day.
-* \param position ointer to return position
+* \param position pointer to return position
 *
 * Calculate Mars rectangular heliocentric coordinates for the
 * given Julian day. Coordinates are in AU.
