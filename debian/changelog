@@ -1,3 +1,8 @@
+libnova (0.12.3-1) unstable; urgency=low
+  * MS Windows source patches
+
+ -- Petr Kubanek <petr@kubanek.net>  Sun, 14 Jan 2009 00:14:00 +0000
+
 libnova (0.12.2-1) unstable; urgency=low
   * Fixed bug #1838359.
   * Fixed time.h issues.
