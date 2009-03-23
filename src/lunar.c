@@ -28,6 +28,10 @@
 #include <libnova/rise_set.h>
 #include <libnova/utility.h>
 
+#ifdef HAVE_LIBsunmath
+#include <sunmath.h>
+#endif
+
 /* AU in KM */
 #define AU			149597870
 
@@ -39376,16 +39380,16 @@ double ln_get_lunar_earth_dist (double JD)
 double ln_get_lunar_phase (double JD)
 {
 	double phase = 0;
-	struct ln_lnlat_posn moon, sun;
+	struct ln_lnlat_posn moon, sunlp;
 	double lunar_elong;
 	double R, delta;
 		
 	/* get lunar and solar long + lat */
 	ln_get_lunar_ecl_coords (JD, &moon, 0.0001);
-	ln_get_solar_ecl_coords (JD, &sun);
+	ln_get_solar_ecl_coords (JD, &sunlp);
 	
 	/* calc lunar geocentric elongation equ 48.2 */
-	lunar_elong = acos (cos (ln_deg_to_rad(moon.lat)) * cos (ln_deg_to_rad(sun.lng - moon.lng)));
+	lunar_elong = acos (cos (ln_deg_to_rad(moon.lat)) * cos (ln_deg_to_rad(sunlp.lng - moon.lng)));
 	
 	/* now calc phase Equ 48.2 */
 	R = ln_get_earth_solar_dist (JD);
@@ -39429,17 +39433,17 @@ double ln_get_lunar_bright_limb (double JD)
 	double angle;
 	double x,y;
 	
-	struct ln_equ_posn moon, sun;
+	struct ln_equ_posn moon, sunlp;
 		
 	/* get lunar and solar long + lat */
 	ln_get_lunar_equ_coords (JD, &moon);
-	ln_get_solar_equ_coords (JD, &sun);
+	ln_get_solar_equ_coords (JD, &sunlp);
 	
 	/* Equ 48.5 */
-	x = cos (ln_deg_to_rad(sun.dec)) * sin (ln_deg_to_rad(sun.ra - moon.ra));
-	y = sin ((ln_deg_to_rad(sun.dec)) * cos (ln_deg_to_rad(moon.dec))) 
-		- (cos (ln_deg_to_rad(sun.dec)) * sin (ln_deg_to_rad(moon.dec)) 
-		* cos (ln_deg_to_rad(sun.ra - moon.ra)));
+	x = cos (ln_deg_to_rad(sunlp.dec)) * sin (ln_deg_to_rad(sunlp.ra - moon.ra));
+	y = sin ((ln_deg_to_rad(sunlp.dec)) * cos (ln_deg_to_rad(moon.dec))) 
+		- (cos (ln_deg_to_rad(sunlp.dec)) * sin (ln_deg_to_rad(moon.dec)) 
+		* cos (ln_deg_to_rad(sunlp.ra - moon.ra)));
 	angle = atan2 (x,y);
 
 	angle = ln_range_radians (angle);

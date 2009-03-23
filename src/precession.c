@@ -20,6 +20,10 @@
 #include <libnova/precession.h>
 #include <libnova/utility.h>
 
+#ifdef HAVE_LIBsunmath
+#include <sunmath.h>
+#endif
+
 /*
 ** Precession
 */

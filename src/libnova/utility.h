@@ -25,8 +25,6 @@
 #include <time.h>
 // cbrt replacement
 #define cbrt(x)   pow (x,1.0/3.0)
-// nan
-#define nan(x)    0
 #endif
 
 #ifdef __cplusplus
@@ -237,13 +235,21 @@ char *strtok_r(char *str, const char *sep, char **last);
 /* Simple cube root */
 double cbrt (double x);
 
-/* Not a Number function generator */
-double nan (const char *code);
+#endif /* __C89_SUB__ */
+
+#ifndef HAVE_ROUND
 
 /* Simple round to nearest */
 double round (double x);
 
-#endif /* __C89_SUB__ */
+#endif /* !HAVE_ROUND */
+
+#if defined(__WIN32__) || defined(sun) || defined(__C89_SUB__)
+
+/* Not a Number function generator */
+double nan (const char *code);
+
+#endif /* defined(__WIN32__) || defined(sun) || defined(__C89_SUB__) */
 
 #ifdef __cplusplus
 };

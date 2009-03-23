@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.16 2009-01-14 00:22:16 pkubanek Exp $
+/* $Id: utility.c,v 1.17 2009-03-23 16:17:08 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -765,6 +765,20 @@ double cbrt (double x)
 	return pow (x, 1.0/3.0);
 }
 
+#endif /* __C89_SUB__ */
+
+#ifndef HAVE_ROUND
+
+/* Simple round to nearest */
+double round (double x)
+{
+	return floor(x + 0.5);
+}
+
+#endif /* ! HAVE_ROUND */
+
+#if defined(__WIN32__) || defined(sun) || defined(__C89_SUB__)
+
 /* Not a Number function generator */
 double nan (const char *code)
 {
@@ -773,14 +787,4 @@ double nan (const char *code)
 	return zero/0.0;
 }
 
-/* Simple round to nearest */
-double round (double x)
-{
-	double y;
-
-	y = x - floor (x);
-
-	return (y >= 0.5) ? (ceil(x)) : (floor (x));
-}
-
-#endif /* __C89_SUB__ */
+#endif /* defined(__WIN32__) || defined(sun) || defined(__C89_SUB__) */

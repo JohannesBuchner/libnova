@@ -21,22 +21,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <libnova/julian_day.h>
+#include <libnova/utility.h>
 
 /* Standard Win32 apps do not have POSIX support. */
 #ifndef __WIN32__
 #include <sys/time.h>
 #endif
-
-/* should be in math.h, but isn't on FC3 even with _GNU_SOURCE */
-double round (double __x); 
-
-#ifdef __WIN32__
-// The round function does not exist on visual studio
-double round (double __x)
-{
-    return floor(__x + 0.5);
-}
-#endif 
 
 /*! \fn double ln_get_julian_day (struct ln_date * date)
 * \param date Date required.
@@ -298,7 +288,7 @@ double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 void ln_get_local_date (double JD, struct ln_zonedate * zonedate)
 {
 	struct ln_date date;
-#ifndef __WIN32__
+#ifdef _BSD_SOURCE
 	time_t curtime;
 	struct tm *loctime;
 #endif
