@@ -1,4 +1,4 @@
-/* $Id: utility.c,v 1.17 2009-03-23 16:17:08 pkubanek Exp $
+/* $Id: utility.c,v 1.18 2009-04-20 07:17:00 pkubanek Exp $
  **
  * Copyright (C) 1999, 2000 Juan Carlos Remis
  * Copyright (C) 2002 Liam Girdwood
@@ -125,15 +125,15 @@ void ln_deg_to_hms (double degrees, struct ln_hms * hms)
     degrees = ln_range_degrees (degrees);	
     
 	/* divide degrees by 15 to get the hours */
-    hms->hours = dtemp = degrees / 15.0;
-    dtemp -= hms->hours;
+    dtemp = degrees / 15.0;
+    hms->hours = (unsigned short)dtemp;
     
-    /* divide remainder by 60 to get minutes */
-    hms->minutes = dtemp = dtemp * 60.0;
-    dtemp -= hms->minutes;
-
-    /* divide remainder by 60 to get seconds */
-    hms->seconds = dtemp * 60.0;
+    /* multiply remainder by 60 to get minutes */
+    dtemp = 60*(dtemp - hms->hours);    
+    hms->minutes = (unsigned short)dtemp;
+    
+    /* multiply remainder by 60 to get seconds */
+    hms->seconds = 60*(dtemp - hms->minutes);
     
     /* catch any overflows */
     if (hms->seconds > 59) {
@@ -149,32 +149,12 @@ void ln_deg_to_hms (double degrees, struct ln_hms * hms)
 /* convert radians to hh:mm:ss */
 void ln_rad_to_hms (double radians, struct ln_hms * hms)
 {
-    double dtemp;
     double degrees;
          
     radians = ln_range_radians(radians);
-    degrees = radians * 360.0 / (2.0 * M_PI);		
+    degrees = ln_rad_to_deg(radians);
   
-    /* divide radians by PI / 12 to get the hours */
-    hms->hours = dtemp = degrees / 15.0;
-    dtemp -= hms->hours;
-    
-    /* divide remainder by 60 to get minutes */
-    hms->minutes = dtemp = dtemp * 60.0;
-    dtemp -= hms->minutes;
-
-    /* divide remainder by 60 to get seconds */
-    hms->seconds = dtemp * 60.0;
-    
-    /* catch any overflows */
-    if (hms->seconds > 59) {
-    	hms->seconds = 0;
-    	hms->minutes ++;
-    }
-    if (hms->minutes > 59) {
-    	hms->minutes = 0;
-    	hms->hours ++;
-    }
+    ln_deg_to_hms(degrees, hms);
 }
 
 
@@ -222,14 +202,13 @@ void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 
 	degrees = fabs(degrees);
 	dms->degrees = (int)degrees;
-	dtemp = degrees - dms->degrees;
 	
-    /* divide remainder by 60 to get minutes */
-    dms->minutes = dtemp = dtemp * 60;
-    dtemp -= dms->minutes;
+    /* multiply remainder by 60 to get minutes */
+    dtemp = 60*(degrees - dms->degrees);
+    dms->minutes = (unsigned short)dtemp;
     
-    /* divide remainder by 60 to get seconds */
-    dms->seconds = dtemp * 60;
+    /* multiply remainder by 60 to get seconds */
+    dms->seconds = 60*(dtemp - dms->minutes);
     
     /* catch any overflows */
     if (dms->seconds > 59) {
@@ -245,35 +224,9 @@ void ln_deg_to_dms (double degrees, struct ln_dms * dms)
 /* convert radians to dms */
 void ln_rad_to_dms (double radians, struct ln_dms * dms)
 {
-    double dtemp;
-    double degrees;
-	
-    degrees = radians * 360.0 / (2.0 * M_PI);
-    if (degrees >= 0) 
-		dms->neg = 0;
-	else
-		dms->neg = 1;
-	
-    degrees = fabs(degrees);
-	dms->degrees = (int)degrees;
-	dtemp = degrees - dms->degrees;
-	
-    /* divide remainder by 60 to get minutes */
-    dms->minutes = dtemp = dtemp * 60;
-    dtemp -= dms->minutes;
+    double degrees = ln_rad_to_deg(radians);
     
-    /* divide remainder by 60 to get seconds */
-    dms->seconds = dtemp * 60;
-    
-     /* catch any overflows */
-    if (dms->seconds > 59) {
-    	dms->seconds = 0;
-    	dms->minutes ++;
-    }
-    if (dms->minutes > 59) {
-    	dms->minutes = 0;
-    	dms->degrees ++;
-    }
+    ln_deg_to_dms(degrees, dms);
 }
 
 
@@ -329,9 +282,9 @@ void ln_add_secs_hms (struct ln_hms * hms, double seconds)
     struct ln_hms source_hms;
     
     /* breaks double seconds int hms */
-    source_hms.hours = seconds / 3600;
+    source_hms.hours = (unsigned short)(seconds / 3600);
     seconds -= source_hms.hours * 3600;
-    source_hms.minutes = seconds / 60;
+    source_hms.minutes = (unsigned short)(seconds / 60);
     seconds -= source_hms.minutes * 60; 
     source_hms.seconds = seconds;
     
@@ -731,8 +684,8 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 
 	_ftime_s (&timeptr);
 
-	tv->tv_sec = timeptr.time + timeptr.timezone * 60;
-	tv->tv_sec = timeptr.millitm;
+	tv->tv_sec = timeptr.time;
+	tv->tv_usec = timeptr.millitm * 1000;
 
 	tz->tz_dsttime = timeptr.dstflag;
 	tz->tz_dsttime = timeptr.timezone;

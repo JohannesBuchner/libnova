@@ -331,17 +331,19 @@ struct ln_rst_time
 */
 struct ln_nutation
 {
-	double longitude;	/*!< Nutation in longitude */
-	double obliquity;	/*!< Nutation in obliquity */
-	double ecliptic;	/*!< Obliquity of the ecliptic */
+	double longitude;	/*!< Nutation in longitude, in degrees */
+	double obliquity;	/*!< Nutation in obliquity, in degrees */
+	double ecliptic;	/*!< Mean obliquity of the ecliptic, in degrees */
 };
 
 /* Definitions of POSIX structures for Win32. */
 #ifdef __WIN32__
 
+#include <time.h>
+
 struct timeval
 {
-	long    tv_sec;         /* count of seconds since Jan. 1, 1970 */
+	time_t  tv_sec;         /* count of seconds since Jan. 1, 1970 */
 	long    tv_usec;        /* and microseconds */
 };
 

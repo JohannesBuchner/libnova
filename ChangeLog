@@ -1,5 +1,36 @@
 ChangeLog
 
+20090420
+	julian_day.h: 
+		Removed "#ifndef __WIN32__" to make ln_get_date_from_timet function available in win32
+
+	ln_types.h:
+		Changed tv_sec type from long to time_t to match standard definition
+		Clarified field documentation for ln_nutation
+
+	julian_day.c:
+		Removed "#ifndef __WIN32__" to make ln_get_date_from_timet function available in win32
+		Remove platform-dependent code form ln_get_date_from_sys. The function now simply makes a call to gettimeofday() - a Win32 implementation is supplied in utility.c, and this function is no longer limited to one-second precision under Windows.
+
+	nutation.c:
+		Fixed two values in nutation coefficients table
+		Fixed method used to compute longitude/obliquity offsets. The general form of the calculation is supposed to be, e.g., coeff*sin(D+M+MM+F+O), not coeff*(sin(D) + sin(M) + sin(MM) + ...)
+		Added correct computation for mean ecliptic (Meeus eq 22.2)
+		(These fixes also fix ln_get_apparent_sidereal_time, and affect:
+			ln_get_solar_equ_coords
+			ln_get_solar_ecl_coords
+			ln_get_equ_from_ecl (possibly needs true ecliptic rather than mean)
+			ln_get_ecl_from_equ (possibly needs true ecliptic rather than mean)
+		)
+
+	utility.c:
+		Fixed gettimeofday Win32 implementation:
+			should not add timezone offset - _ftime_s and gettimeofday both work in terms of seconds since Jan 1 1970, UTC
+		Added some explicit casts to remove compile warnings
+		Cleaned up implementations of ln_deg_to_hms, ln_rad_to_hms, ln_deg_to_dms, and ln_rad_to_hms
+	
+	patch provided by Kevin Ivarsen, applied by Petr Kubanek
+
 20090323
 	Fixed issues while compling on Sun/Solaris (acosl, round, ..)
 

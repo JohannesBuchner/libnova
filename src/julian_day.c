@@ -42,7 +42,7 @@ double ln_get_julian_day (struct ln_date * date)
     double JD;
     double days;
     int a,b;
-	struct ln_date local_date;
+    struct ln_date local_date;
 		
 	/* create local copy */
     memcpy (&local_date, date, sizeof (struct ln_date));
@@ -154,7 +154,6 @@ void ln_get_date (double JD, struct ln_date * date)
 *
 * Set date from system time
 */
-#ifndef __WIN32__
 void ln_get_date_from_timet (time_t * t, struct ln_date * date)
 {
 	struct tm gmt;
@@ -164,7 +163,6 @@ void ln_get_date_from_timet (time_t * t, struct ln_date * date)
     	
 	ln_get_date_from_tm (&gmt, date);
 }
-#endif
 
 /*! \fn void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 * \param tm system tm structure
@@ -191,30 +189,17 @@ void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 void ln_get_date_from_sys (struct ln_date * date)
 {
 	struct tm * gmt;
-#ifndef __WIN32__
-        struct timeval tv;
-        struct timezone tz;
-#else
-	time_t now;
-#endif 
-		
-#ifndef __WIN32__
+	struct timeval tv;
+	struct timezone tz;
+
 	/* get current time with microseconds precission*/
 	gettimeofday (&tv, &tz);
 
 	/* convert to UTC time representation */
 	gmt = gmtime(&tv.tv_sec);
-#else
-	now = time (NULL);
-	gmt = gmtime (&now);
-#endif
     	
 	/* fill in date struct */
-#ifndef __WIN32__
 	date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
-#else
-	date->seconds = gmt->tm_sec;
-#endif
 	date->minutes = gmt->tm_min;
 	date->hours = gmt->tm_hour;
 	date->days = gmt->tm_mday;

@@ -111,7 +111,7 @@ const static struct nutation_arguments arguments[TERMS] = {
 const static struct nutation_coefficients coefficients[TERMS] = {
     {-171996.0,	-174.2,	92025.0,8.9},
     {-13187.0,	-1.6,  	5736.0,	-3.1},
-    {-2274.0, 	 0.2,  	977.0,	-0.5},
+    {-2274.0, 	-0.2,  	977.0,	-0.5},
     {2062.0,   	0.2,    -895.0,    0.5},
     {1426.0,    -3.4,    54.0,    -0.1},
     {712.0,    0.1,    -7.0,    0.0},
@@ -123,7 +123,7 @@ const static struct nutation_coefficients coefficients[TERMS] = {
     {129.0,	0.1,	-70.0,	0.0},
     {123.0,	0.0,	-53.0,	0.0},
     {63.0,	0.0,	0.0,	0.0},
-    {63.0,	1.0,	-33.0,	0.0},
+    {63.0,	0.1,	-33.0,	0.0},
     {-59.0,	0.0,	26.0,	0.0},
     {-58.0,	-0.1,	32.0,	0.0},
     {-51.0,	0.0,	27.0,	0.0},
@@ -191,6 +191,7 @@ void ln_get_nutation (double JD, struct ln_nutation * nutation)
 	
 	long double D,M,MM,F,O,T,T2,T3,JDE;
 	long double coeff_sine, coeff_cos;
+	long double argument;
 	int i;
 
 	/* should we bother recalculating nutation */
@@ -198,9 +199,6 @@ void ln_get_nutation (double JD, struct ln_nutation * nutation)
 		/* set the new epoch */
 		c_JD = JD;
 
-		/* set ecliptic */
-		c_ecliptic = 23.0 + 26.0 / 60.0 + 27.407 / 3600.0;
-		
 		/* get julian ephemeris day */
 		JDE = ln_get_jde (JD);
 		
@@ -228,29 +226,16 @@ void ln_get_nutation (double JD, struct ln_nutation * nutation)
 			/* calc coefficients of sine and cosine */
 			coeff_sine = (coefficients[i].longitude1 + (coefficients[i].longitude2 * T));
 			coeff_cos = (coefficients[i].obliquity1 + (coefficients[i].obliquity2 * T));
-			
-			/* sum the arguments */
-			if (arguments[i].D != 0) {
-				c_longitude += coeff_sine * (sin (arguments[i].D * D));
-				c_obliquity += coeff_cos * (cos (arguments[i].D * D));
-			}
-			if (arguments[i].M != 0) {
-				c_longitude += coeff_sine * (sin (arguments[i].M * M));
-				c_obliquity += coeff_cos * (cos (arguments[i].M * M));
-			}
-			if (arguments[i].MM != 0) {
-				c_longitude += coeff_sine * (sin (arguments[i].MM * MM));
-				c_obliquity += coeff_cos * (cos (arguments[i].MM * MM));
-			}
-			if (arguments[i].F != 0) {
-				c_longitude += coeff_sine * (sin (arguments[i].F * F));
-				c_obliquity += coeff_cos * (cos (arguments[i].F * F));
-			}
-			if (arguments[i].O != 0) {
-				c_longitude += coeff_sine * (sin (arguments[i].O * O));
-				c_obliquity += coeff_cos * (cos (arguments[i].O * O));
-			}
-		}    
+
+			argument = arguments[i].D * D 
+				+ arguments[i].M * M 
+				+ arguments[i].MM * MM 
+				+ arguments[i].F * F
+				+ arguments[i].O * O;
+            
+			c_longitude += coeff_sine * sin(argument);
+			c_obliquity += coeff_cos * cos(argument);
+		}
 
 		/* change to arcsecs */
 		c_longitude /= 10000;
@@ -259,7 +244,16 @@ void ln_get_nutation (double JD, struct ln_nutation * nutation)
 		/* change to degrees */
 		c_longitude /= (60 * 60);
 		c_obliquity /= (60 * 60);
-		c_ecliptic += c_obliquity;
+		
+		/* calculate mean ecliptic - Meeus 2nd edition, eq. 22.2 */
+		c_ecliptic = 23.0 + 26.0 / 60.0 + 21.448 / 3600.0
+                   - 46.8150/3600 * T
+                   - 0.00059/3600 * T2
+                   + 0.0001813/3600 * T3;
+        
+		/* c_ecliptic += c_obliquity; * Uncomment this if function should 
+                                         return true obliquity rather than
+                                         mean obliquity */
 	}
 
 	/* return results */

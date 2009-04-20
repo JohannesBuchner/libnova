@@ -49,9 +49,7 @@ void LIBNOVA_EXPORT ln_get_date (double JD, struct ln_date * date);
 * \\ingroup calendar
 * \brief Set date from system time
 */
-#ifndef __WIN32__
 void LIBNOVA_EXPORT ln_get_date_from_timet (time_t * t, struct ln_date * date);
-#endif
 
 /*! \fn void ln_get_date_from_tm (struct tm * t, struct ln_date * date)
 * \\ingroup calendar
