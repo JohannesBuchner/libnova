@@ -1,5 +1,13 @@
 ChangeLog
 
+20090514
+	heliocentric_time.h:
+	heliocentric_time.c:
+	test.c:
+		Added heliocentric time corrections calculations.
+
+	Petr Kubanek
+
 20090420
 	julian_day.h: 
 		Removed "#ifndef __WIN32__" to make ln_get_date_from_timet function available in win32

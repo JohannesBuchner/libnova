@@ -13,7 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 
-Copyright 2000 Liam Girdwood  */
+Copyright 2000 Liam Girdwood 
+Copyright 2008-2009 Petr Kubanek*/
 
 #define _GNU_SOURCE
 
@@ -172,6 +173,52 @@ int dynamical_test ()
 	JD = ln_get_julian_day (&date);
 	TD = ln_get_jde (JD);
 	failed += test_result ("(Dynamical Time) TD for 01/01/2000 00:00:00", TD, 2451544.50073877, 0.000001);
+	return failed;
+}
+
+int heliocentric_test (void)
+{
+	struct ln_equ_posn object;
+	struct ln_date date;
+	double JD;
+
+	double diff;
+
+	int failed = 0;
+
+	object.ra = 0;
+
+	date.years = 2000;
+	date.months = 1;
+	date.days = 1;
+	date.hours = 0;
+	date.minutes = 0;
+	date.seconds = 0;
+
+	JD = ln_get_julian_day (&date);
+
+	object.dec = 60;
+
+	diff = ln_get_heliocentric_time_diff (JD, &object);
+
+	failed += test_result ("(Heliocentric time) TD for 01/01, object on 0h +60", diff, 15.0 * 0.0001, 0.0001);
+
+	object.ra = 270;
+	object.dec = 50;
+
+	diff = ln_get_heliocentric_time_diff (JD, &object);
+
+	failed += test_result ("(Heliocentric time) TD for 01/01, object on 18h +50", diff, -16.0 * 0.0001, 0.0001);
+
+	date.months = 8;
+	date.days = 8;
+
+	JD = ln_get_julian_day (&date);
+
+	diff = ln_get_heliocentric_time_diff (JD, &object);
+
+	failed += test_result ("(Heliocentric time) TD for 08/08, object on 18h +50", diff, 12.0 * 0.0001, 0.0001);
+
 	return failed;
 }
 
@@ -1674,6 +1721,7 @@ int main ()
 	
 	failed += julian_test();
 	failed += dynamical_test();
+	failed += heliocentric_test ();
 	failed += sidereal_test();
 	failed += nutation_test();
 	failed += transform_test();

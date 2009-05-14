@@ -34,4 +34,5 @@ include_HEADERS = \
 	utility.h \
 	hyperbolic_motion.h \
 	parallax.h \
-	airmass.h
+	airmass.h \
+	heliocentric_time.h

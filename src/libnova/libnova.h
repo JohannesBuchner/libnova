@@ -131,5 +131,6 @@
 #include <libnova/hyperbolic_motion.h>
 #include <libnova/parallax.h>
 #include <libnova/airmass.h>
+#include <libnova/heliocentric_time.h>
 
 #endif
