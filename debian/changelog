@@ -1,3 +1,9 @@
+libnova (0.13.0-1) unstable; urgency=medium
+  * Heliocentric corrections calculations
+  * Solaris patch
+
+ -- Petr Kubanek <petr@kubanek.net>  Fri, 15 May 2009 00:24:12 +0000
+
 libnova (0.12.3-1) unstable; urgency=low
   * MS Windows source patches
 
