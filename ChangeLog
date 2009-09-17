@@ -1,5 +1,9 @@
 ChangeLog
 
+20090917
+	sidereal_time.c:
+		Fix problem with double transformation of degrees to hours, pointed by Edward Falk
+
 *********** release of 0.13.0
 
 20090514

@@ -375,7 +375,7 @@ int sidereal_test ()
 
 	failed += test_result ("(Sidereal) mean hours on 10/04/1987 19:21:00 ", sd, 8.58252488, 0.000001);
 	sd = ln_get_apparent_sidereal_time (JD);
-	failed += test_result ("(Sidereal) apparent hours on 10/04/1987 19:21:00 ", sd, 8.58252060, 0.000001);
+	failed += test_result ("(Sidereal) apparent hours on 10/04/1987 19:21:00 ", sd, 8.58245327, 0.000001);
 	return failed;
 }
 

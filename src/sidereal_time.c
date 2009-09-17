@@ -60,7 +60,7 @@ double ln_get_mean_sidereal_time (double JD)
 
 double ln_get_apparent_sidereal_time (double JD)
 {
-   double correction, hours, sidereal;
+   double correction, sidereal;
    struct ln_nutation nutation;  
    
    /* get the mean sidereal time */
@@ -72,10 +72,7 @@ double ln_get_apparent_sidereal_time (double JD)
     
    correction = (nutation.longitude / 15.0 * cos (ln_deg_to_rad(nutation.obliquity)));
   
-   /* value is in degrees so change it to hours and add to mean sidereal time */
-   hours = (24.0 / 360.0) * correction;
-
-   sidereal += hours;
+   sidereal += correction;
    
    return sidereal;
 }
