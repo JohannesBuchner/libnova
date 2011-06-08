@@ -24,6 +24,28 @@
 #include <sunmath.h>
 #endif
 
+// fixed missing *l functions
+
+#ifndef HAVE_COSL
+#define cosl cos
+#endif
+
+#ifndef HAVE_SINL
+#define sinl sin
+#endif
+
+#ifndef HAVE_ACOSL
+#define acosl acos
+#endif
+
+#ifndef HAVE_ASINL
+#define asinl asin
+#endif
+
+#ifndef HAVE_ATAN2L
+#define atan2l atan2
+#endif
+
 /*
 ** Precession
 */

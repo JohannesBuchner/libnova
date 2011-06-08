@@ -57,6 +57,11 @@ AC_CHECK_LIB(m,pow)
 AC_CHECK_LIB(sunmath,acosl)
 
 AC_CHECK_FUNCS([round])
+AC_CHECK_FUNCS([cosl])
+AC_CHECK_FUNCS([sinl])
+AC_CHECK_FUNCS([acosl])
+AC_CHECK_FUNCS([asinl])
+AC_CHECK_FUNCS([atan2l])
 
 CFLAGS=-Wall
 

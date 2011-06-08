@@ -29,7 +29,7 @@ extern "C" {
 #  elif defined( LIBNOVA_SHARED )
 #    define LIBNOVA_EXPORT   __declspec(dllexport)
 #  else
-#    define LIBNOVA_EXPORT   __declspec(dllimport)
+#    define LIBNOVA_EXPORT
 #  endif
 #else
 #  define LIBNOVA_EXPORT
