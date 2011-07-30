@@ -1715,6 +1715,29 @@ int utility_test()
 	return 0;
 }
 
+int airmass_test()
+{
+	int failed = 0;
+	double x;
+
+	double X = ln_get_airmass (90, 750.0);
+	failed += test_result ("(Airmass) Airmass at Zenith", X, 1, 0);
+ 
+	X = ln_get_airmass (10, 750.0);
+	failed += test_result ("(Airmass) Airmass at 10 degrees altitude", X, 5.3, 0.1);
+	
+	X = ln_get_alt_from_airmass (1, 750.0);
+	failed += test_result ("(Airmass) Altitude at airmass 1", X, 90, 0);
+
+	for (x = -10; x < 90; x += 10.54546456)
+	{
+		X = ln_get_alt_from_airmass (ln_get_airmass (x, 750.0), 750.0);
+		failed += test_result ("(Airmass) Altitude->Airmass->Altitude at 10 degrees", X, x, 0.000000001);
+	}
+
+	return failed;
+}
+
 int main ()
 {
 	int failed = 0;
@@ -1741,6 +1764,7 @@ int main ()
 	failed += parallax_test ();
 	failed += angular_test();
 	failed += utility_test();
+	failed += airmass_test ();
 	
 	printf ("Test completed: %d tests, %d errors.\n", test_number, failed);
 		
