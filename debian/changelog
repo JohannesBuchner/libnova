@@ -1,3 +1,10 @@
+libnova (0.14.0-1) stable; urgency=medium
+  * Added ln_get_alt_from_airmass function
+  * Generate input doxyfile from doxyfile.in
+  * Fix problem with double transformation of degrees to hours, pointed by Edward Falk
+
+ -- Petr Kubanek <petr@kubanek.net>  Sat, 30 Jul 2011 17:24:12 +0000
+
 libnova (0.13.0-1) unstable; urgency=medium
   * Heliocentric corrections calculations
   * Solaris patch
