@@ -6,7 +6,7 @@ cflags_set=${CFLAGS+set}
 
 # libtool versioning
 LIBNOVA_MAJOR_VERSION=0
-LIBNOVA_MINOR_VERSION=13
+LIBNOVA_MINOR_VERSION=14
 LIBNOVA_MICRO_VERSION=0
 LIBNOVA_VERSION=$LIBNOVA_MAJOR_VERSION.$LIBNOVA_MINOR_VERSION.$LIBNOVA_MICRO_VERSION
 AC_SUBST(LIBNOVA_MAJOR_VERSION)
@@ -83,5 +83,6 @@ src/Makefile
 src/libnova/Makefile
 lntest/Makefile
 doc/Makefile
+doc/doxyfile
 examples/Makefile
 ])

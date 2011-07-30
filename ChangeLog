@@ -1,5 +1,16 @@
 ChangeLog
 
+*********** release of 0.14.0
+
+20110730
+	airmass.c:
+		Added ln_get_alt_from_airmass function
+
+	doc/doxyfile.in,doc/doxyfile
+		Generate input doxyfile from doxyfile.in
+	
+	Petr Kubanek
+
 20090917
 	sidereal_time.c:
 		Fix problem with double transformation of degrees to hours, pointed by Edward Falk
