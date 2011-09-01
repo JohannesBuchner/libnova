@@ -249,7 +249,7 @@ void ln_get_nutation (double JD, struct ln_nutation * nutation)
 		c_ecliptic = 23.0 + 26.0 / 60.0 + 21.448 / 3600.0
                    - 46.8150/3600 * T
                    - 0.00059/3600 * T2
-                   + 0.0001813/3600 * T3;
+                   + 0.001813/3600 * T3;
         
 		/* c_ecliptic += c_obliquity; * Uncomment this if function should 
                                          return true obliquity rather than
