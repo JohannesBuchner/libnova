@@ -34,17 +34,19 @@
 */
 double ln_get_heliocentric_time_diff (double JD, struct ln_equ_posn *object)
 {
+	double theta, ra, dec, c_dec, obliq;
+
 	struct ln_nutation nutation;
 	struct ln_helio_posn earth;
 
 	ln_get_nutation (JD, &nutation);
 	ln_get_earth_helio_coords (JD, &earth);
 
-	double theta = ln_deg_to_rad (ln_range_degrees (earth.L + 180));
-	double ra = ln_deg_to_rad (object->ra);
-	double dec = ln_deg_to_rad (object->dec);
-	double c_dec = cos (dec);
-	double obliq = ln_deg_to_rad (nutation.ecliptic);
+	theta = ln_deg_to_rad (ln_range_degrees (earth.L + 180));
+	ra = ln_deg_to_rad (object->ra);
+	dec = ln_deg_to_rad (object->dec);
+	c_dec = cos (dec);
+	obliq = ln_deg_to_rad (nutation.ecliptic);
 
 	/* L.Binnendijk Properties of Double Stars, Philadelphia, University of Pennselvania Press, pp. 228-232, 1960 */
 	return -0.0057755 * earth.R * (
