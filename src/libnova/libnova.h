@@ -16,7 +16,7 @@
  *  Copyright (C) 2000 - 2005 Liam Girdwood  
  */
 
-#define LIBNOVA_VERSION "0.13.0"
+#define LIBNOVA_VERSION "0.14.0"
 
 /*! \mainpage libnova
 * \image html libnova-logo.jpg
