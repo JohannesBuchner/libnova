@@ -60,7 +60,7 @@
 *
 * \section download Download
 * The latest released version of libnova is 0.13.0
-* It is available for download <A href="http://sf.net/project/showfiles.php?group_id=57697">here.</A>
+* It is available for download <A href="http://sourceforge.net/projects/libnova/files/libnova/">here.</A>
 *
 * \section cvs CVS
 * The latest CVS version of libnova is available via CVS <A href="http://sf.net/cvs/?group_id=57697">here.</A>

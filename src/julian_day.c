@@ -220,6 +220,16 @@ double ln_get_julian_from_timet (time_t * in_time)
 	return (double)(2440587.5 + (double)(*in_time / (double) 86400.0));
 }
 
+#ifndef HAVE_ROUND
+
+/* Simple round to nearest */
+double round (double x)
+{
+	return floor(x + 0.5);
+}
+
+#endif /* ! HAVE_ROUND */
+
 /*! \fn void ln_get_timet_from_julian (double JD, time_t * in_time)
 * \param JD Julian day
 * \param in_time Pointer to store time_t

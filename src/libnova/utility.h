@@ -237,13 +237,6 @@ double cbrt (double x);
 
 #endif /* __C89_SUB__ */
 
-#ifndef HAVE_ROUND
-
-/* Simple round to nearest */
-double round (double x);
-
-#endif /* !HAVE_ROUND */
-
 #if defined(__WIN32__) || defined(sun) || defined(__C89_SUB__)
 
 /* Not a Number function generator */

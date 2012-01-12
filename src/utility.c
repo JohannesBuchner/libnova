@@ -720,16 +720,6 @@ double cbrt (double x)
 
 #endif /* __C89_SUB__ */
 
-#ifndef HAVE_ROUND
-
-/* Simple round to nearest */
-double round (double x)
-{
-	return floor(x + 0.5);
-}
-
-#endif /* ! HAVE_ROUND */
-
 #if defined(__WIN32__) || defined(sun) || defined(__C89_SUB__)
 
 /* Not a Number function generator */

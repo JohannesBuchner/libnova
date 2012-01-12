@@ -1,5 +1,13 @@
 ChangeLog
 
+20120111
+	utility.c:
+	utility.h:
+	julian_day.c:
+		Fix problems with double redefinition, pointed by Lukasz Michalik
+	
+	Petr Kubanek
+
 *********** release of 0.14.0
 
 20110730
